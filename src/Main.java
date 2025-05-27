@@ -35,7 +35,7 @@ public class Main {
         ParseTree tree = parser.ast();
         programvisitor visitor = new programvisitor();
         ASTNode ast = visitor.visit(tree);
-       // visitor.st.print();
+        visitor.st.print();
         System.out.println("ssss");
         if (ast != null) {
             ast.prettyPrint("");
