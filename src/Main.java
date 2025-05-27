@@ -36,6 +36,7 @@ public class Main {
         programvisitor visitor = new programvisitor();
         ASTNode ast = visitor.visit(tree);
        // visitor.st.print();
+        System.out.println("ssss");
         if (ast != null) {
             ast.prettyPrint("");
         } else {
