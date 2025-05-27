@@ -27,6 +27,8 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     public UndefinedImportsErrorSymbolTable undefinedImportsErrorSymbolTable = new UndefinedImportsErrorSymbolTable();
     public NotFoundReturnValueMethodErrorSymbolTable notFoundReturnValueMethodErrorSymbolTable = new NotFoundReturnValueMethodErrorSymbolTable();
     public ClassDeclarationOrDecoratorExpectedErrorSymbolTable classDeclarationOrDecoratorExpectedErrorSymbolTable = new ClassDeclarationOrDecoratorExpectedErrorSymbolTable();
+    public IncorrectlyOnInitImplementErrorSymbolTable incorrectlyOnInitImplementErrorSymbolTable = new IncorrectlyOnInitImplementErrorSymbolTable();
+
     @Override
     public ASTNode visitAst(Parsergrammar.AstContext ctx) {
         System.out.println("Visiting AST node...");
@@ -122,20 +124,34 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
                 }
             }
         }
-
         ClassDeclaration classDecl = new ClassDeclaration(className, implementsClause, classBodyNodes);
+        System.out.println(ctx.implementsClause());
+        if(ctx.implementsClause()!=null)
+        {
+
+            if(classDecl.getImplementsClause().getInterfaces().contains("OnInit")) {
+
+                int line = ctx.implementsClause().CROISNN(0).getSymbol().getLine();
+                IncorrectlyOnInitImplementError incorrectlyOnInitImplementError = new IncorrectlyOnInitImplementError(incorrectlyOnInitImplementErrorSymbolTable,line);
+                if(!incorrectlyOnInitImplementError.incorrectlyOnInitImplementErrorSymbolTable.check("ngOnInit"))
+                {
+                    incorrectlyOnInitImplementError.throwException();
+                }
+            }
+        }
         // Symbol table entry
         Row row = new Row();
         row.setName(className);
         row.setType("Class");
         row.setValue("Class with " + classBodyNodes.size() + " members");
         row.setScope("global");
-if(ctx.IDENTIFIER()!=null)
-{ this.classDeclarationOrDecoratorExpectedErrorSymbolTable.addRow(className, row);
+        if(ctx.IDENTIFIER()!=null)
+        { this.classDeclarationOrDecoratorExpectedErrorSymbolTable.addRow(className, row);
 
         }
         return classDecl;
     }
+
 
     @Override
     public ASTNode visitClassBody(Parsergrammar.ClassBodyContext ctx) {
@@ -375,8 +391,7 @@ if(ctx.IDENTIFIER()!=null)
         row.setType("NgOnInitMethod");
         row.setValue(method.toString());
         row.setScope(this.st.getCurrentScope());
-        this.st.addRow("ngOnInit", row);
-
+        this.incorrectlyOnInitImplementErrorSymbolTable.addRow("ngOnInit", row);
         return method;
     }
 
