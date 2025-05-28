@@ -28,6 +28,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     public NotFoundReturnValueMethodErrorSymbolTable notFoundReturnValueMethodErrorSymbolTable = new NotFoundReturnValueMethodErrorSymbolTable();
     public ClassDeclarationOrDecoratorExpectedErrorSymbolTable classDeclarationOrDecoratorExpectedErrorSymbolTable = new ClassDeclarationOrDecoratorExpectedErrorSymbolTable();
     public IncorrectlyOnInitImplementErrorSymbolTable incorrectlyOnInitImplementErrorSymbolTable = new IncorrectlyOnInitImplementErrorSymbolTable();
+    public MissedConstructorAccessModifierErrorSymbolTable missedConstructorAccessModifierErrorSymbolTable= new MissedConstructorAccessModifierErrorSymbolTable();
 
     @Override
     public ASTNode visitAst(Parsergrammar.AstContext ctx) {
@@ -751,19 +752,26 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         String name = null;
         String type = null;
 
-        if (ctx.ACCESS() != null) {
-            access = ctx.ACCESS().getText();
+        if(ctx.ACCESS()==null){
+            int line = ctx.CONSTRUCTOR().getSymbol().getLine();
+            MissedConstructorAccessModifierError missedConstructorAccessModifierError = new MissedConstructorAccessModifierError(missedConstructorAccessModifierErrorSymbolTable,line);
+            missedConstructorAccessModifierError.throwException();
+
         }
-        if (ctx.IDENTIFIER().size() == 2) {
+        if (ctx.ACCESS() != null && ctx.IDENTIFIER().size() == 2) {
+
+            access = ctx.ACCESS().getText();
             name = ctx.IDENTIFIER(0).getText();
             type = ctx.IDENTIFIER(1).getText();
         }
-        ConstructorDeclarationStatement constructor = new ConstructorDeclarationStatement(access, name, type);
 
+        ConstructorDeclarationStatement constructor = new ConstructorDeclarationStatement(access, name, type);
         Row row = new Row();
         row.setName("Constructor");
         row.setType("ConstructorDeclaration");
-        row.setValue("Constructor with " + (name != null ? "param " + name + ": " + type : "no parameters"));
+        row.setValue(name != null
+                ? "Constructor with param " + name + ": " + type
+                : "Constructor with no parameters");
         row.setScope("class");
         this.st.addRow("Constructor", row);
 

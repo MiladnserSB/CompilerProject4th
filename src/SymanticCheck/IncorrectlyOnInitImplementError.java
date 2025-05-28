@@ -5,7 +5,7 @@ public class IncorrectlyOnInitImplementError extends RuntimeException{
     public  IncorrectlyOnInitImplementErrorSymbolTable incorrectlyOnInitImplementErrorSymbolTable;
 
     public IncorrectlyOnInitImplementError(IncorrectlyOnInitImplementErrorSymbolTable symbolTable, int lineNumber) {
-        super("Incorrectly OnInit implement");
+        super("Incorrectly OnInit implement" + " at line " + lineNumber);
         this.lineNumber = lineNumber;
         this.incorrectlyOnInitImplementErrorSymbolTable = symbolTable;
     }

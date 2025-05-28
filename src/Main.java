@@ -24,7 +24,10 @@ public class Main {
                 "  items: any[] = [];\n" +
                 "  selectedItem:any=null;\n" +
                 "\n" +
-                "  constructor(private productsService: ProductsService) { }\n" +
+                "ngOnInit(): void {\n" +
+                "     this.items = this.productsService;\n" +
+                "  }"+
+                "  constructor(productsService: ProductsService) { }\n" +
                 "\n" +
                 "  onselect(item: any): void {\n" +
                 "    this.selectedItem = item;\n" +

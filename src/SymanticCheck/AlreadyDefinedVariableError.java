@@ -9,7 +9,7 @@ public class AlreadyDefinedVariableError extends RuntimeException {
     public  AlreadyDefinedVariableErrorSymbolTable alreadyDefinedVariableErrorSymbolTable;
 
     public AlreadyDefinedVariableError(String variableName, AlreadyDefinedVariableErrorSymbolTable symbolTable, int lineNumber) {
-        super("Already defined variable: " + variableName);
+        super("Already defined variable: " + variableName +" at line " + lineNumber);
         this.variableName = variableName;
         this.lineNumber = lineNumber;
         this.alreadyDefinedVariableErrorSymbolTable = symbolTable;
