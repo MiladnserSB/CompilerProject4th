@@ -80,9 +80,10 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         }
 
         ClassDeclaration classDecl = (ClassDeclaration) visit(ctx.classDeclaration());
+int line = -1;
+if(ctx.componentDecorator()!=null)
+{  line = ctx.componentDecorator().RBRACE().getSymbol().getLine();}
 
-
-               int line = ctx.componentDecorator().RBRACE().getSymbol().getLine();
                 ClassDeclarationExpectedError classDeclarationExpectedError = new ClassDeclarationExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
                     if(!classDeclarationExpectedError.classDeclarationOrDecoratorExpectedErrorSymbolTable.check(classDecl.getClassName())){
                         classDeclarationExpectedError.throwException();
@@ -117,16 +118,11 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             implementsClause = (ImplementsClause) visit(ctx.implementsClause());
         }
         List<ASTNode> classBodyNodes = new ArrayList<>();
-        if (ctx.classBody() != null && ctx.classBody().children!= null) {
-            for (ParseTree member : ctx.classBody().children) {
-                ASTNode node = (ASTNode) visit(member);
-                if (node != null) {
-                    classBodyNodes.add(node);
-                }
-            }
+        if (ctx.classBody() != null) {
+            ClassBody classBody = (ClassBody) visit(ctx.classBody());
+            classBodyNodes.addAll(classBody.getMembers());
         }
         ClassDeclaration classDecl = new ClassDeclaration(className, implementsClause, classBodyNodes);
-        System.out.println(ctx.implementsClause());
         if(ctx.implementsClause()!=null)
         {
 
@@ -157,11 +153,30 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitClassBody(Parsergrammar.ClassBodyContext ctx) {
         ClassBody body = new ClassBody();
+        boolean hasSignalDeclaration = false;
+        int signalLine = -1;
 
         for (Parsergrammar.ClassBodyStatementContext stmtCtx : ctx.classBodyStatement()) {
-            ClassBodyStatement statement = (ClassBodyStatement) visit(stmtCtx);
-            if (statement != null) {
-                body.addMember(statement);
+            ASTNode node = visit(stmtCtx);
+            ClassBodyStatement statement;
+            if (node instanceof ClassBodyStatement) {
+                statement = (ClassBodyStatement) node;
+            } else {
+                statement = new ClassBodyStatement(node);
+            }
+            body.addMember(statement);
+            ASTNode inner = statement.getStatement();
+            if (inner instanceof SignalDeclarationStatement) {
+                hasSignalDeclaration = true;
+                signalLine = stmtCtx.getStart().getLine();
+            }
+        }
+
+        // Signal error if needed
+        if (hasSignalDeclaration) {
+            NotImportedSignalError notImportedSignalError = new NotImportedSignalError(undefinedImportsErrorSymbolTable, signalLine);
+            if (!undefinedImportsErrorSymbolTable.check("signal")) {
+                notImportedSignalError.throwException();
             }
         }
 
@@ -176,16 +191,18 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return body;
     }
 
+
+
     @Override
     public ASTNode visitClassBodyStatement(Parsergrammar.ClassBodyStatementContext ctx) {
-        ASTNode node = visit(ctx.getChild(0)); // Visit the single child (one of the alternatives)
-
-        if (this.st.getCurrentScope().equals("class")) {
+        ASTNode node = visit(ctx.getChild(0));
+        if ("class".equals(this.st.getCurrentScope())) {
             return new ClassBodyStatement(node);
         } else {
-            return node; // top-level statement
+            return node;
         }
     }
+
 
     @Override
     public ASTNode visitSelector(Parsergrammar.SelectorContext ctx) {
@@ -752,7 +769,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         String name = null;
         String type = null;
 
-        if(ctx.ACCESS()==null){
+        if(ctx.ACCESS()==null && !ctx.IDENTIFIER().isEmpty()){
             int line = ctx.CONSTRUCTOR().getSymbol().getLine();
             MissedConstructorAccessModifierError missedConstructorAccessModifierError = new MissedConstructorAccessModifierError(missedConstructorAccessModifierErrorSymbolTable,line);
             missedConstructorAccessModifierError.throwException();
