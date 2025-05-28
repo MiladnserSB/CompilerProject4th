@@ -1,22 +1,12 @@
 package ast.SymbolTable;
 
 public class Row {
-    private int id; // Unique identifier for the row
-    private String name; // Name of the symbol (e.g., variable name)
-    private String type; // Type of the symbol (e.g., VariableAssign)
-    private String value; // Value of the symbol (e.g., 42, "Hello, World!", etc.)
-    private String scope; // Scope of the symbol (e.g., "global", "function", "block")
+    private String name;   // Name of the symbol (e.g., variable name)
+    private String type;   // Type of the symbol (e.g., VariableAssign)
+    private String value;  // Value of the symbol (e.g., 42, "Hello, World!", etc.)
+    private String scope;  // Scope of the symbol (e.g., "global", "function", "block")
 
     public Row() {
-    }
-
-    // Getter and setter for id
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     // Getter and setter for name

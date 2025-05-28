@@ -6,7 +6,7 @@ public class ClassDeclarationExpectedError extends RuntimeException {
     public  ClassDeclarationOrDecoratorExpectedErrorSymbolTable classDeclarationOrDecoratorExpectedErrorSymbolTable;
 
     public ClassDeclarationExpectedError(ClassDeclarationOrDecoratorExpectedErrorSymbolTable symbolTable, int lineNumber) {
-        super("Class Declaration expected");
+        super("Class Declaration expected"+ " at line " + lineNumber);
         this.lineNumber = lineNumber;
         this.classDeclarationOrDecoratorExpectedErrorSymbolTable = symbolTable;
     }

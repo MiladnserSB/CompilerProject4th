@@ -5,7 +5,7 @@ public class DecoratorExpectedError extends RuntimeException{
     public  ClassDeclarationOrDecoratorExpectedErrorSymbolTable classDeclarationOrDecoratorExpectedErrorSymbolTable;
 
     public DecoratorExpectedError(ClassDeclarationOrDecoratorExpectedErrorSymbolTable symbolTable, int lineNumber) {
-        super("Decorator expected");
+        super("Decorator expected" + " at line " + lineNumber);
         this.lineNumber = lineNumber;
         this.classDeclarationOrDecoratorExpectedErrorSymbolTable = symbolTable;
     }

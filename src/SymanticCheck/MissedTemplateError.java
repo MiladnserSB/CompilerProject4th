@@ -5,7 +5,7 @@ public class MissedTemplateError extends RuntimeException{
     public  MissedTemplateErrorSymbolTable missedTemplateErrorSymbolTable;
 
     public MissedTemplateError(MissedTemplateErrorSymbolTable missedTemplateErrorSymbolTable, int lineNumber) {
-        super("Missed TemplateUrl");
+        super("Missed TemplateUrl" + " at line " + lineNumber);
         this.lineNumber = lineNumber;
         this.missedTemplateErrorSymbolTable = missedTemplateErrorSymbolTable;
     }

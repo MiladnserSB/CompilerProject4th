@@ -5,7 +5,7 @@ public class NotFoundReturnValueMethodError extends RuntimeException{
     public  NotFoundReturnValueMethodErrorSymbolTable notFoundReturnValueMethodErrorSymbolTable;
 
     public NotFoundReturnValueMethodError(String methodNName, NotFoundReturnValueMethodErrorSymbolTable symbolTable, int lineNumber) {
-        super("Not found return value error in method : " + methodNName);
+        super("Not found return value error in method : " + methodNName + " at line " + lineNumber);
         this.lineNumber = lineNumber;
         this.notFoundReturnValueMethodErrorSymbolTable = symbolTable;
     }

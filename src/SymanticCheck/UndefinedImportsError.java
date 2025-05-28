@@ -6,7 +6,7 @@ public class UndefinedImportsError extends RuntimeException{
     public  UndefinedImportsErrorSymbolTable undefinedImportsErrorSymbolTable;
 
     public UndefinedImportsError(String importName, UndefinedImportsErrorSymbolTable symbolTable, int lineNumber) {
-        super("Undefined import: " + importName);
+        super("Undefined import: " + importName + " at line " + lineNumber);
         this.importName = importName;
         this.lineNumber = lineNumber;
         this.undefinedImportsErrorSymbolTable = symbolTable;
