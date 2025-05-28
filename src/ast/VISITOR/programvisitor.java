@@ -39,7 +39,6 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         row.setName("AST");
         row.setType("AST");
         row.setValue("AST with TS, CSS, and HTML documents");
-        row.setScope("global");
         this.st.addRow("AST", row);
         return new Ast(tsDecument, htmlDocument, cssDocument);
     }
@@ -90,7 +89,6 @@ if(ctx.componentDecorator()!=null)
         row.setName(classDecl.getClassName());
         row.setType("TSDocument");
         row.setValue(tsDoc.toString());
-        row.setScope("global");
         this.st.addRow("TSDocument", row);
         return tsDoc;
     }
@@ -529,7 +527,6 @@ if(ctx.componentDecorator()!=null)
         MethodBody methodBody = (MethodBody) visit(ctx.methodBody());
         String methodName = signature.getName();
         int line = ctx.RBRACE().getSymbol().getLine();
-        notFoundReturnValueMethodErrorSymbolTable.print();
         NotFoundReturnValueMethodError notFoundReturnValueMethodError = new NotFoundReturnValueMethodError(signature.getName(),notFoundReturnValueMethodErrorSymbolTable,line);
         if(!notFoundReturnValueMethodError.notFoundReturnValueMethodErrorSymbolTable.check("ReturnStatement")){
             notFoundReturnValueMethodError.throwException();
