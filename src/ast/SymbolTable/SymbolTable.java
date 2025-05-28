@@ -8,7 +8,7 @@ public class SymbolTable {
     private Stack<String> scopeStack = new Stack<>();
 
     public SymbolTable() {
-        scopeStack.push("global");
+        scopeStack.push("");
     }
 
     public void enterScope(String scope) {

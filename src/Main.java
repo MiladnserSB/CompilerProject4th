@@ -24,10 +24,10 @@ public class Main {
                 "  items: any[] = [];\n" +
                 "  selectedItem:any=null;\n" +
                 "\n" +
-                "ngOnInit(): void {\n" +
+                "  constructor(private productsService: ProductsService) { }\n" +
+                "  ngOnInit(): void {\n" +
                 "     this.items = this.productsService;\n" +
-                "  }"+
-                "  constructor(productsService: ProductsService) { }\n" +
+                "  }\n" +
                 "\n" +
                 "  onselect(item: any): void {\n" +
                 "    this.selectedItem = item;\n" +
@@ -105,7 +105,7 @@ public class Main {
         ParseTree tree = parser.ast();
         programvisitor visitor = new programvisitor();
         ASTNode ast = visitor.visit(tree);
-        visitor.st.print();
+        visitor.incorrectlyOnInitImplementErrorSymbolTable.print();
         System.out.println("ssss");
         if (ast != null) {
             ast.prettyPrint("");
