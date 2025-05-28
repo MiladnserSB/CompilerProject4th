@@ -53,18 +53,29 @@ public class Ast implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
+        System.out.println();
+        System.out.println();
         System.out.println(indent + "AST:");
+        System.out.println();
+        System.out.println();
         if (tsDecument != null) {
-            System.out.println(indent + "  TSDocument:");
+            System.out.println(indent + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TSDocument>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             tsDecument.prettyPrint(indent + "    ");
         }
-
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
         if (htmlDocument != null) {
-            System.out.println(indent + "  HTMLDocument:");
+            System.out.println(indent + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HTMLDocument>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             htmlDocument.prettyPrint(indent + "    ");
         }
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
         if (cssDocument != null) {
-            System.out.println(indent + "  CSSDocument:");
+            System.out.println(indent + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CSSDocument>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             cssDocument.prettyPrint(indent + "    ");
         }
     }
