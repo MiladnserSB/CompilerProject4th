@@ -13,7 +13,6 @@ import ast.TS.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,11 +48,9 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitTsDocument(Parsergrammar.TsDocumentContext ctx) {
         List<ImportStatement> imports = new ArrayList<>();
-
         for (Parsergrammar.ImportStatementContext importCtx : ctx.importStatement()) {
             imports.add((ImportStatement) visit(importCtx));
         }
-
         ASTNode decorator = null;
         boolean isComponent = false;
         if (ctx.componentDecorator() != null) {
@@ -62,7 +59,6 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         } else if (ctx.injectableDecorator() != null) {
             decorator = visit(ctx.injectableDecorator());
         }
-
         if(decorator==null)
         {
 
@@ -90,29 +86,21 @@ if(ctx.componentDecorator()!=null)
                     }
 
         TsDocument tsDoc = new TsDocument(imports, decorator, classDecl);
-
         Row row = new Row();
         row.setName(classDecl.getClassName());
         row.setType("TSDocument");
         row.setValue(tsDoc.toString());
         row.setScope("global");
         this.st.addRow("TSDocument", row);
-
         return tsDoc;
     }
 
-
-
-
-
-
-
     @Override
     public ASTNode visitClassDeclaration(Parsergrammar.ClassDeclarationContext ctx) {
+        this.classDeclarationOrDecoratorExpectedErrorSymbolTable.enterScope("class");
+        String className="";
         if(ctx.IDENTIFIER()!=null)
-        {String className = ctx.IDENTIFIER().getText();}
-        String className = "";
-
+        { className = ctx.IDENTIFIER().getText();}
         ImplementsClause implementsClause = null;
         if (ctx.implementsClause() != null) {
             implementsClause = (ImplementsClause) visit(ctx.implementsClause());
@@ -136,16 +124,20 @@ if(ctx.componentDecorator()!=null)
                 }
             }
         }
-        // Symbol table entry
         Row row = new Row();
         row.setName(className);
         row.setType("Class");
         row.setValue("Class with " + classBodyNodes.size() + " members");
-        row.setScope("global");
+
+        row.setScope("classDec");
+
+
         if(ctx.IDENTIFIER()!=null)
         { this.classDeclarationOrDecoratorExpectedErrorSymbolTable.addRow(className, row);
 
         }
+        this.classDeclarationOrDecoratorExpectedErrorSymbolTable.exitScope();
+
         return classDecl;
     }
 
@@ -172,7 +164,6 @@ if(ctx.componentDecorator()!=null)
             }
         }
 
-        // Signal error if needed
         if (hasSignalDeclaration) {
             NotImportedSignalError notImportedSignalError = new NotImportedSignalError(undefinedImportsErrorSymbolTable, signalLine);
             if (!undefinedImportsErrorSymbolTable.check("signal")) {
@@ -184,10 +175,7 @@ if(ctx.componentDecorator()!=null)
         row.setName("classBody");
         row.setType("ClassBody");
         row.setValue("Class Body with " + body.getMembers().size() + " members");
-        row.setScope("class");
-        row.setScope(this.st.getCurrentScope());
         this.st.addRow("classBody", row);
-
         return body;
     }
 
@@ -208,21 +196,17 @@ if(ctx.componentDecorator()!=null)
     public ASTNode visitSelector(Parsergrammar.SelectorContext ctx) {
         String value = ctx.STRING_LITERAL().getText().replace("'", "");
         Selector selector = new Selector(value);
-
         Row row = new Row();
         row.setName("Selector");
         row.setType("Selector");
         row.setValue("Selector: " + value);
-        row.setScope("global");
         this.missedTemplateErrorSymbolTable.addRow("Selector", row);
-
         return selector;
     }
 
     @Override
     public ASTNode visitImports(Parsergrammar.ImportsContext ctx) {
         List<String> importsList = new ArrayList<>();
-
         if (ctx.IDENTIFIER() != null) {
             for (var id : ctx.IDENTIFIER()) {
                 int line = id.getSymbol().getLine();
@@ -246,13 +230,10 @@ if(ctx.componentDecorator()!=null)
         }
 
         Imports imports = new Imports(importsList);
-
         Row row = new Row();
         row.setName("Imports");
         row.setType("Imports");
         row.setValue("Imports: " + String.join(", ", importsList));
-        row.setScope("global");
-
         this.missedTemplateErrorSymbolTable.addRow("Imports", row);
         return imports;
     }
@@ -263,12 +244,10 @@ if(ctx.componentDecorator()!=null)
         if(ctx.STRING_LITERAL()!=null) {
             String url = ctx.STRING_LITERAL().getText().replace("'", "");
             TemplateUrl templateUrl = new TemplateUrl(url);
-
             Row row = new Row();
             row.setName("TemplateUrl");
             row.setType("TemplateUrl");
             row.setValue("Template URL: " + url);
-            row.setScope("global");
             this.missedTemplateErrorSymbolTable.addRow("TemplateUrl", row);
             return templateUrl;
         }
@@ -279,14 +258,11 @@ if(ctx.componentDecorator()!=null)
     public ASTNode visitStyleurl(Parsergrammar.StyleurlContext ctx) {
         String url = ctx.STRING_LITERAL().getText().replace("'", "");
         StyleUrl styleUrl = new StyleUrl(url);
-
         Row row = new Row();
         row.setName("StyleUrl");
         row.setType("StyleUrl");
         row.setValue("Style URL: " + url);
-        row.setScope("global");
         this.missedTemplateErrorSymbolTable.addRow("StyleUrl", row);
-
         return styleUrl;
     }
 
@@ -295,37 +271,29 @@ if(ctx.componentDecorator()!=null)
         String accessModifier = ctx.ACCESS() != null ? ctx.ACCESS().getText() : null;
         String staticModifier = ctx.STATIC() != null ? ctx.STATIC().getText() : null;
         String name = ctx.IDENTIFIER().getText();
-
         Signature signature = new Signature(accessModifier, staticModifier, name);
-
         Row row = new Row();
         row.setName(name);
         row.setType("Signature");
         row.setValue("Signature: " + signature.toString());
-        row.setScope(this.st.getCurrentScope());
         this.st.addRow(name, row);
-
         return signature;
     }
 
     @Override
     public ASTNode visitParameters(Parsergrammar.ParametersContext ctx) {
         Parameters parameters = new Parameters();
-
         int count = ctx.IDENTIFIER().size();
         for (int i = 0; i < count; i++) {
             String name = ctx.IDENTIFIER(i).getText();
             String type = ctx.TYPE(i).getText();
             parameters.addParameter(name, type);
         }
-
         Row row = new Row();
         row.setName("Parameters");
         row.setType("Parameters");
         row.setValue("Parameters: " + parameters.toString());
-        row.setScope(this.st.getCurrentScope());
         this.st.addRow("Parameters", row);
-
         return parameters;
     }
 
@@ -333,39 +301,27 @@ if(ctx.componentDecorator()!=null)
     public ASTNode visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) {
         boolean leftThis = ctx.THIS().size() > 0 && ctx.THIS(0) != null;
         boolean rightThis = ctx.THIS().size() > 1 || (!leftThis && ctx.THIS().size() > 0);
-
         String leftId = ctx.IDENTIFIER(0).getText();
         String rightId = ctx.IDENTIFIER(1).getText();
-
         String methodCall = null;
-
         if (ctx.methodcall() != null) {
             methodCall = ctx.methodcall().getText();
             String methodName = ctx.methodcall().IDENTIFIER(0).getText();
             int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
-
             if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
                 UndefinedMethodCallError error = new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
                 error.throwException();
             }
         }
-
         MethodVoidBody body = new MethodVoidBody(leftThis, leftId, rightThis, rightId, methodCall);
-
         Row row = new Row();
         row.setName(leftId);
         row.setType("VoidAssignment");
         row.setValue("Assigned " + (rightThis ? "this." : "") + rightId +
                 (methodCall != null ? "." + methodCall + "()" : ""));
-        row.setScope("local");
         this.st.addRow(leftId, row);
-
         return body;
     }
-
-
-
-
     @Override
     public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
         String methodName = ctx.IDENTIFIER(0).getText();
@@ -375,13 +331,13 @@ if(ctx.componentDecorator()!=null)
         row.setName("MethodCall");
         row.setType("MethodCall");
         row.setValue("Method: " + methodName + (argument != null ? ", Arg: " + argument : ""));
-        row.setScope("local");
         this.undefinedMethodCallErrorSymbolTable.addRow("MethodCall", row);
         return methodCall;
     }
 
     @Override
     public ASTNode visitMethodvoid(Parsergrammar.MethodvoidContext ctx) {
+        this.undefinedMethodCallErrorSymbolTable.enterScope("Local");
         Signature signature = (Signature) visit(ctx.signature());
         Parameters parameters = ctx.parameters() != null ? (Parameters) visit(ctx.parameters()) : null;
         MethodVoidBody body = (MethodVoidBody) visit(ctx.methodvoidbody());
@@ -393,23 +349,24 @@ if(ctx.componentDecorator()!=null)
         row.setValue(method.toString());
         row.setScope(this.st.getCurrentScope());
         this.undefinedMethodCallErrorSymbolTable.addRow(signature.getName(),row);
+        this.undefinedMethodCallErrorSymbolTable.exitScope();
         return method;
     }
 
 
     @Override
     public ASTNode visitNgOnInitMETHOD(Parsergrammar.NgOnInitMETHODContext ctx) {
+        this.incorrectlyOnInitImplementErrorSymbolTable.enterScope("local");
         String accessModifier = ctx.ACCESS() != null ? ctx.ACCESS().getText() : null;
         MethodVoidBody body = (MethodVoidBody) visit(ctx.methodvoidbody());
-
         NgOnInitMethodStatement method = new NgOnInitMethodStatement(accessModifier, body);
-
         Row row = new Row();
         row.setName("ngOnInit");
         row.setType("NgOnInitMethod");
         row.setValue(method.toString());
         row.setScope(this.st.getCurrentScope());
         this.incorrectlyOnInitImplementErrorSymbolTable.addRow("ngOnInit", row);
+        this.incorrectlyOnInitImplementErrorSymbolTable.exitScope();
         return method;
     }
 
@@ -892,7 +849,6 @@ if(ctx.componentDecorator()!=null)
         row.setName("CssDocument");
         row.setType("CssDocument");
         row.setValue(ruleSets.toString());
-        row.setScope("global");
         this.st.addRow("CssDocument", row);
         return new CssDocument(ruleSets);
     }
@@ -911,7 +867,6 @@ if(ctx.componentDecorator()!=null)
         row.setName(propertyName);
         row.setType("Declaration");
         row.setValue(propertyName + ": " + values.toString());
-        row.setScope("global");
         this.st.addRow(propertyName, row);
         return new Declaration(propertyName, values);
     }
@@ -926,9 +881,7 @@ if(ctx.componentDecorator()!=null)
         row.setName("DeclarationList");
         row.setType("DeclarationList");
         row.setValue(declarations.toString());
-        row.setScope("global");
         this.st.addRow("DeclarationList", row);
-
         return new DeclarationList(declarations);
     }
     @Override
@@ -945,7 +898,6 @@ if(ctx.componentDecorator()!=null)
         row.setName(selector.toString());
         row.setType("RuleSet");
         row.setValue(selector.toString() + " with " + declarations.size() + " declarations");
-        row.setScope("global");
         this.st.addRow(row.getName(), row);
         return new RuleSet(selector, declarations);
     }
@@ -953,11 +905,7 @@ if(ctx.componentDecorator()!=null)
     @Override
     public ASTNode visitRuleSetStart(Parsergrammar.RuleSetStartContext ctx) {
         List<String> selectors = new ArrayList<>();
-
-        // Handle the first labeled selector (selectorincss)
         selectors.add(ctx.first.getText());
-
-        // Handle any additional TAGSFORCSS tokens
         for (int i = 1; i < ctx.getChildCount(); i++) {
             ParseTree child = ctx.getChild(i);
             if (child instanceof TerminalNode terminal) {
@@ -966,22 +914,13 @@ if(ctx.componentDecorator()!=null)
                 }
             }
         }
-
-        // Optional: Add the selector list to your symbol table
         Row row = new Row();
         row.setName("List");
         row.setType("List");
         row.setValue(selectors.toString());
-        row.setScope("global");
         this.st.addRow("List", row);
-
         return new RuleSetStart(selectors);
     }
-
-
-
-
-
     @Override
     public ASTNode visitValue(Parsergrammar.ValueContext ctx) {
         Value value = null;
@@ -1000,7 +939,7 @@ if(ctx.componentDecorator()!=null)
         }
         else if (ctx.STRING() != null) {
             val = ctx.STRING().getText();
-            val = val.substring(1, val.length() - 1); // Remove quotes
+            val = val.substring(1, val.length() - 1);
             type = Value.ValueType.STRING;
         }
         else if (ctx.VALUE_KEYWORD() != null) {
@@ -1013,14 +952,11 @@ if(ctx.componentDecorator()!=null)
         }
 
         value = new Value(val, unit, type);
-
         Row row = new Row();
         row.setName(val);
         row.setType("Value");
         row.setValue(val + (unit != null ? unit : ""));
-        row.setScope("global");
         this.st.addRow(val, row);
-
         return value;
     }
 
@@ -1042,7 +978,6 @@ if(ctx.componentDecorator()!=null)
         row.setName("ScriptletOrSeaWs");
         row.setType("ScriptletOrSeaWs");
         row.setValue(content);
-        row.setScope("global");
         this.st.addRow("ScriptletOrSeaWs", row);
         return new ScriptletOrSeaWs(content, isScriptlet);
     }
@@ -1064,9 +999,7 @@ if(ctx.componentDecorator()!=null)
         row.setName("HtmlComment");
         row.setType("HtmlComment");
         row.setValue("Comment Type: " + (isConditional ? "Conditional" : "Standard") + ", Text: " + commentText);
-        row.setScope("html");
         this.st.addRow("HtmlComment", row);
-
         return new HtmlComment(commentText, isConditional);
     }
 
@@ -1078,14 +1011,12 @@ if(ctx.componentDecorator()!=null)
             content = visit(ctx.htmlComment());
         } else if (ctx.WS() != null) {
             String whitespace = ctx.WS().getText();
-
             Row row = new Row();
             row.setName("Whitespace");
             row.setType("HtmlWhitespace");
             row.setValue("Whitespace characters: " + whitespace.replace("\n", "\\n"));
             row.setScope("html");
             this.st.addRow("Whitespace", row);
-
             content = new ASTNode() {
                 @Override
                 public void prettyPrint(String indent) {
@@ -1094,21 +1025,17 @@ if(ctx.componentDecorator()!=null)
                 }
             };
         }
-
         Row row = new Row();
         row.setName("HtmlMisc");
         row.setType("HtmlMisc");
         row.setValue("Contains: " + (content != null ? content.getClass().getSimpleName() : "null"));
-        row.setScope("html");
         this.st.addRow("HtmlMisc", row);
-
         return new HtmlMisc(content);
     }
 
 
     @Override
     public ASTNode visitHtmlElements(Parsergrammar.HtmlElementsContext ctx) {
-        // Process leading comments
         List<ASTNode> leadingComments = new ArrayList<>();
         if (ctx.htmlComment() != null) {
             for (Parsergrammar.HtmlCommentContext commentCtx : ctx.htmlComment()) {
@@ -1130,57 +1057,41 @@ if(ctx.componentDecorator()!=null)
         Row row = new Row();
         row.setName("HtmlElements");
         row.setType("HtmlElements");
-        row.setValue("Element with " + leadingComments.size() + " leading and " +
-                trailingComments.size() + " trailing comments");
-        row.setScope(this.st.getCurrentScope());
-        this.st.addRow("HtmlElements_" + this.st.getCurrentScope(), row);
-
+        row.setValue("Element with " + leadingComments.size() + " leading and " + trailingComments.size() + " trailing comments");
+        this.st.addRow("HtmlElements", row);
         return new HtmlElements(leadingComments, htmlElement, trailingComments);
     }
 
     @Override
     public ASTNode visitHtmlElement(Parsergrammar.HtmlElementContext ctx) {
         ParseTree child = ctx.getChild(0);
-
         if (child instanceof ParserRuleContext ruleCtx) {
-            return visit(ruleCtx); // tsTag, noEndTag, normalTag
+            return visit(ruleCtx);
         } else if (child instanceof TerminalNode token) {
             String raw = token.getText();
-            String scope = this.st.getCurrentScope();
-
             if (token.getSymbol().getType() == Parsergrammar.SCRIPTLET) {
                 Row row = new Row();
                 row.setName("Scriptlet_" + System.identityHashCode(raw));
                 row.setType("ScriptletOrSeaWs");
                 row.setValue("Scriptlet: " + raw);
-                row.setScope(scope);
                 this.st.addRow(row.getName(), row);
-
                 return new ScriptletOrSeaWs(raw, true);
             } else if (token.getSymbol().getType() == Parsergrammar.INTERPOLATION) {
                 Row row = new Row();
                 row.setName("Interpolation_" + System.identityHashCode(raw));
                 row.setType("InterpolationElement");
                 row.setValue("Interpolation: " + raw);
-                row.setScope(scope);
                 this.st.addRow(row.getName(), row);
-
                 return new InterpolationElement(raw);
             }
         }
-
         System.err.println("Unrecognized HTML element: " + ctx.getText());
         return null;
     }
-
-
-
-
     @Override
     public ASTNode visitTsTag(Parsergrammar.TsTagContext ctx) {
         String tagName = ctx.TAG_NAME().getText();
         List<ASTNode> attributes = new ArrayList<>();
-
         if (ctx.htmlAttribute() != null) {
             for (var attrCtx : ctx.htmlAttribute()) {
                 ASTNode attr = visit(attrCtx);
@@ -1194,18 +1105,14 @@ if(ctx.componentDecorator()!=null)
         row.setName(tagName);
         row.setType("TSTag");
         row.setValue("TypeScript tag: " + tagName);
-        row.setScope(this.st.getCurrentScope());
         this.st.addRow(tagName, row);
-
         return new TsTag(tagName, attributes);
     }
-
 
     @Override
     public ASTNode visitNoEndTag(Parsergrammar.NoEndTagContext ctx) {
         String tagName = ctx.TAGS_VOID().getText();
         List<ASTNode> attributes = new ArrayList<>();
-
         if (ctx.htmlAttribute() != null) {
             for (var attrCtx : ctx.htmlAttribute()) {
                 ASTNode attr = visit(attrCtx);
@@ -1214,25 +1121,19 @@ if(ctx.componentDecorator()!=null)
                 }
             }
         }
-
         Row row = new Row();
         row.setName(tagName);
         row.setType("NoEndTag");
         row.setValue("Void HTML tag: " + tagName);
-        row.setScope(this.st.getCurrentScope());
         this.st.addRow(tagName, row);
-
-
         return new NoEndTag(tagName, attributes);
     }
-
 
     @Override
     public ASTNode visitNormalTag(Parsergrammar.NormalTagContext ctx) {
         String tagName = ctx.TAGS(0).getText();
         List<ASTNode> attributes = new ArrayList<>();
         List<ASTNode> content = new ArrayList<>();
-
         if (ctx.htmlAttribute() != null) {
             for (var attrCtx : ctx.htmlAttribute()) {
                 ASTNode attr = visit(attrCtx);
@@ -1251,33 +1152,26 @@ if(ctx.componentDecorator()!=null)
                 }
             }
         }
-
         if (ctx.TAGS().size() > 1) {
             String closing = ctx.TAGS(1).getText();
             if (!tagName.equals(closing)) {
                 System.err.println("Warning: Tag mismatch - <" + tagName + "> vs </" + closing + ">");
             }
         }
-
         Row row = new Row();
         row.setName(tagName);
         row.setType("NormalTag");
         row.setValue("HTML Tag: " + tagName +
                 (attributes.isEmpty() ? "" : " with " + attributes.size() + " attributes") +
                 (content.isEmpty() ? "" : " containing " + content.size() + " elements"));
-        row.setScope(this.st.getCurrentScope());
         this.st.addRow(tagName, row);
-
         return new NormalTag(tagName, attributes, content);
     }
-
-
 
     @Override
     public ASTNode visitHtmlContent(Parsergrammar.HtmlContentContext ctx) {
         List<HtmlContentStatement> contentStatements = new ArrayList<>();
         StringBuilder rawContent = new StringBuilder();
-
         for (Parsergrammar.HtmlContentStatementContext stmtCtx : ctx.htmlContentStatement()) {
             ASTNode node = visitHtmlContentStatement(stmtCtx);
             if (node instanceof HtmlContentStatement statement) {
@@ -1292,24 +1186,17 @@ if(ctx.componentDecorator()!=null)
                 }
             }
         }
-
         Row row = new Row();
         row.setName("HTMLContent");
         row.setType("HTMLContent");
         row.setValue("Contains " + contentStatements.size() + " statements");
-        row.setScope(this.st.getCurrentScope());
         this.st.addRow("HTMLContent_" + this.st.getCurrentScope(), row);
-
         return new HtmlContent(contentStatements, rawContent.toString().trim());
     }
-
-
-
 
     @Override
     public ASTNode visitHtmlContentStatement(Parsergrammar.HtmlContentStatementContext ctx) {
         ASTNode inner = null;
-
         if (ctx instanceof Parsergrammar.HtmlCharDataStatementContext charCtx) {
             String text = charCtx.getText();
             if (text.contains("{{") && text.contains("}}")) {
@@ -1318,7 +1205,6 @@ if(ctx.componentDecorator()!=null)
             } else {
                 inner = new TextContent(text.trim());
             }
-
         } else if (ctx instanceof Parsergrammar.HtmlElementStatementContext elementCtx) {
             inner = visitHtmlElement(elementCtx.htmlElement());
 
@@ -1335,21 +1221,12 @@ if(ctx.componentDecorator()!=null)
             inner = new TextContent(identCtx.IDENTIFIER().getText());
 
         }
-
         return new HtmlContentStatement(inner);
     }
-
-
-
-
-
-
-
     @Override
     public ASTNode visitHtmlChardata(Parsergrammar.HtmlChardataContext ctx) {
         String content;
         boolean isWhitespace;
-
         if (ctx.HTML_TEXT() != null) {
             content = ctx.HTML_TEXT().getText();
             isWhitespace = false;
@@ -1360,21 +1237,15 @@ if(ctx.componentDecorator()!=null)
             content = "";
             isWhitespace = false;
         }
-
         Row row = new Row();
         row.setName("HtmlCharData");
         row.setType("HtmlCharData");
         row.setValue(isWhitespace ? "Whitespace" : ("Text: " + content));
-        row.setScope("html");
         this.st.addRow("HtmlCharData", row);
-
         return new HtmlCharData(content, isWhitespace);
     }
-
-
     @Override
     public ASTNode visitHtmlDocument(Parsergrammar.HtmlDocumentContext ctx) {
-        // Process scriptlets and whitespace
         List<ASTNode> scriptletOrSeaWs = new ArrayList<>();
         if (ctx.scriptletOrSeaWs() != null) {
             for (var sctx : ctx.scriptletOrSeaWs()) {
@@ -1386,8 +1257,6 @@ if(ctx.componentDecorator()!=null)
         }
         String xml = ctx.XML() != null ? ctx.XML().getText() : null;
         String dtd = ctx.DTD() != null ? ctx.DTD().getText() : null;
-
-        // Process HTML elements
         List<ASTNode> htmlElements = new ArrayList<>();
         if (ctx.htmlElements() != null) {
             for (var ectx : ctx.htmlElements()) {
@@ -1403,9 +1272,7 @@ if(ctx.componentDecorator()!=null)
         row.setValue("Document with " + htmlElements.size() + " elements" +
                 (xml != null ? " (has XML)" : "") +
                 (dtd != null ? " (has DTD)" : ""));
-        row.setScope("global");
         this.st.addRow("HTMLDocument", row);
-
         return new HTMLDocument(scriptletOrSeaWs, xml, dtd, htmlElements);
     }
 
@@ -1413,44 +1280,33 @@ if(ctx.componentDecorator()!=null)
     public HtmlAttribute visitStructuralDirectiveAttribute(Parsergrammar.StructuralDirectiveAttributeContext ctx) {
         String name = ctx.STRUCTURAL_DIRECTIVE().getText();
         TagAttribute tagAttribute = ctx.tagAtt() != null ? (TagAttribute) visit(ctx.tagAtt()) : null;
-
         Row row = new Row();
         row.setName("HtmlAttribute");
         row.setType("StructuralDirective");
         row.setValue("Name: " + name + ", Value: " + (tagAttribute != null ? tagAttribute.getValue() : "none"));
-        row.setScope("html");
         this.st.addRow("HtmlAttribute", row);
-
         return new StructuralDirectiveAttribute(name, tagAttribute);
     }
-
     @Override
     public HtmlAttribute visitAttributeBinding(Parsergrammar.AttributeBindingContext ctx) {
         String name = ctx.ATTRIBUTE_BINDING().getText();
         TagAttribute tagAttribute = ctx.tagAtt() != null ? (TagAttribute) visit(ctx.tagAtt()) : null;
-
         Row row = new Row();
         row.setName("HtmlAttribute");
         row.setType("AttributeBinding");
         row.setValue("Name: " + name + ", Value: " + (tagAttribute != null ? tagAttribute.getValue() : "none"));
-        row.setScope("html");
         this.st.addRow("HtmlAttribute", row);
-
         return new AttributeBindingAttribute(name, tagAttribute);
     }
-
     @Override
     public HtmlAttribute visitEventBinding(Parsergrammar.EventBindingContext ctx) {
         String name = ctx.EVENT_BINDING().getText();
         TagAttribute tagAttribute = ctx.tagAtt() != null ? (TagAttribute) visit(ctx.tagAtt()) : null;
-
         Row row = new Row();
         row.setName("HtmlAttribute");
         row.setType("EventBinding");
         row.setValue("Name: " + name + ", Value: " + (tagAttribute != null ? tagAttribute.getValue() : "none"));
-        row.setScope("html");
         this.st.addRow("HtmlAttribute", row);
-
         return new EventBindingAttribute(name, tagAttribute);
     }
 
@@ -1458,48 +1314,37 @@ if(ctx.componentDecorator()!=null)
     public HtmlAttribute visitTagNameAttribute(Parsergrammar.TagNameAttributeContext ctx) {
         String name = ctx.TAG_NAME().getText();
         TagAttribute tagAttribute = ctx.tagAtt() != null ? (TagAttribute) visit(ctx.tagAtt()) : null;
-
         Row row = new Row();
         row.setName("HtmlAttribute");
         row.setType("TagName");
         row.setValue("Name: " + name + ", Value: " + (tagAttribute != null ? tagAttribute.getValue() : "none"));
-        row.setScope("html");
         this.st.addRow("HtmlAttribute", row);
-
         return new TagNameAttribute(name, tagAttribute);
     }
-
 
     @Override
     public ASTNode visitTagAtt(Parsergrammar.TagAttContext ctx) {
         String value = "";
         boolean isMethodCall = false;
         int line = ctx.start.getLine();
-
         if (ctx.METHOD_CALL_VALUE() != null) {
             value = ctx.METHOD_CALL_VALUE().getText(); // e.g., "\"methodName(arg)\""
-
             String methodCallContent = value.substring(1, value.length() - 1).trim(); // methodName(arg)
-
             String methodName = methodCallContent.contains("(")
                     ? methodCallContent.substring(0, methodCallContent.indexOf('(')).trim()
                     : methodCallContent;
-
             if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
                 UndefinedMethodCallError error = new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
                 error.throwException();
             }
-
             isMethodCall = true;
         } else if (ctx.ATTVALUE_VALUE() != null) {
             value = ctx.ATTVALUE_VALUE().getText().trim();
         }
-
         Row row = new Row();
         row.setName("TagAttribute");
         row.setType("TagAttribute");
         row.setValue(isMethodCall ? "Method Call: " + value : "Value: " + value);
-        row.setScope("html");
         if(isMethodCall)
             this.undefinedMethodCallErrorSymbolTable.addRow("TagAttribute", row);
         else {this.st.addRow("TagAttribute",row);}
