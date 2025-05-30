@@ -38,6 +38,6 @@ public class Declaration implements ASTNode {
         for (Value value : values) {
             value.prettyPrint("");
         }
-        System.out.println(";");
+        System.out.println();
     }
 }

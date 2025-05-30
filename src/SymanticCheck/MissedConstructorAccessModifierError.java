@@ -11,7 +11,6 @@ public class MissedConstructorAccessModifierError extends RuntimeException{
     }
 
     public void throwException() {
-        missedConstructorAccessModifierErrorSymbolTable.print();
         ErrorHandler.logError(this, lineNumber);
         throw this;
     }
