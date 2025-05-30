@@ -17,6 +17,10 @@ public class Main {
                 "})\n" +
                 "export class HeaderComponent {\n" +
                 "title=signal('WELCOME to my store');\n" +
+                "onselect(item: any): void {\n" +
+                "    this.selectedItem = item;\n" +
+                "  }"+
+                "x:number=1;\n"+
                 "}\n" +
                 "\n" +
                 "\n" +
@@ -34,7 +38,6 @@ public class Main {
                 "    justify-content: space-between;\n" +
                 "    color: aliceblue;\n" +
                 "    }"
-
                 ;
         Lexergrammmar lexer = new Lexergrammmar(CharStreams.fromString(input));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -42,6 +45,7 @@ public class Main {
         ParseTree tree = parser.ast();
         programvisitor visitor = new programvisitor();
         ASTNode ast = visitor.visit(tree);
+        visitor.st.print();
         System.out.println();
         System.out.println("..................................................................................... WELCOME TO MY COMPILER PROJECT......................................................................................");
         System.out.println();

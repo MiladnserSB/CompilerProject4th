@@ -6,7 +6,7 @@ ast:
 tsDocument htmlDocument cssDocument;
 
 tsDocument:
-(importStatement+ (componentDecorator | injectableDecorator)? classDeclaration);
+(importStatement+ (componentDecorator | injectableDecorator) classDeclaration);
 
 classDeclaration:
 EXPORT CLASS IDENTIFIER implementsClause? LBRACE classBody RBRACE ;
@@ -101,7 +101,7 @@ arraybody2:
 objectExpression COMMA NUMBER COMMA STRING_LITERAL;
 
 constructorDeclaration:
-CONSTRUCTOR LPAREN (ACCESS? IDENTIFIER COLON IDENTIFIER)? RPAREN LBRACE RBRACE;
+CONSTRUCTOR LPAREN (ACCESS IDENTIFIER COLON IDENTIFIER)? RPAREN LBRACE RBRACE;
 
 variableDeclaration:
 signature COLON TYPE ASSIGN values SEMICOLON;
