@@ -35,11 +35,10 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         TsDocument tsDecument = (TsDocument) visit(ctx.tsDocument());
         HTMLDocument htmlDocument = (HTMLDocument) visit(ctx.htmlDocument());
         CssDocument cssDocument = (CssDocument) visit(ctx.cssDocument());
-        Row row = new Row();
-        row.setName("AST");
-        row.setType("AST");
-        row.setValue("AST with TS, CSS, and HTML documents");
-        this.st.addRow("AST", row);
+//        Row row = new Row();
+//        row.setName("AST");
+//        row.setValue("AST with TS, CSS, and HTML documents");
+//        this.st.addRow("AST", row);
         return new Ast(tsDecument, htmlDocument, cssDocument);
     }
 
@@ -60,7 +59,6 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         }
         if(decorator==null)
         {
-
             int line = ctx.importStatement(ctx.importStatement().size()-1).SEMICOLON().getSymbol().getLine();
             DecoratorExpectedError decoratorExpectedError = new DecoratorExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
             if(isComponent)
@@ -73,11 +71,10 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
                 }
             }
         }
-
         ClassDeclaration classDecl = (ClassDeclaration) visit(ctx.classDeclaration());
-int line = -1;
-if(ctx.componentDecorator()!=null)
-{  line = ctx.componentDecorator().RBRACE().getSymbol().getLine();}
+        int line = -1;
+        if(ctx.componentDecorator()!=null)
+        { line = ctx.componentDecorator().RBRACE().getSymbol().getLine();}
 
                 ClassDeclarationExpectedError classDeclarationExpectedError = new ClassDeclarationExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
                     if(!classDeclarationExpectedError.classDeclarationOrDecoratorExpectedErrorSymbolTable.check(classDecl.getClassName())){
@@ -85,11 +82,10 @@ if(ctx.componentDecorator()!=null)
                     }
 
         TsDocument tsDoc = new TsDocument(imports, decorator, classDecl);
-        Row row = new Row();
-        row.setName(classDecl.getClassName());
-        row.setType("TSDocument");
-        row.setValue(tsDoc.toString());
-        this.st.addRow("TSDocument", row);
+//        Row row = new Row();
+//        row.setName(classDecl.getClassName());
+//        row.setValue(tsDoc.toString());
+//        this.st.addRow("TSDocument", row);
         return tsDoc;
     }
 
@@ -111,7 +107,6 @@ if(ctx.componentDecorator()!=null)
         ClassDeclaration classDecl = new ClassDeclaration(className, implementsClause, classBodyNodes);
         if(ctx.implementsClause()!=null)
         {
-
             if(classDecl.getImplementsClause().getInterfaces().contains("OnInit")) {
 
                 int line = ctx.implementsClause().CROISNN(0).getSymbol().getLine();
@@ -124,11 +119,8 @@ if(ctx.componentDecorator()!=null)
         }
         Row row = new Row();
         row.setName(className);
-        row.setType("Class");
         row.setValue("Class with " + classBodyNodes.size() + " members");
-
-        row.setScope("classDec");
-
+        row.setScope("class");
 
         if(ctx.IDENTIFIER()!=null)
         { this.classDeclarationOrDecoratorExpectedErrorSymbolTable.addRow(className, row);
@@ -138,7 +130,6 @@ if(ctx.componentDecorator()!=null)
 
         return classDecl;
     }
-
 
     @Override
     public ASTNode visitClassBody(Parsergrammar.ClassBodyContext ctx) {
@@ -168,19 +159,16 @@ if(ctx.componentDecorator()!=null)
                 notImportedSignalError.throwException();
             }
         }
-
-        Row row = new Row();
-        row.setName("classBody");
-        row.setType("ClassBody");
-        row.setValue("Class Body with " + body.getMembers().size() + " members");
-        this.st.addRow("classBody", row);
+//        Row row = new Row();
+//        row.setName("classBody");
+//        row.setValue("Class Body with " + body.getMembers().size() + " members");
+//        this.st.addRow("classBody", row);
         return body;
     }
 
-
-
     @Override
     public ASTNode visitClassBodyStatement(Parsergrammar.ClassBodyStatementContext ctx) {
+        System.out.println("jjjjjjjjjj");
         ASTNode node = visit(ctx.getChild(0));
         if ("class".equals(this.st.getCurrentScope())) {
             return new ClassBodyStatement(node);
@@ -189,16 +177,14 @@ if(ctx.componentDecorator()!=null)
         }
     }
 
-
     @Override
     public ASTNode visitSelector(Parsergrammar.SelectorContext ctx) {
         String value = ctx.STRING_LITERAL().getText().replace("'", "");
         Selector selector = new Selector(value);
-        Row row = new Row();
+        /*Row row = new Row();
         row.setName("Selector");
-        row.setType("Selector");
         row.setValue("Selector: " + value);
-        this.missedTemplateErrorSymbolTable.addRow("Selector", row);
+        this.missedTemplateErrorSymbolTable.addRow("Selector", row);*/
         return selector;
     }
 
@@ -215,12 +201,11 @@ if(ctx.componentDecorator()!=null)
                 importsList.add(id.getText());
             }
         }
-
         if (ctx.CROISNN() != null) {
             for (var croisnn : ctx.CROISNN()) {
                 int line = croisnn.getSymbol().getLine();
                 UndefinedImportsError undefinedImportsError = new UndefinedImportsError(croisnn.getText(), undefinedImportsErrorSymbolTable, line);
-                if (!undefinedImportsError.undefinedImportsErrorSymbolTable.check(croisnn.getText())) { // 🟢 Fixed this line
+                if (!undefinedImportsError.undefinedImportsErrorSymbolTable.check(croisnn.getText())) {
                     undefinedImportsError.throwException();
                 }
                 importsList.add(croisnn.getText());
@@ -228,11 +213,10 @@ if(ctx.componentDecorator()!=null)
         }
 
         Imports imports = new Imports(importsList);
-        Row row = new Row();
+       /* Row row = new Row();
         row.setName("Imports");
-        row.setType("Imports");
         row.setValue("Imports: " + String.join(", ", importsList));
-        this.missedTemplateErrorSymbolTable.addRow("Imports", row);
+        this.missedTemplateErrorSymbolTable.addRow("Imports", row);*/
         return imports;
     }
 
@@ -244,8 +228,7 @@ if(ctx.componentDecorator()!=null)
             TemplateUrl templateUrl = new TemplateUrl(url);
             Row row = new Row();
             row.setName("TemplateUrl");
-            row.setType("TemplateUrl");
-            row.setValue("Template URL: " + url);
+            row.setValue(url);
             this.missedTemplateErrorSymbolTable.addRow("TemplateUrl", row);
             return templateUrl;
         }
@@ -256,11 +239,10 @@ if(ctx.componentDecorator()!=null)
     public ASTNode visitStyleurl(Parsergrammar.StyleurlContext ctx) {
         String url = ctx.STRING_LITERAL().getText().replace("'", "");
         StyleUrl styleUrl = new StyleUrl(url);
-        Row row = new Row();
-        row.setName("StyleUrl");
-        row.setType("StyleUrl");
-        row.setValue("Style URL: " + url);
-        this.missedTemplateErrorSymbolTable.addRow("StyleUrl", row);
+//        Row row = new Row();
+//        row.setName("StyleUrl");
+//        row.setValue("Style URL: " + url);
+//        this.missedTemplateErrorSymbolTable.addRow("StyleUrl", row);
         return styleUrl;
     }
 
@@ -270,11 +252,10 @@ if(ctx.componentDecorator()!=null)
         String staticModifier = ctx.STATIC() != null ? ctx.STATIC().getText() : null;
         String name = ctx.IDENTIFIER().getText();
         Signature signature = new Signature(accessModifier, staticModifier, name);
-        Row row = new Row();
-        row.setName(name);
-        row.setType("Signature");
-        row.setValue("Signature: " + signature.toString());
-        this.st.addRow(name, row);
+//        Row row = new Row();
+//        row.setName(name);
+//        row.setValue("Signature: " + signature.toString());
+//        this.st.addRow(name, row);
         return signature;
     }
 
@@ -287,16 +268,16 @@ if(ctx.componentDecorator()!=null)
             String type = ctx.TYPE(i).getText();
             parameters.addParameter(name, type);
         }
-        Row row = new Row();
-        row.setName("Parameters");
-        row.setType("Parameters");
-        row.setValue("Parameters: " + parameters.toString());
-        this.st.addRow("Parameters", row);
+//        Row row = new Row();
+//        row.setName("Parameters");
+//        row.setValue("Parameters: " + parameters.toString());
+//        this.st.addRow("Parameters", row);
         return parameters;
     }
 
     @Override
     public ASTNode visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) {
+
         boolean leftThis = ctx.THIS().size() > 0 && ctx.THIS(0) != null;
         boolean rightThis = ctx.THIS().size() > 1 || (!leftThis && ctx.THIS().size() > 0);
         String leftId = ctx.IDENTIFIER(0).getText();
@@ -312,12 +293,11 @@ if(ctx.componentDecorator()!=null)
             }
         }
         MethodVoidBody body = new MethodVoidBody(leftThis, leftId, rightThis, rightId, methodCall);
-        Row row = new Row();
-        row.setName(leftId);
-        row.setType("VoidAssignment");
-        row.setValue("Assigned " + (rightThis ? "this." : "") + rightId +
-                (methodCall != null ? "." + methodCall + "()" : ""));
-        this.st.addRow(leftId, row);
+//        Row row = new Row();
+//        row.setName(leftId);
+//        row.setValue("Assigned " + (rightThis ? "this." : "") + rightId +
+//                (methodCall != null ? "." + methodCall + "()" : ""));
+//        this.st.addRow(leftId, row);
         return body;
     }
     @Override
@@ -327,7 +307,6 @@ if(ctx.componentDecorator()!=null)
         MethodCall methodCall = new MethodCall(methodName, argument);
         Row row = new Row();
         row.setName("MethodCall");
-        row.setType("MethodCall");
         row.setValue("Method: " + methodName + (argument != null ? ", Arg: " + argument : ""));
         this.undefinedMethodCallErrorSymbolTable.addRow("MethodCall", row);
         return methodCall;
@@ -343,14 +322,12 @@ if(ctx.componentDecorator()!=null)
         VoidMethodDeclarationStatement method = new VoidMethodDeclarationStatement(signature, parameters, body);
         Row row = new Row();
         row.setName(signature.getName());
-        row.setType("MethodVoid");
         row.setValue(method.toString());
-        row.setScope(this.st.getCurrentScope());
+        row.setScope("class");
         this.undefinedMethodCallErrorSymbolTable.addRow(signature.getName(),row);
         this.undefinedMethodCallErrorSymbolTable.exitScope();
         return method;
     }
-
 
     @Override
     public ASTNode visitNgOnInitMETHOD(Parsergrammar.NgOnInitMETHODContext ctx) {
@@ -360,9 +337,8 @@ if(ctx.componentDecorator()!=null)
         NgOnInitMethodStatement method = new NgOnInitMethodStatement(accessModifier, body);
         Row row = new Row();
         row.setName("ngOnInit");
-        row.setType("NgOnInitMethod");
         row.setValue(method.toString());
-        row.setScope(this.st.getCurrentScope());
+        row.setScope("class");
         this.incorrectlyOnInitImplementErrorSymbolTable.addRow("ngOnInit", row);
         this.incorrectlyOnInitImplementErrorSymbolTable.exitScope();
         return method;
@@ -386,12 +362,10 @@ if(ctx.componentDecorator()!=null)
 
         Values valNode = new Values(value);
 
-        Row row = new Row();
-        row.setName("LiteralValue");
-        row.setType("Value");
-        row.setValue("Value: " + value);
-        row.setScope(this.st.getCurrentScope());
-        this.st.addRow("LiteralValue", row);
+//        Row row = new Row();
+//        row.setName("LiteralValue");
+//        row.setValue("Value: " + value);
+//        this.st.addRow("LiteralValue", row);
 
         return valNode;
     }
@@ -415,12 +389,8 @@ if(ctx.componentDecorator()!=null)
 
         Row row = new Row();
         row.setName(name);
-        row.setType("ImportBody");
         row.setValue("Imported: " + name);
-        row.setScope(this.st.getCurrentScope());
-
-        this.st.addRow(name, row);
-        this.undefinedImportsErrorSymbolTable.addRow(name, row); // 🟢 Added this
+        this.undefinedImportsErrorSymbolTable.addRow(name, row);
 
         return importBody;
     }
@@ -442,10 +412,8 @@ if(ctx.componentDecorator()!=null)
 
         Row row = new Row();
         row.setName("import");
-        row.setType("ImportStatement");
         row.setValue(stmt.toString());
-        row.setScope(this.st.getCurrentScope());
-        this.undefinedImportsErrorSymbolTable.addRow("import_" + source, row); // unique key
+        this.undefinedImportsErrorSymbolTable.addRow("import_" + source, row);
 
         return stmt;
     }
@@ -475,15 +443,12 @@ if(ctx.componentDecorator()!=null)
 
         Row row = new Row();
         row.setName("ComponentProperties");
-        row.setType("ComponentProperties");
-
         String value = "";
         if (selector != null) value += "Selector: " + selector.getValue() + ", ";
         if (templateUrl != null) value += "TemplateUrl: " + templateUrl.getUrl()+ ", ";
         if (styleUrl != null) value += "StyleUrl: " + styleUrl.getUrl()+ ", ";
         if (imports != null) value += "Imports: " + imports.getIdentifiers();
         row.setValue(value);
-        row.setScope("global");
         this.missedTemplateErrorSymbolTable.addRow("ComponentProperties", row);
 
         return props;
@@ -504,22 +469,15 @@ if(ctx.componentDecorator()!=null)
                 error.throwException();
             }
         }
-
         ComponentDecorator decorator = new ComponentDecorator(componentProperties);
 
         Row row = new Row();
         row.setName("ComponentDecorator");
-        row.setType("ComponentDecorator");
         row.setValue("Component with properties");
-        row.setScope("global");
         missedTemplateErrorSymbolTable.addRow("ComponentDecorator", row);
         classDeclarationOrDecoratorExpectedErrorSymbolTable.addRow("ComponentDecorator", row);
         return decorator;
     }
-
-
-
-
 
     public ASTNode visitMethodDeclaration(Parsergrammar.MethodDeclarationContext ctx) {
         Signature signature = (Signature) visit(ctx.signature());
@@ -533,9 +491,8 @@ if(ctx.componentDecorator()!=null)
         }
         Row row = new Row();
         row.setName(methodName);
-        row.setType("MethodDeclaration");
         row.setValue("Declared method: " + methodName);
-        row.setScope("global");
+        row.setScope("class");
         undefinedMethodCallErrorSymbolTable.addRow(signature.getName(),row);
 
         return new TypedMethodDeclarationStatement(signature, parameters, methodBody);
@@ -558,9 +515,7 @@ if(ctx.componentDecorator()!=null)
 
         Row row = new Row();
         row.setName("ReturnStatement");
-        row.setType("MethodBody");
         row.setValue("Returns: " + (isThisRef ? "this." : "") + returnTarget);
-        row.setScope(this.st.getCurrentScope());
         if(returnTarget!=null)
         {this.notFoundReturnValueMethodErrorSymbolTable.addRow("ReturnStatement", row); return methodBody;}
 
@@ -571,12 +526,10 @@ if(ctx.componentDecorator()!=null)
     @Override
     public ASTNode visitProvidedIn(Parsergrammar.ProvidedinContext ctx) {
         String providedIn = ctx.STRING_LITERAL().getText();
-        Row row = new Row();
-        row.setName("InjectableProperties");
-        row.setType("InjectableProperties");
-        row.setValue("providedIn: " + providedIn);
-        row.setScope("global");
-        this.st.addRow("InjectableProperties", row);
+//        Row row = new Row();
+//        row.setName("InjectableProperties");
+//        row.setValue("providedIn: " + providedIn);
+//        this.st.addRow("InjectableProperties", row);
         return new ProvidedIn(providedIn);
 
     }
@@ -593,9 +546,7 @@ if(ctx.componentDecorator()!=null)
 
         Row row = new Row();
         row.setName("InjectableDecorator");
-        row.setType("InjectableDecorator");
         row.setValue("Injectable with providedIn: " + (providedIn != null ? providedIn.toString() : "none"));
-        row.setScope("global");
         this.classDeclarationOrDecoratorExpectedErrorSymbolTable.addRow("InjectableDecorator", row);
 
         return decorator;
@@ -615,12 +566,10 @@ if(ctx.componentDecorator()!=null)
         }
         ArrayExprOneStatement arrayExpr = new ArrayExprOneStatement(signature, elements);
 
-        Row row = new Row();
-        row.setName(signature.getName());
-        row.setType("ArrayExpression1");
-        row.setValue("Array with " + elements.size() + " elements");
-        row.setScope("global");
-        this.st.addRow(signature.getName(), row);
+//        Row row = new Row();
+//        row.setName(signature.getName());
+//        row.setValue("Array with " + elements.size() + " elements");
+//        this.st.addRow(signature.getName(), row);
 
         return arrayExpr;
     }
@@ -637,12 +586,10 @@ if(ctx.componentDecorator()!=null)
         }
         ObjectExpression objExpr = new ObjectExpression(properties);
 
-        Row row = new Row();
-        row.setName("ObjectExpression");
-        row.setType("ObjectExpression");
-        row.setValue("Object with keys: " + properties.keySet());
-        row.setScope("global");
-        this.st.addRow("ObjectExpression", row);
+//        Row row = new Row();
+//        row.setName("ObjectExpression");
+//        row.setValue("Object with keys: " + properties.keySet());
+//        this.st.addRow("ObjectExpression", row);
 
         return objExpr;
     }
@@ -663,12 +610,10 @@ if(ctx.componentDecorator()!=null)
 
         ArrayBody1 arrayElement = new ArrayBody1(value);
 
-        Row row = new Row();
-        row.setName("ArrayElement");
-        row.setType("ArrayBody1");
-        row.setValue("Value: " + (value != null ? value.toString() : "null"));
-        row.setScope("global");
-        this.st.addRow("ArrayElement", row);
+//        Row row = new Row();
+//        row.setName("ArrayElement");
+//        row.setValue("Value: " + (value != null ? value.toString() : "null"));
+//        this.st.addRow("ArrayElement", row);
 
         return arrayElement;
     }
@@ -681,12 +626,10 @@ if(ctx.componentDecorator()!=null)
 
         ArrayBody2 result = new ArrayBody2(objExpr, num, str);
 
-        Row row = new Row();
-        row.setName("ArrayBody2");
-        row.setType("ArrayBody2");
-        row.setValue("Composite: " + result.toString());
-        row.setScope("global");
-        this.st.addRow("ArrayBody2", row);
+//        Row row = new Row();
+//        row.setName("ArrayBody2");
+//        row.setValue("Composite: " + result.toString());
+//        this.st.addRow("ArrayBody2", row);
 
         return result;
     }
@@ -706,12 +649,10 @@ if(ctx.componentDecorator()!=null)
         }
         ArrayExprTwoStatement arrayExpr = new ArrayExprTwoStatement(signature, type, elements);
 
-        Row row = new Row();
-        row.setName(signature.getName());
-        row.setType("ArrayExpression2");
-        row.setValue("Typed array (" + type + ") with " + elements.size() + " composite elements");
-        row.setScope("global");
-        this.st.addRow(signature.getName(), row);
+//        Row row = new Row();
+//        row.setName(signature.getName());
+//        row.setValue("Typed array (" + type + ") with " + elements.size() + " composite elements");
+//        this.st.addRow(signature.getName(), row);
 
         return arrayExpr;
     }
@@ -737,14 +678,13 @@ if(ctx.componentDecorator()!=null)
         }
 
         ConstructorDeclarationStatement constructor = new ConstructorDeclarationStatement(access, name, type);
-        Row row = new Row();
-        row.setName("Constructor");
-        row.setType("ConstructorDeclaration");
-        row.setValue(name != null
-                ? "Constructor with param " + name + ": " + type
-                : "Constructor with no parameters");
-        row.setScope("class");
-        this.st.addRow("Constructor", row);
+//        Row row = new Row();
+//        row.setName("Constructor");
+//        row.setValue(name != null
+//                ? "Constructor with param " + name + ": " + type
+//                : "Constructor with no parameters");
+//        row.setScope("class");
+//        this.st.addRow("Constructor", row);
 
         return constructor;
     }
@@ -762,9 +702,9 @@ if(ctx.componentDecorator()!=null)
 
         Row row = new Row();
         row.setName(signature);
-        row.setType("VariableDeclaration");
-        row.setValue("Type: " + type + ", Value: " + value);
-        row.setScope("local");
+        row.setType(type);
+        row.setValue( value);
+        row.setScope("class");
 
         AlreadyDefinedVariableError error = new AlreadyDefinedVariableError(signature,alreadyDefinedVariableErrorSymbolTable,line);
         if(error.alreadyDefinedVariableErrorSymbolTable.check(signature)){
@@ -782,13 +722,11 @@ if(ctx.componentDecorator()!=null)
         String identifier = ctx.IDENTIFIER().getText();
         String value = ctx.values().getText();
         VariableAssignmentStatement assignment = new VariableAssignmentStatement(identifier, value);
-        Row row = new Row();
-        // Check type compatibility
-        row.setName(identifier);
-        row.setType("VariableAssignment");
-        row.setValue("Assigned value: " + value);
-        row.setScope("local");
-        this.st.addRow(identifier, row);
+//        Row row = new Row();
+//        row.setName(identifier);
+//        row.setValue("Assigned value: " + value);
+//        row.setScope("local");
+//        this.st.addRow(identifier, row);
 
         return assignment;
     }
@@ -802,12 +740,11 @@ if(ctx.componentDecorator()!=null)
 
         SignalDeclarationStatement declaration = new SignalDeclarationStatement(name, signalType, argument);
 
-        Row row = new Row();
+        /*Row row = new Row();
         row.setName(name);
-        row.setType("SignalDeclaration");
         row.setValue("Signal: " + declaration.toString());
         row.setScope(this.st.getCurrentScope());
-        this.st.addRow(name, row);
+        this.st.addRow(name, row);*/
 
         return declaration;
     }
@@ -822,14 +759,13 @@ if(ctx.componentDecorator()!=null)
         for (TerminalNode croisnn : ctx.CROISNN()) {
             clause.addInterface(croisnn.getText());
         }
-        if (!clause.getInterfaces().isEmpty()) {
-            Row row = new Row();
-            row.setName("implements");
-            row.setType("ImplementsClause");
-            row.setValue("Implements: " + String.join(", ", clause.getInterfaces()));
-            row.setScope(this.st.getCurrentScope());
-            this.st.addRow("implements", row);
-        }
+//        if (!clause.getInterfaces().isEmpty()) {
+//            Row row = new Row();
+//            row.setName("implements");
+//            row.setValue("Implements: " + String.join(", ", clause.getInterfaces()));
+//            row.setScope(this.st.getCurrentScope());
+//            this.st.addRow("implements", row);
+//        }
 
         return clause;
     }
@@ -842,11 +778,11 @@ if(ctx.componentDecorator()!=null)
         for (Parsergrammar.RuleSetContext rctx : ctx.ruleSet()) {
             ruleSets.add((RuleSet) visit(rctx));
         }
+        /*
         Row row = new Row();
         row.setName("CssDocument");
-        row.setType("CssDocument");
         row.setValue(ruleSets.toString());
-        this.st.addRow("CssDocument", row);
+       this.st.addRow("CssDocument", row);*/
         return new CssDocument(ruleSets);
     }
 
@@ -860,11 +796,11 @@ if(ctx.componentDecorator()!=null)
                 values.add((Value) visit(ctx.value(i)));
             }
         }
+        /*
         Row row = new Row();
         row.setName(propertyName);
-        row.setType("Declaration");
         row.setValue(propertyName + ": " + values.toString());
-        this.st.addRow(propertyName, row);
+       // this.st.addRow(propertyName, row);*/
         return new Declaration(propertyName, values);
     }
 
@@ -874,11 +810,11 @@ if(ctx.componentDecorator()!=null)
         for (Parsergrammar.DeclarationContext dctx : ctx.declaration()) {
             declarations.add((Declaration) visit(dctx));
         }
+        /*
         Row row = new Row();
         row.setName("DeclarationList");
-        row.setType("DeclarationList");
         row.setValue(declarations.toString());
-        this.st.addRow("DeclarationList", row);
+        this.st.addRow("DeclarationList", row);*/
         return new DeclarationList(declarations);
     }
     @Override
@@ -890,12 +826,11 @@ if(ctx.componentDecorator()!=null)
                 declarations.add((Declaration) visit(declCtx));
             }
         }
-
+/*
         Row row = new Row();
         row.setName(selector.toString());
-        row.setType("RuleSet");
         row.setValue(selector.toString() + " with " + declarations.size() + " declarations");
-        this.st.addRow(row.getName(), row);
+       this.st.addRow(row.getName(), row);*/
         return new RuleSet(selector, declarations);
     }
 
@@ -911,11 +846,12 @@ if(ctx.componentDecorator()!=null)
                 }
             }
         }
+        /*
         Row row = new Row();
         row.setName("List");
         row.setType("List");
         row.setValue(selectors.toString());
-        this.st.addRow("List", row);
+        this.st.addRow("List", row);*/
         return new RuleSetStart(selectors);
     }
     @Override
@@ -924,7 +860,6 @@ if(ctx.componentDecorator()!=null)
         Value.ValueType type = null;
         String val = "";
         String unit = null;
-
         if (ctx.NUMBER() != null) {
             val = ctx.NUMBER().getText();
             unit = ctx.UNIT() != null ? ctx.UNIT().getText() : null;
@@ -949,11 +884,14 @@ if(ctx.componentDecorator()!=null)
         }
 
         value = new Value(val, unit, type);
+        /*
         Row row = new Row();
         row.setName(val);
         row.setType("Value");
         row.setValue(val + (unit != null ? unit : ""));
         this.st.addRow(val, row);
+
+         */
         return value;
     }
 
@@ -971,11 +909,10 @@ if(ctx.componentDecorator()!=null)
             content = ctx.WS().getText();
             isScriptlet = false;
         }
-        Row row = new Row();
+        /*Row row = new Row();
         row.setName("ScriptletOrSeaWs");
-        row.setType("ScriptletOrSeaWs");
         row.setValue(content);
-        this.st.addRow("ScriptletOrSeaWs", row);
+        this.st.addRow("ScriptletOrSeaWs", row);*/
         return new ScriptletOrSeaWs(content, isScriptlet);
     }
 
@@ -992,11 +929,10 @@ if(ctx.componentDecorator()!=null)
             isConditional = true;
         }
 
-        Row row = new Row();
+      /*  Row row = new Row();
         row.setName("HtmlComment");
-        row.setType("HtmlComment");
         row.setValue("Comment Type: " + (isConditional ? "Conditional" : "Standard") + ", Text: " + commentText);
-        this.st.addRow("HtmlComment", row);
+        this.st.addRow("HtmlComment", row);*/
         return new HtmlComment(commentText, isConditional);
     }
 
@@ -1008,12 +944,12 @@ if(ctx.componentDecorator()!=null)
             content = visit(ctx.htmlComment());
         } else if (ctx.WS() != null) {
             String whitespace = ctx.WS().getText();
-            Row row = new Row();
+         /*   Row row = new Row();
             row.setName("Whitespace");
             row.setType("HtmlWhitespace");
             row.setValue("Whitespace characters: " + whitespace.replace("\n", "\\n"));
             row.setScope("html");
-            this.st.addRow("Whitespace", row);
+            this.st.addRow("Whitespace", row);*/
             content = new ASTNode() {
                 @Override
                 public void prettyPrint(String indent) {
@@ -1022,11 +958,10 @@ if(ctx.componentDecorator()!=null)
                 }
             };
         }
-        Row row = new Row();
+        /*Row row = new Row();
         row.setName("HtmlMisc");
-        row.setType("HtmlMisc");
         row.setValue("Contains: " + (content != null ? content.getClass().getSimpleName() : "null"));
-        this.st.addRow("HtmlMisc", row);
+        this.st.addRow("HtmlMisc", row);*/
         return new HtmlMisc(content);
     }
 
@@ -1051,11 +986,10 @@ if(ctx.componentDecorator()!=null)
 
         List<ASTNode> trailingComments = new ArrayList<>();
 
-        Row row = new Row();
+        /*Row row = new Row();
         row.setName("HtmlElements");
-        row.setType("HtmlElements");
         row.setValue("Element with " + leadingComments.size() + " leading and " + trailingComments.size() + " trailing comments");
-        this.st.addRow("HtmlElements", row);
+        this.st.addRow("HtmlElements", row);*/
         return new HtmlElements(leadingComments, htmlElement, trailingComments);
     }
 
@@ -1067,18 +1001,16 @@ if(ctx.componentDecorator()!=null)
         } else if (child instanceof TerminalNode token) {
             String raw = token.getText();
             if (token.getSymbol().getType() == Parsergrammar.SCRIPTLET) {
-                Row row = new Row();
+               /* Row row = new Row();
                 row.setName("Scriptlet_" + System.identityHashCode(raw));
-                row.setType("ScriptletOrSeaWs");
                 row.setValue("Scriptlet: " + raw);
-                this.st.addRow(row.getName(), row);
+                this.st.addRow(row.getName(), row);*/
                 return new ScriptletOrSeaWs(raw, true);
             } else if (token.getSymbol().getType() == Parsergrammar.INTERPOLATION) {
-                Row row = new Row();
+                /*Row row = new Row();
                 row.setName("Interpolation_" + System.identityHashCode(raw));
-                row.setType("InterpolationElement");
                 row.setValue("Interpolation: " + raw);
-                this.st.addRow(row.getName(), row);
+                this.st.addRow(row.getName(), row);*/
                 return new InterpolationElement(raw);
             }
         }
@@ -1098,11 +1030,10 @@ if(ctx.componentDecorator()!=null)
             }
         }
 
-        Row row = new Row();
+       /* Row row = new Row();
         row.setName(tagName);
-        row.setType("TSTag");
         row.setValue("TypeScript tag: " + tagName);
-        this.st.addRow(tagName, row);
+        this.st.addRow(tagName, row);*/
         return new TsTag(tagName, attributes);
     }
 
@@ -1118,11 +1049,10 @@ if(ctx.componentDecorator()!=null)
                 }
             }
         }
-        Row row = new Row();
+        /*Row row = new Row();
         row.setName(tagName);
-        row.setType("NoEndTag");
         row.setValue("Void HTML tag: " + tagName);
-        this.st.addRow(tagName, row);
+        this.st.addRow(tagName, row);*/
         return new NoEndTag(tagName, attributes);
     }
 
@@ -1155,13 +1085,12 @@ if(ctx.componentDecorator()!=null)
                 System.err.println("Warning: Tag mismatch - <" + tagName + "> vs </" + closing + ">");
             }
         }
-        Row row = new Row();
+      /* Row row = new Row();
         row.setName(tagName);
-        row.setType("NormalTag");
         row.setValue("HTML Tag: " + tagName +
                 (attributes.isEmpty() ? "" : " with " + attributes.size() + " attributes") +
                 (content.isEmpty() ? "" : " containing " + content.size() + " elements"));
-        this.st.addRow(tagName, row);
+        this.st.addRow(tagName, row);*/
         return new NormalTag(tagName, attributes, content);
     }
 
@@ -1176,18 +1105,17 @@ if(ctx.componentDecorator()!=null)
                 ASTNode inner = statement.getStatement();
                 if (inner instanceof InterpolationElement interp) {
                     rawContent.append("${").append(interp.getContent()).append("} ");
-                } else if (inner instanceof CDataContent || inner instanceof ScriptletOrSeaWs ||
-                        inner instanceof TextContent || inner instanceof HtmlComment ||
+                } else if (inner instanceof CDataContent || inner instanceof ScriptletOrSeaWs
+                        || inner instanceof TextContent || inner instanceof HtmlComment ||
                         inner instanceof HtmlElement) {
                     rawContent.append(inner.toString()).append(" ");
                 }
             }
         }
-        Row row = new Row();
+       /* Row row = new Row();
         row.setName("HTMLContent");
-        row.setType("HTMLContent");
         row.setValue("Contains " + contentStatements.size() + " statements");
-        this.st.addRow("HTMLContent_" + this.st.getCurrentScope(), row);
+        this.st.addRow("HTMLContent_" + this.st.getCurrentScope(), row);*/
         return new HtmlContent(contentStatements, rawContent.toString().trim());
     }
 
@@ -1216,7 +1144,6 @@ if(ctx.componentDecorator()!=null)
 
         } else if (ctx instanceof Parsergrammar.HtmlIdentifierStatementContext identCtx) {
             inner = new TextContent(identCtx.IDENTIFIER().getText());
-
         }
         return new HtmlContentStatement(inner);
     }
@@ -1234,11 +1161,10 @@ if(ctx.componentDecorator()!=null)
             content = "";
             isWhitespace = false;
         }
-        Row row = new Row();
+        /*Row row = new Row();
         row.setName("HtmlCharData");
-        row.setType("HtmlCharData");
-        row.setValue(isWhitespace ? "Whitespace" : ("Text: " + content));
-        this.st.addRow("HtmlCharData", row);
+        row.setValue(isWhitespace ? "Whitespace" : content);
+        this.st.addRow("HtmlCharData", row);*/
         return new HtmlCharData(content, isWhitespace);
     }
     @Override
@@ -1263,13 +1189,12 @@ if(ctx.componentDecorator()!=null)
                 }
             }
         }
-        Row row = new Row();
+       /* Row row = new Row();
         row.setName("HTMLDocument");
-        row.setType("HTMLDocument");
         row.setValue("Document with " + htmlElements.size() + " elements" +
                 (xml != null ? " (has XML)" : "") +
                 (dtd != null ? " (has DTD)" : ""));
-        this.st.addRow("HTMLDocument", row);
+        this.st.addRow("HTMLDocument", row);*/
         return new HTMLDocument(scriptletOrSeaWs, xml, dtd, htmlElements);
     }
 
@@ -1277,33 +1202,31 @@ if(ctx.componentDecorator()!=null)
     public HtmlAttribute visitStructuralDirectiveAttribute(Parsergrammar.StructuralDirectiveAttributeContext ctx) {
         String name = ctx.STRUCTURAL_DIRECTIVE().getText();
         TagAttribute tagAttribute = ctx.tagAtt() != null ? (TagAttribute) visit(ctx.tagAtt()) : null;
-        Row row = new Row();
+       /* Row row = new Row();
         row.setName("HtmlAttribute");
-        row.setType("StructuralDirective");
         row.setValue("Name: " + name + ", Value: " + (tagAttribute != null ? tagAttribute.getValue() : "none"));
-        this.st.addRow("HtmlAttribute", row);
+        this.st.addRow("HtmlAttribute", row);*/
         return new StructuralDirectiveAttribute(name, tagAttribute);
     }
     @Override
     public HtmlAttribute visitAttributeBinding(Parsergrammar.AttributeBindingContext ctx) {
         String name = ctx.ATTRIBUTE_BINDING().getText();
         TagAttribute tagAttribute = ctx.tagAtt() != null ? (TagAttribute) visit(ctx.tagAtt()) : null;
-        Row row = new Row();
+       /* Row row = new Row();
         row.setName("HtmlAttribute");
-        row.setType("AttributeBinding");
         row.setValue("Name: " + name + ", Value: " + (tagAttribute != null ? tagAttribute.getValue() : "none"));
-        this.st.addRow("HtmlAttribute", row);
+        this.st.addRow("HtmlAttribute", row);*/
         return new AttributeBindingAttribute(name, tagAttribute);
     }
     @Override
     public HtmlAttribute visitEventBinding(Parsergrammar.EventBindingContext ctx) {
         String name = ctx.EVENT_BINDING().getText();
         TagAttribute tagAttribute = ctx.tagAtt() != null ? (TagAttribute) visit(ctx.tagAtt()) : null;
-        Row row = new Row();
+        /*Row row = new Row();
         row.setName("HtmlAttribute");
         row.setType("EventBinding");
         row.setValue("Name: " + name + ", Value: " + (tagAttribute != null ? tagAttribute.getValue() : "none"));
-        this.st.addRow("HtmlAttribute", row);
+        this.st.addRow("HtmlAttribute", row);*/
         return new EventBindingAttribute(name, tagAttribute);
     }
 
@@ -1311,11 +1234,10 @@ if(ctx.componentDecorator()!=null)
     public HtmlAttribute visitTagNameAttribute(Parsergrammar.TagNameAttributeContext ctx) {
         String name = ctx.TAG_NAME().getText();
         TagAttribute tagAttribute = ctx.tagAtt() != null ? (TagAttribute) visit(ctx.tagAtt()) : null;
-        Row row = new Row();
+       /* Row row = new Row();
         row.setName("HtmlAttribute");
-        row.setType("TagName");
         row.setValue("Name: " + name + ", Value: " + (tagAttribute != null ? tagAttribute.getValue() : "none"));
-        this.st.addRow("HtmlAttribute", row);
+        this.st.addRow("HtmlAttribute", row);*/
         return new TagNameAttribute(name, tagAttribute);
     }
 
@@ -1338,13 +1260,12 @@ if(ctx.componentDecorator()!=null)
         } else if (ctx.ATTVALUE_VALUE() != null) {
             value = ctx.ATTVALUE_VALUE().getText().trim();
         }
-        Row row = new Row();
+       /* Row row = new Row();
         row.setName("TagAttribute");
-        row.setType("TagAttribute");
-        row.setValue(isMethodCall ? "Method Call: " + value : "Value: " + value);
+        row.setValue(value);
         if(isMethodCall)
             this.undefinedMethodCallErrorSymbolTable.addRow("TagAttribute", row);
-        else {this.st.addRow("TagAttribute",row);}
+        else {this.st.addRow("TagAttribute",row);}*/
         return new TagAttribute(value, isMethodCall);
     }
 }
