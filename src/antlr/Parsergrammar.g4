@@ -83,7 +83,7 @@ methodDeclaration:
 signature LPAREN parameters? RPAREN LBRACE methodBody RBRACE;
 
 methodBody:
-RETURN ((THIS DOT)? IDENTIFIER|values)SEMICOLON ;
+RETURN (THIS DOT)? (IDENTIFIER|values)SEMICOLON ;
 
 objectExpression:
 LBRACE (IDENTIFIER COLON values COMMA?)* RBRACE COMMA?;

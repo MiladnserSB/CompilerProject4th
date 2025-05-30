@@ -59,8 +59,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         }
         if(decorator==null)
         {
-            int line = ctx.importStatement(ctx.importStatement().size()-1).SEMICOLON().getSymbol().getLine();
-            DecoratorExpectedError decoratorExpectedError = new DecoratorExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
+            int line = ctx.classDeclaration().EXPORT().getSymbol().getLine();            DecoratorExpectedError decoratorExpectedError = new DecoratorExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
             if(isComponent)
             { if(!decoratorExpectedError.classDeclarationOrDecoratorExpectedErrorSymbolTable.check("ComponentDecorator")){
             decoratorExpectedError.throwException();
@@ -75,7 +74,8 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         int line = -1;
         if(ctx.componentDecorator()!=null)
         { line = ctx.componentDecorator().RBRACE().getSymbol().getLine();}
-
+       else if(ctx.injectableDecorator()!=null)
+        { line = ctx.injectableDecorator().RBRACE().getSymbol().getLine();}
                 ClassDeclarationExpectedError classDeclarationExpectedError = new ClassDeclarationExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
                     if(!classDeclarationExpectedError.classDeclarationOrDecoratorExpectedErrorSymbolTable.check(classDecl.getClassName())){
                         classDeclarationExpectedError.throwException();
@@ -137,44 +137,43 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         boolean hasSignalDeclaration = false;
         int signalLine = -1;
 
-        for (Parsergrammar.ClassBodyStatementContext stmtCtx : ctx.classBodyStatement()) {
-            ASTNode node = visit(stmtCtx);
-            ClassBodyStatement statement;
-            if (node instanceof ClassBodyStatement) {
-                statement = (ClassBodyStatement) node;
-            } else {
-                statement = new ClassBodyStatement(node);
+        // Visit all direct children in the class body (bypassing classBodyStatement)
+        if(ctx.children!=null) {
+            for (ParseTree child : ctx.children) {
+                if (child instanceof TerminalNode) continue; // skip '{' or '}'
+
+                ASTNode node = visit(child);
+                if (node == null) continue;
+
+                ClassBodyStatement wrapped = new ClassBodyStatement(node);
+                body.addMember(wrapped);
+
+                if (node instanceof SignalDeclarationStatement) {
+                    hasSignalDeclaration = true;
+                    signalLine = ((ParserRuleContext) child).getStart().getLine();
+                }
             }
-            body.addMember(statement);
-            ASTNode inner = statement.getStatement();
-            if (inner instanceof SignalDeclarationStatement) {
-                hasSignalDeclaration = true;
-                signalLine = stmtCtx.getStart().getLine();
-            }
+        }
+        if (hasSignalDeclaration && !undefinedImportsErrorSymbolTable.check("signal")) {
+            NotImportedSignalError notImportedSignalError =
+                    new NotImportedSignalError(undefinedImportsErrorSymbolTable, signalLine);
+            notImportedSignalError.throwException();
         }
 
-        if (hasSignalDeclaration) {
-            NotImportedSignalError notImportedSignalError = new NotImportedSignalError(undefinedImportsErrorSymbolTable, signalLine);
-            if (!undefinedImportsErrorSymbolTable.check("signal")) {
-                notImportedSignalError.throwException();
-            }
-        }
-//        Row row = new Row();
-//        row.setName("classBody");
-//        row.setValue("Class Body with " + body.getMembers().size() + " members");
-//        this.st.addRow("classBody", row);
         return body;
     }
 
+
     @Override
     public ASTNode visitClassBodyStatement(Parsergrammar.ClassBodyStatementContext ctx) {
-        System.out.println("jjjjjjjjjj");
-        ASTNode node = visit(ctx.getChild(0));
-        if ("class".equals(this.st.getCurrentScope())) {
-            return new ClassBodyStatement(node);
-        } else {
-            return node;
-        }
+//        System.out.println("jjjjjjjjjj");
+//        ASTNode node = visit(ctx.getChild(0));
+//        if ("class".equals(this.st.getCurrentScope())) {
+//            return new ClassBodyStatement(node);
+//        } else {
+//            return node;
+//        }
+        return null;
     }
 
     @Override
@@ -322,8 +321,8 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         VoidMethodDeclarationStatement method = new VoidMethodDeclarationStatement(signature, parameters, body);
         Row row = new Row();
         row.setName(signature.getName());
-        row.setValue(method.toString());
-        row.setScope("class");
+        row.setValue(ctx.methodvoidbody().getText());
+      //  row.setScope("class");
         this.undefinedMethodCallErrorSymbolTable.addRow(signature.getName(),row);
         this.undefinedMethodCallErrorSymbolTable.exitScope();
         return method;
@@ -338,7 +337,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         Row row = new Row();
         row.setName("ngOnInit");
         row.setValue(method.toString());
-        row.setScope("class");
+       // row.setScope("class");
         this.incorrectlyOnInitImplementErrorSymbolTable.addRow("ngOnInit", row);
         this.incorrectlyOnInitImplementErrorSymbolTable.exitScope();
         return method;
@@ -387,10 +386,10 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
         ImportBody importBody = new ImportBody(name);
 
-        Row row = new Row();
-        row.setName(name);
-        row.setValue("Imported: " + name);
-        this.undefinedImportsErrorSymbolTable.addRow(name, row);
+//        Row row = new Row();
+//        row.setName(name);
+//        row.setValue("Imported: " + name);
+//        this.undefinedImportsErrorSymbolTable.addRow(name, row);
 
         return importBody;
     }
@@ -409,12 +408,12 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         source = source.substring(1, source.length() - 1);
 
         ImportStatement stmt = new ImportStatement(items, source);
-
-        Row row = new Row();
-        row.setName("import");
-        row.setValue(stmt.toString());
-        this.undefinedImportsErrorSymbolTable.addRow("import_" + source, row);
-
+        for(var i: items) {
+            Row row = new Row();
+            row.setName(i.getName());
+            row.setValue("from "+ source);
+            this.undefinedImportsErrorSymbolTable.addRow(i.getName(), row);
+        }
         return stmt;
     }
 
@@ -484,6 +483,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         Parameters parameters = ctx.parameters() != null ? (Parameters) visit(ctx.parameters()) : null;
         MethodBody methodBody = (MethodBody) visit(ctx.methodBody());
         String methodName = signature.getName();
+
         int line = ctx.RBRACE().getSymbol().getLine();
         NotFoundReturnValueMethodError notFoundReturnValueMethodError = new NotFoundReturnValueMethodError(signature.getName(),notFoundReturnValueMethodErrorSymbolTable,line);
         if(!notFoundReturnValueMethodError.notFoundReturnValueMethodErrorSymbolTable.check("ReturnStatement")){
@@ -491,8 +491,8 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         }
         Row row = new Row();
         row.setName(methodName);
-        row.setValue("Declared method: " + methodName);
-        row.setScope("class");
+        row.setValue(ctx.methodBody().getText());
+      //  row.setScope("class");
         undefinedMethodCallErrorSymbolTable.addRow(signature.getName(),row);
 
         return new TypedMethodDeclarationStatement(signature, parameters, methodBody);
@@ -516,7 +516,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         Row row = new Row();
         row.setName("ReturnStatement");
         row.setValue("Returns: " + (isThisRef ? "this." : "") + returnTarget);
-        if(returnTarget!=null)
+        if(returnTarget!=null && "return".equals(ctx.RETURN().getText()))
         {this.notFoundReturnValueMethodErrorSymbolTable.addRow("ReturnStatement", row); return methodBody;}
 
         return null;
@@ -546,7 +546,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
         Row row = new Row();
         row.setName("InjectableDecorator");
-        row.setValue("Injectable with providedIn: " + (providedIn != null ? providedIn.toString() : "none"));
+        row.setValue("Injectable with providedIn: " + (providedIn != null ? providedIn.getProvidedIn() : "none"));
         this.classDeclarationOrDecoratorExpectedErrorSymbolTable.addRow("InjectableDecorator", row);
 
         return decorator;
@@ -704,7 +704,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         row.setName(signature);
         row.setType(type);
         row.setValue( value);
-        row.setScope("class");
+        row.setScope(this.alreadyDefinedVariableErrorSymbolTable.getCurrentScope());
 
         AlreadyDefinedVariableError error = new AlreadyDefinedVariableError(signature,alreadyDefinedVariableErrorSymbolTable,line);
         if(error.alreadyDefinedVariableErrorSymbolTable.check(signature)){
@@ -760,13 +760,13 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             clause.addInterface(croisnn.getText());
         }
 //        if (!clause.getInterfaces().isEmpty()) {
-//            Row row = new Row();
-//            row.setName("implements");
-//            row.setValue("Implements: " + String.join(", ", clause.getInterfaces()));
+            Row row = new Row();
+            row.setName("implements");
+            row.setValue(String.join(", ", clause.getInterfaces()));
 //            row.setScope(this.st.getCurrentScope());
 //            this.st.addRow("implements", row);
 //        }
-
+        this.incorrectlyOnInitImplementErrorSymbolTable.addRow("implements",row);
         return clause;
     }
 

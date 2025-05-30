@@ -11,7 +11,6 @@ public class NotFoundReturnValueMethodError extends RuntimeException{
     }
 
     public void throwException() {
-        notFoundReturnValueMethodErrorSymbolTable.print();
         ErrorHandler.logError(this, lineNumber);
         throw this;
     }

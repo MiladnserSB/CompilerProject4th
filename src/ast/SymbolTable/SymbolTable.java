@@ -47,49 +47,40 @@ public class SymbolTable {
 
     public void print() {
         int nameWidth = 40;
-        int typeWidth = 40;
-        int scopeWidth = 40;
-        int valueWidth = 250;
+        int valueWidth = 100;
 
-        printHeader(nameWidth, typeWidth, scopeWidth, valueWidth);
+        printHeader(nameWidth, valueWidth);
 
-        System.out.printf("║ \u001B[38;5;213m%-" + nameWidth + "s\u001B[0m ║ \u001B[38;5;213m%-" + typeWidth + "s\u001B[0m ║ \u001B[38;5;213m%-" + scopeWidth + "s\u001B[0m ║ \u001B[38;5;213m%-" + valueWidth + "s\u001B[0m ║\n",
-                "Name", "Type", "Scope", "Value");
+        System.out.printf("║ \u001B[38;5;213m%-" + nameWidth + "s\u001B[0m ║ \u001B[38;5;213m%-" + valueWidth + "s\u001B[0m ║\n",
+                "Name", "Value");
 
-        printLine(nameWidth, typeWidth, scopeWidth, valueWidth);
+        printLine(nameWidth, valueWidth);
 
         for (Map.Entry<String, Row> entry : rows.entrySet()) {
             Row row = entry.getValue();
             if (row != null) {
-                System.out.printf("║ \u001B[38;5;183m%-" + nameWidth + "s\u001B[0m ║ \u001B[38;5;141m%-" + typeWidth + "s\u001B[0m ║ \u001B[38;5;117m%-" + scopeWidth + "s\u001B[0m ║ \u001B[38;5;159m%-" + valueWidth + "s\u001B[0m ║\n",
+                System.out.printf("║ \u001B[38;5;183m%-" + nameWidth + "s\u001B[0m ║ \u001B[38;5;159m%-" + valueWidth + "s\u001B[0m ║\n",
                         row.getName(),
-                        row.getType(),
-                        row.getScope(),
                         row.getValue() == null ? "null" : row.getValue());
-                printLine(nameWidth, typeWidth, scopeWidth, valueWidth);
+                printLine(nameWidth, valueWidth);
             }
         }
     }
 
-    private void printHeader(int nameWidth, int typeWidth, int scopeWidth, int valueWidth) {
+
+    private void printHeader(int nameWidth, int valueWidth) {
         System.out.print("╔");
         for (int i = 0; i < nameWidth + 2; i++) System.out.print("═");
-        System.out.print("╦");
-        for (int i = 0; i < typeWidth + 2; i++) System.out.print("═");
-        System.out.print("╦");
-        for (int i = 0; i < scopeWidth + 2; i++) System.out.print("═");
+
         System.out.print("╦");
         for (int i = 0; i < valueWidth + 2; i++) System.out.print("═");
         System.out.println("╗");
     }
 
-    private void printLine(int nameWidth, int typeWidth, int scopeWidth, int valueWidth) {
+    private void printLine(int nameWidth, int valueWidth) {
         System.out.print("╠");
         for (int i = 0; i < nameWidth + 2; i++) System.out.print("─");
-        System.out.print("╬");
-        for (int i = 0; i < typeWidth + 2; i++) System.out.print("─");
-        System.out.print("╬");
-        for (int i = 0; i < scopeWidth + 2; i++) System.out.print("─");
+
         System.out.print("╬");
         for (int i = 0; i < valueWidth + 2; i++) System.out.print("─");
         System.out.println("╣");

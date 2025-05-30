@@ -56,27 +56,23 @@ public class Ast implements ASTNode {
         System.out.println();
         System.out.println();
         System.out.println(indent + "AST:");
-        System.out.println();
-        System.out.println();
         if (tsDecument != null) {
-            System.out.println(indent + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TSDocument>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             tsDecument.prettyPrint(indent + "    ");
         }
         System.out.println();
         System.out.println();
-        System.out.println();
-        System.out.println();
-        if (htmlDocument != null) {
-            System.out.println(indent + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HTMLDocument>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        if (htmlDocument != null && !htmlDocument.getHtmlElements().isEmpty()) {
             htmlDocument.prettyPrint(indent + "    ");
+        }else{
+            System.out.println("///////////////Empty HTML");
         }
         System.out.println();
         System.out.println();
-        System.out.println();
-        System.out.println();
-        if (cssDocument != null) {
-            System.out.println(indent + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CSSDocument>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        if (cssDocument != null && !cssDocument.getRuleSets().isEmpty()) {
             cssDocument.prettyPrint(indent + "    ");
+        }
+        else{
+            System.out.println("///////////////Empty CSS");
         }
     }
 }
