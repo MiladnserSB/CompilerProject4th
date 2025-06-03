@@ -16,6 +16,7 @@ public class UndefinedMethodCallError extends RuntimeException {
     public void throwException() {
         undefinedMethodCallErrorSymbolTable.print();
         ErrorHandler.logError(this, lineNumber);
+        undefinedMethodCallErrorSymbolTable.removeAllRows();
         throw this;
     }
 }

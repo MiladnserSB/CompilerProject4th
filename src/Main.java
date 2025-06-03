@@ -13,19 +13,18 @@ public class Main {
                 "import { ProductsService } from '../../services/products.service';\n" +
                 "import { NgFor, NgIf } from '@angular/common';\n" +
                 "\n" +
-                "\n" +
-                "@Component({\n" +
+            "@Component({\n" +
                 "  selector: 'app-products',\n" +
                 "  imports: [NgFor,NgIf],\n" +
                 "  templateUrl: './products.component.html',\n" +
                 "  styleUrl: './products.component.css'\n" +
-                "})\n" +
+                "})"+
                 "export class ProductsComponent implements OnInit{\n" +
                 "  items: any[] = [];\n" +
                 "  selectedItem:any=null;\n" +
                 "\n" +
-                "  getProducts() {\n" +
-                "    return this.items;\n" +
+                "getProducts() {\n" +
+                "    return 5;\n" +
                 "  }"+
                 "  constructor(private productsService: ProductsService) { }\n" +
                 "  ngOnInit(): void {\n" +
@@ -107,7 +106,6 @@ public class Main {
         ParseTree tree = parser.ast();
         programvisitor visitor = new programvisitor();
         ASTNode ast = visitor.visit(tree);
-visitor.undefinedMethodCallErrorSymbolTable.print();
         if (ast != null) {
             ast.prettyPrint("");
         } else {

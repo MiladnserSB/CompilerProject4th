@@ -12,6 +12,7 @@ public class MissedConstructorAccessModifierError extends RuntimeException{
 
     public void throwException() {
         ErrorHandler.logError(this, lineNumber);
+        missedConstructorAccessModifierErrorSymbolTable.removeAllRows();
         throw this;
     }
 }

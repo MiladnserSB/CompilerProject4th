@@ -15,6 +15,7 @@ public class UndefinedImportsError extends RuntimeException{
     public void throwException() {
         undefinedImportsErrorSymbolTable.print();
         ErrorHandler.logError(this, lineNumber);
+        undefinedImportsErrorSymbolTable.removeAllRows();
         throw this;
     }
 }

@@ -14,6 +14,7 @@ public class ClassDeclarationExpectedError extends RuntimeException {
     public void throwException() {
         classDeclarationOrDecoratorExpectedErrorSymbolTable.print();
         ErrorHandler.logError(this, lineNumber);
+        classDeclarationOrDecoratorExpectedErrorSymbolTable.removeAllRows();
         throw this;
     }
 
