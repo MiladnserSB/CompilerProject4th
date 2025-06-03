@@ -19,7 +19,7 @@ public abstract class ErrorHandler {
             writer.write("=== COMPILATION ERROR ===\n");
             writer.write("Timestamp: " + timestamp + "\n");
             writer.write("Line: " + lineNumber + "\n");
-            writer.write("Error: " + e.getMessage() + "\n");
+            writer.write("Error: " + e.getMessage() + "\n" + "\n");
 
         } catch (IOException ioException) {
             System.err.println("Failed to write to error log: " + ioException.getMessage());

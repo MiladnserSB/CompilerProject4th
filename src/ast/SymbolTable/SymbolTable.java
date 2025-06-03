@@ -44,7 +44,9 @@ public class SymbolTable {
     public void removeRow(String key) {
         this.rows.remove(key);
     }
-
+    public void removeAllRows() {
+        this.rows.clear();
+    }
     public void print() {
         int nameWidth = 40;
         int valueWidth = 100;

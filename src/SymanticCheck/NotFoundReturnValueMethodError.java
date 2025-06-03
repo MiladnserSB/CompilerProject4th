@@ -12,6 +12,7 @@ public class NotFoundReturnValueMethodError extends RuntimeException{
 
     public void throwException() {
         ErrorHandler.logError(this, lineNumber);
+        notFoundReturnValueMethodErrorSymbolTable.removeAllRows();
         throw this;
     }
 }

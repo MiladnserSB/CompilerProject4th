@@ -18,6 +18,7 @@ public class AlreadyDefinedVariableError extends RuntimeException {
     public void throwException() {
         alreadyDefinedVariableErrorSymbolTable.print();
         ErrorHandler.logError(this, lineNumber);
+        alreadyDefinedVariableErrorSymbolTable.removeAllRows();
         throw this;
     }
 }

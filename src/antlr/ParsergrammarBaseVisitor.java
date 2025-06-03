@@ -140,9 +140,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 */
 	@Override public T visitComponentProperties(Parsergrammar.ComponentPropertiesContext ctx) { return visitChildren(ctx); }
 
-    public abstract ASTNode visitClassBodyStatement(Parsergrammar.ClassBodyStatementContext ctx);
+	public abstract ASTNode visitClassBodyStatement(Parsergrammar.ClassBodyStatementContext ctx);
 
-    /**
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling

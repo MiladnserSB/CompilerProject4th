@@ -13,6 +13,7 @@ public class MissedTemplateError extends RuntimeException{
     public void throwException() {
         missedTemplateErrorSymbolTable.print();
         ErrorHandler.logError(this, lineNumber);
+        missedTemplateErrorSymbolTable.removeAllRows();
         throw this;
     }
 }

@@ -59,7 +59,9 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         }
         if(decorator==null)
         {
-            int line = ctx.classDeclaration().EXPORT().getSymbol().getLine();            DecoratorExpectedError decoratorExpectedError = new DecoratorExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
+            int line = ctx.importStatement(ctx.importStatement().size()-1).SEMICOLON().getSymbol().getLine()+1;
+
+            DecoratorExpectedError decoratorExpectedError = new DecoratorExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
             if(isComponent)
             { if(!decoratorExpectedError.classDeclarationOrDecoratorExpectedErrorSymbolTable.check("ComponentDecorator")){
             decoratorExpectedError.throwException();
@@ -716,6 +718,10 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return variableDeclaration;
     }
 
+    @Override
+    public ASTNode visitVariableAssignmentStatement(Parsergrammar.VariableAssignmentStatementContext ctx) {
+        return visit(ctx.variableAssign());
+    }
 
     @Override
     public ASTNode visitVariableAssign(Parsergrammar.VariableAssignContext ctx) {
@@ -1208,6 +1214,12 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         this.st.addRow("HtmlAttribute", row);*/
         return new StructuralDirectiveAttribute(name, tagAttribute);
     }
+
+    @Override
+    public ASTNode visitVoidMethodDeclarationStatement(Parsergrammar.VoidMethodDeclarationStatementContext ctx) {
+        return super.visitVoidMethodDeclarationStatement(ctx);
+    }
+
     @Override
     public HtmlAttribute visitAttributeBinding(Parsergrammar.AttributeBindingContext ctx) {
         String name = ctx.ATTRIBUTE_BINDING().getText();

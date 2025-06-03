@@ -13,6 +13,7 @@ public class IncorrectlyOnInitImplementError extends RuntimeException{
     public void throwException() {
         incorrectlyOnInitImplementErrorSymbolTable.print();
         ErrorHandler.logError(this, lineNumber);
+        incorrectlyOnInitImplementErrorSymbolTable.removeAllRows();
         throw this;
     }
 
