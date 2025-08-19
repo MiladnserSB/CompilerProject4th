@@ -137,6 +137,18 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArrayExprThreeStatement(Parsergrammar.ArrayExprThreeStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayExprThreeStatement(Parsergrammar.ArrayExprThreeStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTypedMethodDeclarationStatement(Parsergrammar.TypedMethodDeclarationStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -180,6 +192,42 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNgOnInitMethodStatement(Parsergrammar.NgOnInitMethodStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAsObservableStatement(Parsergrammar.AsObservableStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAsObservableStatement(Parsergrammar.AsObservableStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObservableStatement(Parsergrammar.ObservableStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObservableStatement(Parsergrammar.ObservableStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObjectExpressionStatement(Parsergrammar.ObjectExpressionStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObjectExpressionStatement(Parsergrammar.ObjectExpressionStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -425,6 +473,18 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArrayExpression3(Parsergrammar.ArrayExpression3Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayExpression3(Parsergrammar.ArrayExpression3Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterConstructorDeclaration(Parsergrammar.ConstructorDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -516,6 +576,150 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSignalDeclaration(Parsergrammar.SignalDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCrudBody(Parsergrammar.CrudBodyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCrudBody(Parsergrammar.CrudBodyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNextCall(Parsergrammar.NextCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNextCall(Parsergrammar.NextCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAddCall(Parsergrammar.AddCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAddCall(Parsergrammar.AddCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEdit_delete_call(Parsergrammar.Edit_delete_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEdit_delete_call(Parsergrammar.Edit_delete_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMap(Parsergrammar.MapContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMap(Parsergrammar.MapContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFilter(Parsergrammar.FilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFilter(Parsergrammar.FilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRightMapFilterAssign(Parsergrammar.RightMapFilterAssignContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRightMapFilterAssign(Parsergrammar.RightMapFilterAssignContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMapFilterIDENTIFIER(Parsergrammar.MapFilterIDENTIFIERContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMapFilterIDENTIFIER(Parsergrammar.MapFilterIDENTIFIERContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAsObservable(Parsergrammar.AsObservableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAsObservable(Parsergrammar.AsObservableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObservable(Parsergrammar.ObservableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObservable(Parsergrammar.ObservableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObservableArray(Parsergrammar.ObservableArrayContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObservableArray(Parsergrammar.ObservableArrayContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

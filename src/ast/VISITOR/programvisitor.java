@@ -1110,6 +1110,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitNoEndTag(Parsergrammar.NoEndTagContext ctx) {
         String tagName = ctx.TAGS_VOID().getText();
+
         List<ASTNode> attributes = new ArrayList<>();
         if (ctx.htmlAttribute() != null) {
             for (var attrCtx : ctx.htmlAttribute()) {
@@ -1119,12 +1120,15 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
                 }
             }
         }
-        /*Row row = new Row();
-        row.setName(tagName);
-        row.setValue("Void HTML tag: " + tagName);
-        this.st.addRow(tagName, row);*/
-        return new NoEndTag(tagName, attributes);
+        boolean required = ctx.REQUIRED() != null;
+    /*Row row = new Row();
+    row.setName(tagName);
+    row.setValue("Void HTML tag: " + tagName);
+    this.st.addRow(tagName, row);*/
+
+        return new NoEndTag(tagName, attributes, required);
     }
+
 
     @Override
     public ASTNode visitNormalTag(Parsergrammar.NormalTagContext ctx) {

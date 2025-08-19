@@ -118,6 +118,18 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	 */
 	void exitArrayExprTwoStatement(Parsergrammar.ArrayExprTwoStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ArrayExprThreeStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayExprThreeStatement(Parsergrammar.ArrayExprThreeStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ArrayExprThreeStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayExprThreeStatement(Parsergrammar.ArrayExprThreeStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code TypedMethodDeclarationStatement}
 	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
 	 * @param ctx the parse tree
@@ -165,6 +177,42 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNgOnInitMethodStatement(Parsergrammar.NgOnInitMethodStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AsObservableStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAsObservableStatement(Parsergrammar.AsObservableStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AsObservableStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAsObservableStatement(Parsergrammar.AsObservableStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ObservableStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterObservableStatement(Parsergrammar.ObservableStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ObservableStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitObservableStatement(Parsergrammar.ObservableStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ObjectExpressionStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterObjectExpressionStatement(Parsergrammar.ObjectExpressionStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ObjectExpressionStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitObjectExpressionStatement(Parsergrammar.ObjectExpressionStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Parsergrammar#importStatement}.
 	 * @param ctx the parse tree
@@ -277,13 +325,13 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	void exitSignature(Parsergrammar.SignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code values}
-	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
+	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
 	 * @param ctx the parse tree
 	 */
 	void enterValues(Parsergrammar.ValuesContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code values}
-	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
+	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
 	 * @param ctx the parse tree
 	 */
 	void exitValues(Parsergrammar.ValuesContext ctx);
@@ -368,6 +416,16 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	 */
 	void exitArraybody2(Parsergrammar.Arraybody2Context ctx);
 	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#arrayExpression3}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayExpression3(Parsergrammar.ArrayExpression3Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#arrayExpression3}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayExpression3(Parsergrammar.ArrayExpression3Context ctx);
+	/**
 	 * Enter a parse tree produced by {@link Parsergrammar#constructorDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -447,6 +505,126 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSignalDeclaration(Parsergrammar.SignalDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#crudBody}.
+	 * @param ctx the parse tree
+	 */
+	void enterCrudBody(Parsergrammar.CrudBodyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#crudBody}.
+	 * @param ctx the parse tree
+	 */
+	void exitCrudBody(Parsergrammar.CrudBodyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#nextCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterNextCall(Parsergrammar.NextCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#nextCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitNextCall(Parsergrammar.NextCallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#addCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterAddCall(Parsergrammar.AddCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#addCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitAddCall(Parsergrammar.AddCallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#edit_delete_call}.
+	 * @param ctx the parse tree
+	 */
+	void enterEdit_delete_call(Parsergrammar.Edit_delete_callContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#edit_delete_call}.
+	 * @param ctx the parse tree
+	 */
+	void exitEdit_delete_call(Parsergrammar.Edit_delete_callContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#map}.
+	 * @param ctx the parse tree
+	 */
+	void enterMap(Parsergrammar.MapContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#map}.
+	 * @param ctx the parse tree
+	 */
+	void exitMap(Parsergrammar.MapContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#filter}.
+	 * @param ctx the parse tree
+	 */
+	void enterFilter(Parsergrammar.FilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#filter}.
+	 * @param ctx the parse tree
+	 */
+	void exitFilter(Parsergrammar.FilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#leftMapFilterAssign}.
+	 * @param ctx the parse tree
+	 */
+	void enterLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#leftMapFilterAssign}.
+	 * @param ctx the parse tree
+	 */
+	void exitLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#rightMapFilterAssign}.
+	 * @param ctx the parse tree
+	 */
+	void enterRightMapFilterAssign(Parsergrammar.RightMapFilterAssignContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#rightMapFilterAssign}.
+	 * @param ctx the parse tree
+	 */
+	void exitRightMapFilterAssign(Parsergrammar.RightMapFilterAssignContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#mapFilterIDENTIFIER}.
+	 * @param ctx the parse tree
+	 */
+	void enterMapFilterIDENTIFIER(Parsergrammar.MapFilterIDENTIFIERContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#mapFilterIDENTIFIER}.
+	 * @param ctx the parse tree
+	 */
+	void exitMapFilterIDENTIFIER(Parsergrammar.MapFilterIDENTIFIERContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#asObservable}.
+	 * @param ctx the parse tree
+	 */
+	void enterAsObservable(Parsergrammar.AsObservableContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#asObservable}.
+	 * @param ctx the parse tree
+	 */
+	void exitAsObservable(Parsergrammar.AsObservableContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#observable}.
+	 * @param ctx the parse tree
+	 */
+	void enterObservable(Parsergrammar.ObservableContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#observable}.
+	 * @param ctx the parse tree
+	 */
+	void exitObservable(Parsergrammar.ObservableContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#observableArray}.
+	 * @param ctx the parse tree
+	 */
+	void enterObservableArray(Parsergrammar.ObservableArrayContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#observableArray}.
+	 * @param ctx the parse tree
+	 */
+	void exitObservableArray(Parsergrammar.ObservableArrayContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Parsergrammar#cssDocument}.
 	 * @param ctx the parse tree

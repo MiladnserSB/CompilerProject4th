@@ -76,6 +76,13 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayExprTwoStatement(Parsergrammar.ArrayExprTwoStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ArrayExprThreeStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayExprThreeStatement(Parsergrammar.ArrayExprThreeStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code TypedMethodDeclarationStatement}
 	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
 	 * @param ctx the parse tree
@@ -103,6 +110,27 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNgOnInitMethodStatement(Parsergrammar.NgOnInitMethodStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AsObservableStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAsObservableStatement(Parsergrammar.AsObservableStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ObservableStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObservableStatement(Parsergrammar.ObservableStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ObjectExpressionStatement}
+	 * labeled alternative in {@link Parsergrammar#classBodyStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectExpressionStatement(Parsergrammar.ObjectExpressionStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#importStatement}.
 	 * @param ctx the parse tree
@@ -171,7 +199,7 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	T visitSignature(Parsergrammar.SignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code values}
-	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
+	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
@@ -225,6 +253,12 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArraybody2(Parsergrammar.Arraybody2Context ctx);
 	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#arrayExpression3}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayExpression3(Parsergrammar.ArrayExpression3Context ctx);
+	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#constructorDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -272,6 +306,78 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSignalDeclaration(Parsergrammar.SignalDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#crudBody}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCrudBody(Parsergrammar.CrudBodyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#nextCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNextCall(Parsergrammar.NextCallContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#addCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddCall(Parsergrammar.AddCallContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#edit_delete_call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEdit_delete_call(Parsergrammar.Edit_delete_callContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#map}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMap(Parsergrammar.MapContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#filter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFilter(Parsergrammar.FilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#leftMapFilterAssign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#rightMapFilterAssign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRightMapFilterAssign(Parsergrammar.RightMapFilterAssignContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#mapFilterIDENTIFIER}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMapFilterIDENTIFIER(Parsergrammar.MapFilterIDENTIFIERContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#asObservable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAsObservable(Parsergrammar.AsObservableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#observable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObservable(Parsergrammar.ObservableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#observableArray}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObservableArray(Parsergrammar.ObservableArrayContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#cssDocument}.
 	 * @param ctx the parse tree

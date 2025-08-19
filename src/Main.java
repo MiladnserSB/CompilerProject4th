@@ -39,21 +39,44 @@ public class Main {
                 "\n" +
                 "<div class=\"container\">\n" +
                 "\n" +
-                "    <div class=\"product-list\">\n" +
-                "      <div *ngFor=\"let item of items\" class=\"product-card\" (click)=\"onselect(item)\">\n" +
-                "        <img [src]=\"item.image\" alt=\"{{ item.name }}\">\n" +
-                "        <h3>{{item.name }}</h3>\n" +
-                "      </div>\n" +
-                "    </div>\n" +
-                "\n" +
-                "\n" +
-                "    <div class=\"product-details\" *ngIf=\"selectedItem\">\n" +
-                "      <h2>{{ selectedItem.name }}</h2>\n" +
-                "      <img [src]=\"selectedItem.image\" alt=\"{{ selectedItem.name }}\">\n" +
-                "      <p>price: {{ selectedItem.price }} sp </p>\n" +
-                "      <p>colorItem: {{ selectedItem.color }}</p>\n" +
+                "  <div class=\"product-list\">\n" +
+                "    <div *ngFor=\"let item of products$ | async\" class=\"product-card\">\n" +
+                "      <img [src]=\"item.image\" alt=\"{{ item.name }}\">\n" +
+                "      <h3>{{ item.name }}</h3>\n" +
+                "      <button (click)=\"onEdit(item); $event.stopPropagation()\">Edit</button>\n" +
+                "      <button (click)=\"onDelete(item.id); $event.stopPropagation()\">Delete</button>\n" +
+                "      <button (click)=\"viewDetails(item); $event.stopPropagation()\">View</button>\n" +
                 "    </div>\n" +
                 "  </div>\n" +
+                "\n" +
+                "  <div class=\"edit-form\" *ngIf=\"editMode\">\n" +
+                "    <h2>Edit Product</h2>\n" +
+                "\n" +
+                "    <form (submit)=\"onEditSave(); $event.preventDefault()\">\n" +
+                "      <label>Name:\n" +
+                "        <input name=\"name\" [value]=\"selectedItem.name\" (input)=\"selectedItem.name = $any($event.target).value\" required />\n" +
+                "      </label><br />\n" +
+                "\n" +
+                "      <label>Image:\n" +
+                "        <input name=\"image\" [value]=\"selectedItem.image\" (input)=\"selectedItem.image = $any($event.target).value\" required />\n" +
+                "      </label><br />\n" +
+                "\n" +
+                "      <label>Price:\n" +
+                "        <input type=\"number\" name=\"price\" [value]=\"selectedItem.price\" (input)=\"selectedItem.price = +$any($event.target).value\" required />\n" +
+                "      </label><br />\n" +
+                "\n" +
+                "      <label>Color:\n" +
+                "        <input name=\"color\" [value]=\"selectedItem.color\" (input)=\"selectedItem.color = $any($event.target).value\" required />\n" +
+                "      </label><br />\n" +
+                "\n" +
+                "      <div class=\"center-btn\">\n" +
+                "        <button type=\"submit\">Save</button>\n" +
+                "        <button type=\"button\" (click)=\"onEditCancel()\">Cancel</button>\n" +
+                "      </div>\n" +
+                "    </form>\n" +
+                "  </div>\n" +
+                "\n" +
+                "</div>" +
                 "\n" +
                 "  .container {\n" +
                 "      display: flex;\n" +
