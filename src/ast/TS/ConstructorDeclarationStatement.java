@@ -2,12 +2,13 @@ package ast.TS;
 
 import ast.ASTNode;
 
-public class ConstructorDeclarationStatement implements ASTNode {
+public class ConstructorDeclarationStatement extends ClassBodyStatement {
     private String accessModifier;
     private String paramName;
     private String paramType;
 
     public ConstructorDeclarationStatement(String accessModifier, String paramName, String paramType) {
+        super(null); // No inner ASTNode
         this.accessModifier = accessModifier;
         this.paramName = paramName;
         this.paramType = paramType;
@@ -27,11 +28,11 @@ public class ConstructorDeclarationStatement implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Constructor Declaration:");
+        super.prettyPrint(indent);
         if (paramName != null && paramType != null) {
-            System.out.println(indent + "  Parameter: "
-                    + (accessModifier != null ? accessModifier + " " : "")
-                    + paramName + ": " + paramType);
+            System.out.println(indent + "  Parameter: " +
+                    (accessModifier != null ? accessModifier + " " : "") +
+                    paramName + ": " + paramType);
         } else {
             System.out.println(indent + "  No parameters");
         }
@@ -39,7 +40,7 @@ public class ConstructorDeclarationStatement implements ASTNode {
 
     @Override
     public String toString() {
-        return "constructor(" +
+        return super.toString() + " constructor(" +
                 (paramName != null ? (accessModifier != null ? accessModifier + " " : "") + paramName + ": " + paramType : "") +
                 ")";
     }

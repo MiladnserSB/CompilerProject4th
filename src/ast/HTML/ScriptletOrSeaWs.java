@@ -1,12 +1,11 @@
 package ast.HTML;
 
-import ast.ASTNode;
-
-public class ScriptletOrSeaWs implements ASTNode {
-    private String content;
-    private boolean isScriptlet;
+public class ScriptletOrSeaWs extends HtmlContentStatement {
+    private final String content;
+    private final boolean isScriptlet;
 
     public ScriptletOrSeaWs(String content, boolean isScriptlet) {
+        super(null);
         this.content = content;
         this.isScriptlet = isScriptlet;
     }

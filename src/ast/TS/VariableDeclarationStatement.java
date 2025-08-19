@@ -2,12 +2,13 @@ package ast.TS;
 
 import ast.ASTNode;
 
-public class VariableDeclarationStatement implements ASTNode {
+public class VariableDeclarationStatement extends ClassBodyStatement {
     private String signature;
     private String type;
     private String value;
 
     public VariableDeclarationStatement(String signature, String type, String value) {
+        super(null);
         this.signature = signature;
         this.type = type;
         this.value = value;
@@ -27,7 +28,7 @@ public class VariableDeclarationStatement implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Variable Declaration:");
+        super.prettyPrint(indent);
         System.out.println(indent + "  Signature: " + signature);
         System.out.println(indent + "  Type: " + type);
         System.out.println(indent + "  Value: " + value);
@@ -35,6 +36,6 @@ public class VariableDeclarationStatement implements ASTNode {
 
     @Override
     public String toString() {
-        return signature + ": " + type + " = " + value;
+        return super.toString() + signature + ": " + type + " = " + value;
     }
 }

@@ -1,12 +1,11 @@
 package ast.HTML;
 
-import ast.ASTNode;
-
-public class HtmlCharData implements ASTNode {
+public class HtmlCharData extends HtmlContentStatement {
     private final String content;
     private final boolean isWhitespace;
 
     public HtmlCharData(String content, boolean isWhitespace) {
+        super(null); // You can set `this` if you want this node as statement
         this.content = content;
         this.isWhitespace = isWhitespace;
     }

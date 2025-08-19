@@ -23,7 +23,7 @@ BOOLEAN        : 'true' | 'false';
 TYPE           : 'any' |'number'| 'string' |'boolean';
 STATIC         : 'let'|'var'|'static'|'const';
 ACCESS         : 'private'|'public';
-CROISNN        : 'RouterOutlet' | 'OnInit' | 'signal' | 'NgFor' | 'NgIf';
+CROISNN        : 'RouterOutlet' | 'OnInit' | 'signal' | 'NgFor' | 'NgIf' | 'Router' | 'Observable' | 'BehaviorSubject';
 COMPONENT      :'Component' ;
 INJECTABLE     :'Injectable';
 
@@ -111,7 +111,7 @@ TAGS
     | 'tbody' | 'tr' | 'td' | 'th' | 'form' | 'button' | 'label' | 'select' | 'option' | 'h1' | 'h2'
     | 'h3' | 'h4' | 'h5' | 'h6' | 'script' | 'style' | 'footer' | 'header' | 'nav'
     | 'article' | 'section' | 'aside' | 'main' | 'figure' | 'figcaption' | 'video' | 'audio' | 'iframe'
-    | 'canvas' | 'blockquote' | 'pre' | 'code' | 'small' | 'b' | 'i' | 'u' | 'strong' | 'em' | 'br' |
+    | 'canvas' | 'blockquote' | 'pre' | 'code' | 'small' | 'b' | 'i' | 'u' | 'strong' | 'em' | 'br' | 'router-outlet'
     ;
 
 TAGS_VOID:

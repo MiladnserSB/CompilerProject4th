@@ -3,12 +3,13 @@ package ast.TS;
 import ast.ASTNode;
 import java.util.List;
 
-public class ArrayExprTwoStatement implements ASTNode {
+public class ArrayExprTwoStatement extends ClassBodyStatement {
     private Signature signature;
     private String type;
     private List<ASTNode> arrayElements;
 
     public ArrayExprTwoStatement(Signature signature, String type, List<ASTNode> arrayElements) {
+        super(signature);
         this.signature = signature;
         this.type = type;
         this.arrayElements = arrayElements;
@@ -28,21 +29,16 @@ public class ArrayExprTwoStatement implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "ArrayExpression2:");
-        signature.prettyPrint(indent + "  ");
+        super.prettyPrint(indent);
         System.out.println(indent + "  Type: " + type + "[]");
-        if(arrayElements.isEmpty()) {
-            System.out.println(indent + "  Elements: null");
-        }else{
-            System.out.println(indent + "  Elements:");
-            for (ASTNode node : arrayElements) {
-                node.prettyPrint(indent + "    ");
-            }
+        System.out.println(indent + "  Elements:");
+        for (ASTNode node : arrayElements) {
+            node.prettyPrint(indent + "    ");
         }
     }
 
     @Override
     public String toString() {
-        return signature + ": " + type + "[] = " + arrayElements;
+        return super.toString() + ": " + type + "[] = " + arrayElements;
     }
 }

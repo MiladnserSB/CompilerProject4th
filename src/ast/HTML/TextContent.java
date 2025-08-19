@@ -1,18 +1,19 @@
 package ast.HTML;
 
-import ast.ASTNode;
-
-public class TextContent implements ASTNode {
+public class TextContent extends HtmlContentStatement {
     private final String text;
 
     public TextContent(String text) {
+        super(null);
         this.text = text;
     }
+
     public String getText() {
         return text;
     }
+
     @Override
     public void prettyPrint(String indent) {
-       System.out.println(indent + "Text: " + text);
+        System.out.println(indent + "Text: " + text);
     }
 }

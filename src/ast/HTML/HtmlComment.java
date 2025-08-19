@@ -1,12 +1,11 @@
 package ast.HTML;
 
-import ast.ASTNode;
-
-public class HtmlComment implements ASTNode {
+public class HtmlComment extends HtmlContentStatement {
     private final String commentText;
     private final boolean isConditional;
 
     public HtmlComment(String commentText, boolean isConditional) {
+        super(null);
         this.commentText = commentText;
         this.isConditional = isConditional;
     }

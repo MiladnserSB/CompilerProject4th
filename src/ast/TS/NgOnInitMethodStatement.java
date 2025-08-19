@@ -2,11 +2,12 @@ package ast.TS;
 
 import ast.ASTNode;
 
-public class NgOnInitMethodStatement implements ASTNode {
-    private String accessModifier; // Can be null
+public class NgOnInitMethodStatement extends ClassBodyStatement {
+    private String accessModifier;
     private MethodVoidBody body;
 
     public NgOnInitMethodStatement(String accessModifier, MethodVoidBody body) {
+        super(body);
         this.accessModifier = accessModifier;
         this.body = body;
     }
@@ -21,16 +22,14 @@ public class NgOnInitMethodStatement implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "ngOnInit Method:");
+        super.prettyPrint(indent);
         if (accessModifier != null) {
             System.out.println(indent + "  Access: " + accessModifier);
         }
-        body.prettyPrint(indent + "  ");
     }
 
     @Override
     public String toString() {
-        return (accessModifier != null ? accessModifier + " " : "") +
-                "ngOnInit(): void {\n  " + body.toString() + "\n}";
+        return super.toString() + " ngOnInit() { ... }";
     }
 }

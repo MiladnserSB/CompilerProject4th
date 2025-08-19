@@ -1,11 +1,10 @@
 package ast.HTML;
 
-import ast.ASTNode;
-
-public class CDataContent implements ASTNode {
+public class CDataContent extends HtmlContentStatement {
     private final String content;
 
     public CDataContent(String content) {
+        super(null);
         this.content = content;
     }
 

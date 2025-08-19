@@ -2,11 +2,12 @@ package ast.TS;
 
 import ast.ASTNode;
 
-public class VariableAssignmentStatement implements ASTNode {
+public class VariableAssignmentStatement extends ClassBodyStatement {
     private String identifier;
     private String value;
 
     public VariableAssignmentStatement(String identifier, String value) {
+        super(null);
         this.identifier = identifier;
         this.value = value;
     }
@@ -21,13 +22,13 @@ public class VariableAssignmentStatement implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Variable Assignment:");
+        super.prettyPrint(indent);
         System.out.println(indent + "  Identifier: " + identifier);
         System.out.println(indent + "  Value: " + value);
     }
 
     @Override
     public String toString() {
-        return identifier + " = " + value;
+        return super.toString() + identifier + " = " + value;
     }
 }

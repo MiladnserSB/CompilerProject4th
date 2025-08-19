@@ -139,23 +139,18 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         boolean hasSignalDeclaration = false;
         int signalLine = -1;
 
-        // Visit all direct children in the class body (bypassing classBodyStatement)
-        if(ctx.children!=null) {
-            for (ParseTree child : ctx.children) {
-                if (child instanceof TerminalNode) continue; // skip '{' or '}'
+        for (Parsergrammar.ClassBodyStatementContext stmtCtx : ctx.classBodyStatement()) {
+            ClassBodyStatement statement = (ClassBodyStatement) visit(stmtCtx); // must return a concrete subclass
+            if (statement == null) continue;
 
-                ASTNode node = visit(child);
-                if (node == null) continue;
+            body.addMember(statement);
 
-                ClassBodyStatement wrapped = new ClassBodyStatement(node);
-                body.addMember(wrapped);
-
-                if (node instanceof SignalDeclarationStatement) {
-                    hasSignalDeclaration = true;
-                    signalLine = ((ParserRuleContext) child).getStart().getLine();
-                }
+            if (statement instanceof SignalDeclarationStatement) {
+                hasSignalDeclaration = true;
+                signalLine = stmtCtx.getStart().getLine();
             }
         }
+
         if (hasSignalDeclaration && !undefinedImportsErrorSymbolTable.check("signal")) {
             NotImportedSignalError notImportedSignalError =
                     new NotImportedSignalError(undefinedImportsErrorSymbolTable, signalLine);
@@ -164,6 +159,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
         return body;
     }
+
 
 
     @Override
@@ -694,20 +690,16 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
     @Override
     public ASTNode visitVariableDeclaration(Parsergrammar.VariableDeclarationContext ctx) {
-
         String signature = ctx.signature().IDENTIFIER().getText();
         String type = ctx.TYPE().getText();
         String value = ctx.values().getText();
         int line =  ctx.signature().IDENTIFIER().getSymbol().getLine();
-
         VariableDeclarationStatement variableDeclaration = new VariableDeclarationStatement(signature, type, value);
-
         Row row = new Row();
         row.setName(signature);
         row.setType(type);
         row.setValue( value);
         row.setScope(this.alreadyDefinedVariableErrorSymbolTable.getCurrentScope());
-
         AlreadyDefinedVariableError error = new AlreadyDefinedVariableError(signature,alreadyDefinedVariableErrorSymbolTable,line);
         if(error.alreadyDefinedVariableErrorSymbolTable.check(signature)){
             error.throwException();
@@ -716,6 +708,51 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             error.alreadyDefinedVariableErrorSymbolTable.addRow(signature, row);
         }
         return variableDeclaration;
+    }
+
+    @Override
+    public ASTNode visitVariableDeclarationStatement(Parsergrammar.VariableDeclarationStatementContext ctx) {
+        return visit(ctx.variableDeclaration());
+    }
+
+    @Override
+    public ASTNode visitArrayExprOneStatement(Parsergrammar.ArrayExprOneStatementContext ctx) {
+        return visit(ctx.arrayExpression1());
+    }
+
+    @Override
+    public ASTNode visitArrayExprTwoStatement(Parsergrammar.ArrayExprTwoStatementContext ctx) {
+        return visit(ctx.arrayExpression2());
+    }
+
+    @Override
+    public ASTNode visitTypedMethodDeclarationStatement(Parsergrammar.TypedMethodDeclarationStatementContext ctx) {
+        return visit(ctx.methodDeclaration());
+    }
+
+    @Override
+    public ASTNode visitConstructorDeclarationStatement(Parsergrammar.ConstructorDeclarationStatementContext ctx) {
+         return visit(ctx.constructorDeclaration());
+    }
+
+    @Override
+    public ASTNode visitSignalDeclarationStatement(Parsergrammar.SignalDeclarationStatementContext ctx) {
+        return visit(ctx.signalDeclaration());
+    }
+
+    @Override
+    public ASTNode visitNgOnInitMethodStatement(Parsergrammar.NgOnInitMethodStatementContext ctx) {
+        return visit(ctx.ngOnInitMETHOD());
+    }
+
+    @Override
+    public ASTNode visitProvidedin(Parsergrammar.ProvidedinContext ctx) {
+        return super.visitProvidedin(ctx);
+    }
+
+    @Override
+    public ASTNode visitMethodcall(Parsergrammar.MethodcallContext ctx) {
+        return super.visitMethodcall(ctx);
     }
 
     @Override
@@ -1023,6 +1060,33 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         System.err.println("Unrecognized HTML element: " + ctx.getText());
         return null;
     }
+
+
+    @Override
+    public ASTNode visitTsTagElement(Parsergrammar.TsTagElementContext ctx) {
+        return visit(ctx.tsTag());
+    }
+
+    @Override
+    public ASTNode visitNoEndTagElement(Parsergrammar.NoEndTagElementContext ctx) {
+        return visit(ctx.noEndTag());
+    }
+
+    @Override
+    public ASTNode visitNormalTagElement(Parsergrammar.NormalTagElementContext ctx) {
+        return visit(ctx.normalTag());
+    }
+
+    @Override
+    public ASTNode visitScriptletElement(Parsergrammar.ScriptletElementContext ctx) {
+        return visit(ctx.SCRIPTLET());
+    }
+
+    @Override
+    public ASTNode visitInterpolationElement(Parsergrammar.InterpolationElementContext ctx) {
+        return visit(ctx.INTERPOLATION());
+    }
+
     @Override
     public ASTNode visitTsTag(Parsergrammar.TsTagContext ctx) {
         String tagName = ctx.TAG_NAME().getText();
@@ -1128,6 +1192,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitHtmlContentStatement(Parsergrammar.HtmlContentStatementContext ctx) {
         ASTNode inner = null;
+
         if (ctx instanceof Parsergrammar.HtmlCharDataStatementContext charCtx) {
             String text = charCtx.getText();
             if (text.contains("{{") && text.contains("}}")) {
@@ -1136,6 +1201,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             } else {
                 inner = new TextContent(text.trim());
             }
+
         } else if (ctx instanceof Parsergrammar.HtmlElementStatementContext elementCtx) {
             inner = visitHtmlElement(elementCtx.htmlElement());
 
@@ -1151,8 +1217,46 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         } else if (ctx instanceof Parsergrammar.HtmlIdentifierStatementContext identCtx) {
             inner = new TextContent(identCtx.IDENTIFIER().getText());
         }
-        return new HtmlContentStatement(inner);
+
+        return new HtmlContentStatementImpl(inner);
+
     }
+
+    @Override
+    public ASTNode visitHtmlCharDataStatement(Parsergrammar.HtmlCharDataStatementContext ctx) {
+        return visit(ctx.htmlChardata());
+    }
+
+    @Override
+    public ASTNode visitHtmlElementStatement(Parsergrammar.HtmlElementStatementContext ctx) {
+        return visit(ctx.htmlElement());
+    }
+
+    @Override
+    public ASTNode visitHtmlCDataStatement(Parsergrammar.HtmlCDataStatementContext ctx) {
+        return visit(ctx.CDATA());
+    }
+
+    @Override
+    public ASTNode visitHtmlCommentStatement(Parsergrammar.HtmlCommentStatementContext ctx) {
+        return visit(ctx.htmlComment());
+    }
+
+    @Override
+    public ASTNode visitHtmlScriptletStatement(Parsergrammar.HtmlScriptletStatementContext ctx) {
+        return visit(ctx.SCRIPTLET());
+    }
+
+    @Override
+    public ASTNode visitHtmlIdentifierStatement(Parsergrammar.HtmlIdentifierStatementContext ctx) {
+        return visit(ctx.IDENTIFIER());
+    }
+
+    @Override
+    public ASTNode visitHtmlColonStatement(Parsergrammar.HtmlColonStatementContext ctx) {
+        return visit(ctx.COLON());
+    }
+
     @Override
     public ASTNode visitHtmlChardata(Parsergrammar.HtmlChardataContext ctx) {
         String content;
