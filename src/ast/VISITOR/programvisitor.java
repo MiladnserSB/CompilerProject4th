@@ -281,13 +281,13 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         String rightId = ctx.IDENTIFIER(1).getText();
         String methodCall = null;
         if (ctx.methodcall() != null) {
-            methodCall = ctx.methodcall().getText();
-            String methodName = ctx.methodcall().IDENTIFIER(0).getText();
-            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
-            if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
-                UndefinedMethodCallError error = new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
-                error.throwException();
-            }
+//            methodCall = ctx.methodcall().getText();
+//            String methodName = ctx.methodcall().IDENTIFIER(0).getText();
+//            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
+//            if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
+//                UndefinedMethodCallError error = new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
+//                error.throwException();
+//            }
         }
         MethodVoidBody body = new MethodVoidBody(leftThis, leftId, rightThis, rightId, methodCall);
 //        Row row = new Row();
@@ -670,7 +670,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         }
         if (ctx.ACCESS() != null && ctx.IDENTIFIER().size() == 2) {
 
-            access = ctx.ACCESS().getText();
+//            access = ctx.ACCESS().getText();
             name = ctx.IDENTIFIER(0).getText();
             type = ctx.IDENTIFIER(1).getText();
         }

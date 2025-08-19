@@ -1,5 +1,6 @@
 // Generated from C:/Users/USER/IdeaProjects/untitled1/src/antlr/Parsergrammar.g4 by ANTLR 4.13.2
 package antlr;
+import ast.ASTNode;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -11,7 +12,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * operations with no return type.
  */
 @SuppressWarnings("CheckReturnValue")
-public class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ParsergrammarVisitor<T> {
+public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ParsergrammarVisitor<T> {
 	/**
 	 * {@inheritDoc}
 	 *
@@ -166,6 +167,9 @@ public class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> imp
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitComponentProperties(Parsergrammar.ComponentPropertiesContext ctx) { return visitChildren(ctx); }
+
+	public abstract ASTNode visitClassBodyStatement(Parsergrammar.ClassBodyStatementContext ctx);
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -194,7 +198,10 @@ public class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> imp
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitTemplateurl(Parsergrammar.TemplateurlContext ctx) { return visitChildren(ctx); }
-	/**
+
+    public abstract ASTNode visitProvidedIn(Parsergrammar.ProvidedinContext ctx);
+
+    /**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
@@ -306,6 +313,9 @@ public class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> imp
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitVariableAssign(Parsergrammar.VariableAssignContext ctx) { return visitChildren(ctx); }
+
+	public abstract ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx);
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -495,6 +505,9 @@ public class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> imp
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitHtmlElements(Parsergrammar.HtmlElementsContext ctx) { return visitChildren(ctx); }
+
+	public abstract ASTNode visitHtmlElement(Parsergrammar.HtmlElementContext ctx);
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -558,6 +571,9 @@ public class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> imp
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitHtmlContent(Parsergrammar.HtmlContentContext ctx) { return visitChildren(ctx); }
+
+	public abstract ASTNode visitHtmlContentStatement(Parsergrammar.HtmlContentStatementContext ctx);
+
 	/**
 	 * {@inheritDoc}
 	 *
