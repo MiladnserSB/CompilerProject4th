@@ -3,17 +3,23 @@ package ast.TS;
 import ast.ASTNode;
 
 public class NgOnInitMethodStatement extends ClassBodyStatement {
-    private String accessModifier;
+    private String accessModifier; // public/private/protected
+    private boolean hasVoidType;   // whether ": void" is present
     private MethodVoidBody body;
 
-    public NgOnInitMethodStatement(String accessModifier, MethodVoidBody body) {
+    public NgOnInitMethodStatement(String accessModifier, boolean hasVoidType, MethodVoidBody body) {
         super(body);
         this.accessModifier = accessModifier;
+        this.hasVoidType = hasVoidType;
         this.body = body;
     }
 
     public String getAccessModifier() {
         return accessModifier;
+    }
+
+    public boolean hasVoidType() {
+        return hasVoidType;
     }
 
     public MethodVoidBody getBody() {
@@ -22,14 +28,18 @@ public class NgOnInitMethodStatement extends ClassBodyStatement {
 
     @Override
     public void prettyPrint(String indent) {
-        super.prettyPrint(indent);
+        System.out.println(indent + "NgOnInit Method:");
         if (accessModifier != null) {
             System.out.println(indent + "  Access: " + accessModifier);
         }
+        System.out.println(indent + "  Return Type: " + (hasVoidType ? "void" : "implicit void"));
+        if (body != null) body.prettyPrint(indent + "  ");
     }
 
     @Override
     public String toString() {
-        return super.toString() + " ngOnInit() { ... }";
+        return (accessModifier != null ? accessModifier + " " : "") +
+                "ngOnInit() " + (hasVoidType ? ": void " : "") +
+                "{ ... }";
     }
 }

@@ -199,9 +199,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 */
 	@Override public T visitTemplateurl(Parsergrammar.TemplateurlContext ctx) { return visitChildren(ctx); }
 
-    public abstract ASTNode visitProvidedIn(Parsergrammar.ProvidedinContext ctx);
+	public abstract ASTNode visitProvidedIn(Parsergrammar.ProvidedinContext ctx);
 
-    /**
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
@@ -314,7 +314,32 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 */
 	@Override public T visitVariableAssign(Parsergrammar.VariableAssignContext ctx) { return visitChildren(ctx); }
 
-	public abstract ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx);
+	/* @Override
+	 public ASTNode visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) {
+
+		 boolean leftThis = ctx.THIS().size() > 0 && ctx.THIS(0) != null;
+		 boolean rightThis = ctx.THIS().size() > 1 || (!leftThis && ctx.THIS().size() > 0);
+		 String leftId = ctx.IDENTIFIER(0).getText();
+		 String rightId = ctx.IDENTIFIER(1).getText();
+		 String methodCall = null;
+		 if (ctx.methodcall() != null) {
+ //            methodCall = ctx.methodcall().getText();
+ //            String methodName = ctx.methodcall().IDENTIFIER(0).getText();
+ //            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
+ //            if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
+ //                UndefinedMethodCallError error = new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
+ //                error.throwException();
+ //            }
+		 }
+		 MethodVoidBody body = new MethodVoidBody(leftThis, leftId, rightThis, rightId, methodCall);
+ //        Row row = new Row();
+ //        row.setName(leftId);
+ //        row.setValue("Assigned " + (rightThis ? "this." : "") + rightId +
+ //                (methodCall != null ? "." + methodCall + "()" : ""));
+ //        this.st.addRow(leftId, row);
+		 return body;
+	 }*/
+	 public abstract ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx);
 
 	/**
 	 * {@inheritDoc}
@@ -330,6 +355,69 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitCrudBodyRule(Parsergrammar.CrudBodyRuleContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitIfStatement(Parsergrammar.IfStatementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitIfBody(Parsergrammar.IfBodyContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -506,9 +594,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 */
 	@Override public T visitHtmlElements(Parsergrammar.HtmlElementsContext ctx) { return visitChildren(ctx); }
 
-	public abstract ASTNode visitHtmlElement(Parsergrammar.HtmlElementContext ctx);
+    public abstract ASTNode visitHtmlElement(Parsergrammar.HtmlElementContext ctx);
 
-	/**
+    /**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling

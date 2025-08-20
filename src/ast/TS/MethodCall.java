@@ -4,7 +4,7 @@ import ast.ASTNode;
 
 public class MethodCall implements ASTNode {
     private String methodName;
-    private String argument; // optional
+    private String argument; // can be IDENTIFIER, "this.IDENTIFIER", or ["string"]
 
     public MethodCall(String methodName, String argument) {
         this.methodName = methodName;

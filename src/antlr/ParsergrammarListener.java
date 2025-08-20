@@ -476,6 +476,96 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	 */
 	void exitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssign}.
+	 * @param ctx the parse tree
+	 */
+	void enterThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssign}.
+	 * @param ctx the parse tree
+	 */
+	void exitThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssignValues}.
+	 * @param ctx the parse tree
+	 */
+	void enterThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssignValues}.
+	 * @param ctx the parse tree
+	 */
+	void exitThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#identifierAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#identifierAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#crudBodyRule}.
+	 * @param ctx the parse tree
+	 */
+	void enterCrudBodyRule(Parsergrammar.CrudBodyRuleContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#crudBodyRule}.
+	 * @param ctx the parse tree
+	 */
+	void exitCrudBodyRule(Parsergrammar.CrudBodyRuleContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssignWithBraces}.
+	 * @param ctx the parse tree
+	 */
+	void enterThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssignWithBraces}.
+	 * @param ctx the parse tree
+	 */
+	void exitThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#staticAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterStaticAssignment(Parsergrammar.StaticAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#staticAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#ifStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfStatement(Parsergrammar.IfStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#ifStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfStatement(Parsergrammar.IfStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#ifBody}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfBody(Parsergrammar.IfBodyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#ifBody}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfBody(Parsergrammar.IfBodyContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Parsergrammar#methodcall}.
 	 * @param ctx the parse tree
 	 */

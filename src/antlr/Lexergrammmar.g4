@@ -195,17 +195,17 @@ METHOD_CALL_VALUE
 
  ATTVALUE_VALUE
         : ' '* ATTRIBUTE -> popMode;
-
+//
 ATTRIBUTE
     : DOUBLE_QUOTE_STRING
     | SINGLE_QUOTE_STRING
     | ATTCHARS
     | HEXCHARS
     | DECCHARS;
-
+//
 ATTCHARS
     : ATTCHAR+ ' '?;
-
+//
 ATTCHAR
     : MINUS
     | '_'
@@ -219,16 +219,16 @@ ATTCHAR
     | SEMICOLON
     | HASH
     | [0-9a-zA-Z];
-
+//
 HEXCHARS
     : COLOR;
-
+//
 DECCHARS
     : [0-9]+ '%'?;
-
+//
 DOUBLE_QUOTE_STRING
     : '"' ~[<"]* '"';
-
+//
 SINGLE_QUOTE_STRING
     : '\'' ~[<']* '\'';
 

@@ -272,7 +272,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return parameters;
     }
 
-    @Override
+   /* @Override
     public ASTNode visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) {
 
         boolean leftThis = ctx.THIS().size() > 0 && ctx.THIS(0) != null;
@@ -296,18 +296,38 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 //                (methodCall != null ? "." + methodCall + "()" : ""));
 //        this.st.addRow(leftId, row);
         return body;
-    }
-    @Override
-    public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
-        String methodName = ctx.IDENTIFIER(0).getText();
-        String argument = ctx.IDENTIFIER().size() > 1 ? ctx.IDENTIFIER(1).getText() : null;
-        MethodCall methodCall = new MethodCall(methodName, argument);
-        Row row = new Row();
-        row.setName("MethodCall");
-        row.setValue("Method: " + methodName + (argument != null ? ", Arg: " + argument : ""));
-        this.undefinedMethodCallErrorSymbolTable.addRow("MethodCall", row);
-        return methodCall;
-    }
+    }*/
+   @Override
+   public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
+       // method name can be IDENTIFIER, NAVIGATE, or NOW
+       String methodName = ctx.IDENTIFIER() != null
+               ? ctx.IDENTIFIER(0).getText()
+               : (ctx.NAVIGATE() != null ? ctx.NAVIGATE().getText() : ctx.NOW().getText());
+
+       String argument = null;
+       if (ctx.IDENTIFIER().size() > 1) {
+           // case: IDENTIFIER(...) or this.IDENTIFIER
+           if (ctx.THIS() != null) {
+               argument = "this." + ctx.IDENTIFIER(1).getText();
+           } else {
+               argument = ctx.IDENTIFIER(1).getText();
+           }
+       } else if (ctx.STRING_LITERAL() != null) {
+           // case: ["string"]
+           argument = "[\"" + ctx.STRING_LITERAL().getText().replaceAll("\"", "") + "\"]";
+       }
+
+       MethodCall methodCall = new MethodCall(methodName, argument);
+
+       // Symbol table tracking (optional logging)
+       Row row = new Row();
+       row.setName("MethodCall");
+       row.setValue("Method: " + methodName + (argument != null ? ", Arg: " + argument : ""));
+       this.undefinedMethodCallErrorSymbolTable.addRow("MethodCall", row);
+
+       return methodCall;
+   }
+
 
     @Override
     public ASTNode visitMethodvoid(Parsergrammar.MethodvoidContext ctx) {
@@ -329,17 +349,25 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitNgOnInitMETHOD(Parsergrammar.NgOnInitMETHODContext ctx) {
         this.incorrectlyOnInitImplementErrorSymbolTable.enterScope("local");
+
         String accessModifier = ctx.ACCESS() != null ? ctx.ACCESS().getText() : null;
+        boolean hasVoidType = ctx.VOIDTYPE() != null;
+
         MethodVoidBody body = (MethodVoidBody) visit(ctx.methodvoidbody());
-        NgOnInitMethodStatement method = new NgOnInitMethodStatement(accessModifier, body);
+
+        NgOnInitMethodStatement method =
+                new NgOnInitMethodStatement(accessModifier, hasVoidType, body);
+
+        // Symbol table tracking
         Row row = new Row();
         row.setName("ngOnInit");
         row.setValue(method.toString());
-       // row.setScope("class");
         this.incorrectlyOnInitImplementErrorSymbolTable.addRow("ngOnInit", row);
+
         this.incorrectlyOnInitImplementErrorSymbolTable.exitScope();
         return method;
     }
+
 
     @Override
     public ASTNode visitValues(Parsergrammar.ValuesContext ctx) {
@@ -460,11 +488,11 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             componentProperties = (ComponentProperties) visit(ctx.componentProperties());
 
 
-            if (!missedTemplateErrorSymbolTable.check("TemplateUrl")) {
-                int line = ctx.componentProperties().styleurl().STYLEURL().getSymbol().getLine();
-                MissedTemplateError error = new MissedTemplateError(missedTemplateErrorSymbolTable, line);
-                error.throwException();
-            }
+//            if (!missedTemplateErrorSymbolTable.check("TemplateUrl")) {
+//                int line = ctx.componentProperties().styleurl().STYLEURL().getSymbol().getLine();
+//                MissedTemplateError error = new MissedTemplateError(missedTemplateErrorSymbolTable, line);
+//                error.throwException();
+//            }
         }
         ComponentDecorator decorator = new ComponentDecorator(componentProperties);
 
@@ -812,6 +840,98 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         this.incorrectlyOnInitImplementErrorSymbolTable.addRow("implements",row);
         return clause;
     }
+
+
+
+    @Override
+    public ASTNode visitAsObservable(Parsergrammar.AsObservableContext ctx) {
+        String variableName = ctx.IDENTIFIER(0).getText();  // left IDENTIFIER before $
+        String sourceIdentifier = ctx.IDENTIFIER(1).getText(); // the one after this.
+        MethodCall methodCall = null;
+
+        if (ctx.methodcall() != null) {
+            methodCall = (MethodCall) visit(ctx.methodcall());
+        }
+
+        return new AsObservable(variableName, sourceIdentifier, methodCall);
+    }
+
+    @Override
+    public ASTNode visitObservable(Parsergrammar.ObservableContext ctx) {
+        String variableName = ctx.IDENTIFIER().getText();
+        ObservableArray observableArray = null;
+
+        if (ctx.observableArray() != null) {
+            observableArray = (ObservableArray) visit(ctx.observableArray());
+        }
+
+        return new Observable(variableName, observableArray != null ? observableArray.toString() : null);
+    }
+
+    @Override
+    public ASTNode visitObservableArray(Parsergrammar.ObservableArrayContext ctx) {
+        // reconstruct something like <any[]>
+        String type = "<" + ctx.ANY().getText() + "[]>";
+        return new ObservableArray(type);
+    }
+
+    @Override
+    public ASTNode visitCrudBody(Parsergrammar.CrudBodyContext ctx) {
+        String identifier = ctx.IDENTIFIER().getText();
+        String action = ctx.NEXT() != null ? "next" : "value";
+        return new CrudBody(identifier, action);
+    }
+
+    @Override
+    public ASTNode visitNextCall(Parsergrammar.NextCallContext ctx) {
+        if (ctx.addCall() != null) {
+            return new NextCall(visit(ctx.addCall()));
+        } else {
+            return new NextCall(visit(ctx.edit_delete_call()));
+        }
+    }
+
+    @Override
+    public ASTNode visitAddCall(Parsergrammar.AddCallContext ctx) {
+        CrudBody crudBody = (CrudBody) visit(ctx.crudBody());
+        String identifier = ctx.IDENTIFIER().getText();
+        return new AddCall(crudBody, identifier);
+    }
+
+    @Override
+    public ASTNode visitEdit_delete_call(Parsergrammar.Edit_delete_callContext ctx) {
+        CrudBody crudBody = (CrudBody) visit(ctx.crudBody());
+        ASTNode operation = ctx.map() != null ? visit(ctx.map()) : visit(ctx.filter());
+        return new EditDeleteCall(crudBody, operation);
+    }
+
+    @Override
+    public ASTNode visitMap(Parsergrammar.MapContext ctx) {
+        LeftMapFilterAssign left = (LeftMapFilterAssign) visit(ctx.leftMapFilterAssign());
+        RightMapFilterAssign right = (RightMapFilterAssign) visit(ctx.rightMapFilterAssign());
+        return new MapCall(left, right);
+    }
+
+    @Override
+    public ASTNode visitFilter(Parsergrammar.FilterContext ctx) {
+        LeftMapFilterAssign left = (LeftMapFilterAssign) visit(ctx.leftMapFilterAssign());
+        RightMapFilterAssign right = (RightMapFilterAssign) visit(ctx.rightMapFilterAssign());
+        return new FilterCall(left, right);
+    }
+
+    @Override
+    public ASTNode visitLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx) {
+        String identifier = ctx.IDENTIFIER().getText();
+        String mapFilterId = ctx.mapFilterIDENTIFIER().getText();
+        return new LeftMapFilterAssign(identifier, mapFilterId);
+    }
+
+    @Override
+    public ASTNode visitRightMapFilterAssign(Parsergrammar.RightMapFilterAssignContext ctx) {
+        return new RightMapFilterAssign(ctx.getText());
+    }
+
+
 
     ////////////////////// CSS VISITORS/////////////////////////////
 

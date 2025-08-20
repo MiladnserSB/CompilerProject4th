@@ -289,6 +289,60 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssignValues}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#identifierAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#crudBodyRule}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCrudBodyRule(Parsergrammar.CrudBodyRuleContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssignWithBraces}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#staticAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#ifStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStatement(Parsergrammar.IfStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#ifBody}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfBody(Parsergrammar.IfBodyContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#methodcall}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

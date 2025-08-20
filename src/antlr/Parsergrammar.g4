@@ -119,9 +119,9 @@ signature ASSIGN NEW BEHAVIOR_SUBJECT observableArray LPAREN LBRACKET arraybody1
 //////////modified
 constructorDeclaration:
 CONSTRUCTOR LPAREN (ACCESS? IDENTIFIER COLON IDENTIFIER (COMMA ACCESS IDENTIFIER COLON ROUTER)?)? RPAREN LBRACE RBRACE;
-
+//modified
 variableDeclaration:
-signature COLON TYPE ASSIGN values SEMICOLON;
+signature COLON TYPE (ASSIGN values)? SEMICOLON;
 
 variableAssign:
 IDENTIFIER ASSIGN values SEMICOLON ;
@@ -131,64 +131,106 @@ signature LPAREN parameters? RPAREN (COLON VOIDTYPE)? LBRACE methodvoidbody RBRA
 
 ////////////// all modified
 methodvoidbody:
-((THIS DOT IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT IDENTIFIER DOLLAR_SIGN SEMICOLON)
-| (THIS DOT IDENTIFIER ASSIGN (IDENTIFIER|values) SEMICOLON)
-| ((THIS DOT)? IDENTIFIER ((ASSIGN THIS DOT IDENTIFIER(DOT methodcall))| (DOT methodcall)) SEMICOLON)
-| ( crudBody nextCall SEMICOLON)
-| (THIS DOT IDENTIFIER ASSIGN LBRACE THREE_DOTS IDENTIFIER RBRACE SEMICOLON)
-| (STATIC IDENTIFIER ASSIGN LBRACE THREE_DOTS THIS DOT IDENTIFIER COMMA IDENTIFIER COLON DATE DOT methodcall RBRACE SEMICOLON)
-| (IF LPAREN THIS DOT IDENTIFIER QUESTION_MARK DOT IDENTIFIER THREE_ASSIGN IDENTIFIER RPAREN LBRACE (THIS DOT IDENTIFIER ASSIGN values SEMICOLON)+ RBRACE)
-)*
-;
+    (methodAssignment | crudBodyRule | ifStatement)*
+    ;
+
+methodAssignment:
+    thisDotIdentifierAssign |
+    thisDotIdentifierAssignValues |
+    identifierAssignment |
+    thisDotIdentifierAssignWithBraces |
+    staticAssignment
+    ;
+
+thisDotIdentifierAssign:
+    THIS DOT IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT IDENTIFIER DOLLAR_SIGN SEMICOLON
+    ;
+
+thisDotIdentifierAssignValues:
+    THIS DOT IDENTIFIER ASSIGN (IDENTIFIER | values) SEMICOLON
+    ;
+
+identifierAssignment:
+    (THIS DOT)? IDENTIFIER (ASSIGN THIS DOT IDENTIFIER (DOT methodcall) | DOT methodcall) SEMICOLON
+    ;
+
+crudBodyRule:
+    crudBody nextCall SEMICOLON
+    ;
+
+thisDotIdentifierAssignWithBraces:
+    THIS DOT IDENTIFIER ASSIGN LBRACE THREE_DOTS IDENTIFIER RBRACE SEMICOLON
+    ;
+
+staticAssignment:
+    STATIC IDENTIFIER ASSIGN LBRACE THREE_DOTS THIS DOT IDENTIFIER COMMA IDENTIFIER COLON DATE DOT methodcall RBRACE SEMICOLON
+    ;
+
+ifStatement:
+    IF LPAREN THIS DOT IDENTIFIER QUESTION_MARK DOT IDENTIFIER THREE_ASSIGN IDENTIFIER RPAREN LBRACE ifBody RBRACE
+    ;
+
+ifBody:
+    (THIS DOT IDENTIFIER ASSIGN values SEMICOLON)+
+    ;
+
+
 //(THIS DOT IDENTIFIER DOLLAR_SIGN? ASSIGN
  //(LBRACE THREE_DOTS IDENTIFIER RBRACE)|
 //(THIS DOT IDENTIFIER ((DOT IDENTIFIER DOLLAR_SIGN)|(DOT methodcall)|(crudBody nextCall))|values) SEMICOLON);
 
-/////////modified
-methodcall:
+
+methodcall:         //DONE
 (IDENTIFIER | NAVIGATE | NOW) LPAREN ((THIS DOT)?IDENTIFIER|(LBRACKET STRING_LITERAL RBRACKET))? RPAREN ;
 
-///////modofied
-ngOnInitMETHOD:
+
+ngOnInitMETHOD:     //DONE
 ACCESS? NGONINIT LPAREN  RPAREN (COLON VOIDTYPE)? LBRACE methodvoidbody RBRACE ;
 
+
+/////////
 signalDeclaration:
 IDENTIFIER ASSIGN CROISNN LPAREN STRING_LITERAL RPAREN SEMICOLON ;
+///////
 
-crudBody:
+
+
+
+crudBody: //DONE
 THIS DOT IDENTIFIER DOT (NEXT|VALUE);
 
-nextCall:
+nextCall: //DONE
  LPAREN (addCall | edit_delete_call) RPAREN;
 
-addCall:
+addCall: //DONE
 LBRACKET THREE_DOTS  crudBody COMMA IDENTIFIER RBRACKET;
 
-edit_delete_call:
+edit_delete_call: //DONE
  crudBody DOT (map | filter) ;
 
-map:
+map: //DONE
 MAP LPAREN leftMapFilterAssign THREE_ASSIGN rightMapFilterAssign RPAREN;
 
-filter:
+filter: //DONE
 FILTER LPAREN leftMapFilterAssign NOT_THREE_ASSIGN rightMapFilterAssign RPAREN;
 
-leftMapFilterAssign:
+leftMapFilterAssign: //DONE
 IDENTIFIER ASSIGN_TAG mapFilterIDENTIFIER;
 
-rightMapFilterAssign:
+rightMapFilterAssign: //DONE
 (mapFilterIDENTIFIER QUESTION_MARK mapFilterIDENTIFIER) | IDENTIFIER;
 
-mapFilterIDENTIFIER:
+mapFilterIDENTIFIER: //DONE
 (IDENTIFIER DOT IDENTIFIER) | (IDENTIFIER COLON IDENTIFIER);
 
-asObservable:
+asObservable:       //DONE
 IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT methodcall SEMICOLON  ;
 
-observable:
+observable:         //DONE
 IDENTIFIER DOLLAR_SIGN INTERJECTION COLON OBSERVABLE observableArray SEMICOLON;
 
-observableArray:
+
+observableArray:    //DONE
 TAG_OPEN ANY LBRA RBRA TAG_CLOSE;
 
 ///////////////////////////////////////////////// قواعد الـ CSS /////////////////////////////////////////////
