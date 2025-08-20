@@ -497,6 +497,18 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterConstructorParam(Parsergrammar.ConstructorParamContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstructorParam(Parsergrammar.ConstructorParamContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterVariableDeclaration(Parsergrammar.VariableDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}

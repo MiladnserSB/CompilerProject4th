@@ -167,7 +167,10 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitComponentProperties(Parsergrammar.ComponentPropertiesContext ctx) { return visitChildren(ctx); }
-	/**
+
+    public abstract ASTNode visitClassBodyStatement(Parsergrammar.ClassBodyStatementContext ctx);
+
+    /**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
@@ -195,6 +198,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitTemplateurl(Parsergrammar.TemplateurlContext ctx) { return visitChildren(ctx); }
+
+	public abstract ASTNode visitProvidedIn(Parsergrammar.ProvidedinContext ctx);
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -299,6 +305,13 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitConstructorParam(Parsergrammar.ConstructorParamContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitVariableDeclaration(Parsergrammar.VariableDeclarationContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -307,6 +320,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitVariableAssign(Parsergrammar.VariableAssignContext ctx) { return visitChildren(ctx); }
+
+	public abstract ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx);
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -357,9 +373,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 */
 	@Override public T visitStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx) { return visitChildren(ctx); }
 
-    public abstract ASTNode visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
+	public abstract ASTNode visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
 
-    /**
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
@@ -590,6 +606,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitHtmlElements(Parsergrammar.HtmlElementsContext ctx) { return visitChildren(ctx); }
+
+	public abstract ASTNode visitHtmlElement(Parsergrammar.HtmlElementContext ctx);
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -653,6 +672,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitHtmlContent(Parsergrammar.HtmlContentContext ctx) { return visitChildren(ctx); }
+
+	public abstract ASTNode visitHtmlContentStatement(Parsergrammar.HtmlContentStatementContext ctx);
+
 	/**
 	 * {@inheritDoc}
 	 *

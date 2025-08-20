@@ -34,11 +34,11 @@ classBodyStatement
   | objectExpression            #ObjectExpressionStatement
   ;
 
-//mod
+
 importStatement:
 IMPORT LBRACE importBody (COMMA importBody)*RBRACE FROM(STRING_LITERAL) SEMICOLON;
 
-//mod
+
 
 importBody:
 IDENTIFIER
@@ -50,11 +50,11 @@ IDENTIFIER
 |ROUTER
 ;
 
-//mod
+
 componentDecorator:
 AT COMPONENT LPAREN LBRACE componentProperties? RBRACE RPAREN ;
 
-//mod
+
 componentProperties:
 (selector COMMA)? (imports COMMA)? templateurl styleurl?;
 
@@ -86,13 +86,15 @@ NULL | NUMBER | STRING_LITERAL | BOOLEAN;
 
 parameters:
 IDENTIFIER COLON TYPE (COMMA IDENTIFIER COLON TYPE)*;
-//mod12
+
+
 methodDeclaration:
 signature LPAREN parameters? RPAREN LBRACE methodBody RBRACE;
 
-////////////modified (DOT VALUE)?
+
+////////////done j
 methodBody:
-RETURN (THIS DOT)? (IDENTIFIER|values) (DOT VALUE)? SEMICOLON ;
+RETURN ((THIS DOT)?IDENTIFIER (DOT VALUE)?|values) SEMICOLON ;
 
 ////////modified
 objectExpression:
@@ -116,9 +118,12 @@ arrayExpression3:
 signature ASSIGN NEW BEHAVIOR_SUBJECT observableArray LPAREN LBRACKET arraybody1* RBRACKET RPAREN SEMICOLON? ;
 
 
-//////////modified
+//////////done j
 constructorDeclaration:
-CONSTRUCTOR LPAREN (ACCESS? IDENTIFIER COLON IDENTIFIER (COMMA ACCESS IDENTIFIER COLON ROUTER)?)? RPAREN LBRACE RBRACE;
+    CONSTRUCTOR LPAREN (constructorParam (COMMA constructorParam)*)? RPAREN LBRACE RBRACE;
+
+constructorParam:
+    ACCESS? IDENTIFIER COLON (IDENTIFIER | ROUTER);
 
 variableDeclaration:
 signature COLON TYPE ASSIGN values SEMICOLON;

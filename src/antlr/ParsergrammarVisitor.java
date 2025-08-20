@@ -265,6 +265,12 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConstructorDeclaration(Parsergrammar.ConstructorDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#constructorParam}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstructorParam(Parsergrammar.ConstructorParamContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#variableDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

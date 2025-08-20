@@ -14,9 +14,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     public SymbolTable st = new SymbolTable();
@@ -448,7 +446,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
 
     @Override
-   public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
+    public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
        // method name can be IDENTIFIER, NAVIGATE, or NOW
        String methodName = ctx.IDENTIFIER() != null
                ? ctx.IDENTIFIER(0).getText()
@@ -481,18 +479,30 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
     @Override
     public ASTNode visitMethodvoid(Parsergrammar.MethodvoidContext ctx) {
+        // Enter a new scope for the method body
         this.undefinedMethodCallErrorSymbolTable.enterScope("Local");
+
+        // Visit and extract method components
         Signature signature = (Signature) visit(ctx.signature());
         Parameters parameters = ctx.parameters() != null ? (Parameters) visit(ctx.parameters()) : null;
         MethodVoidBody body = (MethodVoidBody) visit(ctx.methodvoidbody());
+
+        // Line number for potential error reporting
         int line = ctx.signature().IDENTIFIER().getSymbol().getLine();
+
+        // Create the AST node
         VoidMethodDeclarationStatement method = new VoidMethodDeclarationStatement(signature, parameters, body);
+
+        // Add entry to symbol table for error tracking
         Row row = new Row();
         row.setName(signature.getName());
         row.setValue(ctx.methodvoidbody().getText());
-      //  row.setScope("class");
-        this.undefinedMethodCallErrorSymbolTable.addRow(signature.getName(),row);
+
+        this.undefinedMethodCallErrorSymbolTable.addRow(signature.getName(), row);
+
+        // Exit scope
         this.undefinedMethodCallErrorSymbolTable.exitScope();
+
         return method;
     }
 
@@ -654,6 +664,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return decorator;
     }
 
+    @Override
     public ASTNode visitMethodDeclaration(Parsergrammar.MethodDeclarationContext ctx) {
         Signature signature = (Signature) visit(ctx.signature());
         Parameters parameters = ctx.parameters() != null ? (Parameters) visit(ctx.parameters()) : null;
@@ -668,7 +679,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         Row row = new Row();
         row.setName(methodName);
         row.setValue(ctx.methodBody().getText());
-      //  row.setScope("class");
+
         undefinedMethodCallErrorSymbolTable.addRow(signature.getName(),row);
 
         return new TypedMethodDeclarationStatement(signature, parameters, methodBody);
@@ -677,23 +688,32 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitMethodBody(Parsergrammar.MethodBodyContext ctx) {
         boolean isThisRef = ctx.THIS() != null;
-        String returnTarget;
+        String returnTarget = null;
+        ASTNode valueNode = null;
+        boolean hasDotValue = false;
 
         if (ctx.IDENTIFIER() != null) {
             returnTarget = ctx.IDENTIFIER().getText();
-        } else if(ctx.values()!=null){
-            Values valueNode = (Values) visit(ctx.values());
-            returnTarget = valueNode.getValue();
+            hasDotValue = ctx.VALUE() != null;
+        } else if (ctx.values() != null) {
+            valueNode = (ASTNode) visit(ctx.values());
         }
-        else returnTarget = null;
 
-        MethodBody methodBody = new MethodBody(returnTarget, isThisRef);
+        MethodBody methodBody = new MethodBody(isThisRef, returnTarget, valueNode, hasDotValue);
 
         Row row = new Row();
         row.setName("ReturnStatement");
-        row.setValue("Returns: " + (isThisRef ? "this." : "") + returnTarget);
-        if(returnTarget!=null && "return".equals(ctx.RETURN().getText()))
-        {this.notFoundReturnValueMethodErrorSymbolTable.addRow("ReturnStatement", row); return methodBody;}
+
+        String returned = returnTarget != null
+                ? (isThisRef ? "this." : "") + returnTarget + (hasDotValue ? ".value" : "")
+                : (valueNode != null ? valueNode.toString() : "null");
+
+        row.setValue("Returns: " + returned);
+
+        if (returnTarget != null && "return".equals(ctx.RETURN().getText())) {
+            this.notFoundReturnValueMethodErrorSymbolTable.addRow("ReturnStatement", row);
+            return methodBody;
+        }
 
         return null;
     }
@@ -728,7 +748,22 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return decorator;
     }
 
+    @Override
+    public ASTNode visitArrayExpression3(Parsergrammar.ArrayExpression3Context ctx) {
+        Signature signature = (Signature) visit(ctx.signature());
 
+        String observableType = ctx.observableArray().getText();
+
+        List<ArrayBody1> elements = new ArrayList<>();
+        for (Parsergrammar.Arraybody1Context elemCtx : ctx.arraybody1()) {
+            ArrayBody1 element = (ArrayBody1) visit(elemCtx);
+            elements.add(element);
+        }
+
+        ArrayExprThreeStatement arrayExpr=new ArrayExprThreeStatement(signature, observableType, elements);
+
+        return arrayExpr;
+    }
     @Override
     public ASTNode visitArrayExpression1(Parsergrammar.ArrayExpression1Context ctx) {
         Signature signature = (Signature) visit(ctx.signature());
@@ -753,45 +788,39 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
     @Override
     public ASTNode visitObjectExpression(Parsergrammar.ObjectExpressionContext ctx) {
-        Map<String, ASTNode> properties = new LinkedHashMap<>();
-
-        for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
-            String key = ctx.IDENTIFIER(i).getText();
-            ASTNode value = visit(ctx.values(i));
-            properties.put(key, value);
+        String assignIdentifier = null;
+        if (ctx.IDENTIFIER(0) != null && ctx.ASSIGN() != null) {
+            assignIdentifier = ctx.IDENTIFIER(0).getText();
         }
-        ObjectExpression objExpr = new ObjectExpression(properties);
 
-//        Row row = new Row();
-//        row.setName("ObjectExpression");
-//        row.setValue("Object with keys: " + properties.keySet());
-//        this.st.addRow("ObjectExpression", row);
+        List<String> keys = new ArrayList<>();
+        List<ASTNode> values = new ArrayList<>();
 
-        return objExpr;
+        int startIndex = (assignIdentifier != null) ? 1 : 0;
+
+        for (int i = 0; i < ctx.values().size(); i++) {
+            keys.add(ctx.IDENTIFIER(startIndex + i).getText());
+            values.add(visit(ctx.values(i)));
+        }
+
+        return new ObjectExpression(assignIdentifier, keys, values);
     }
+
 
     @Override
     public ASTNode visitArraybody1(Parsergrammar.Arraybody1Context ctx) {
-        ASTNode value;
-
         if (ctx.objectExpression() != null) {
-            value = visit(ctx.objectExpression());
+            ASTNode objectExpr = visit(ctx.objectExpression());
+            return new ArrayBody1(objectExpr, null, null);
         } else if (ctx.NUMBER() != null) {
-            value = new Values(ctx.NUMBER().getText());
+            String numberText = ctx.NUMBER().getText();
+            return new ArrayBody1(null, numberText, null);
         } else if (ctx.STRING_LITERAL() != null) {
-            value = new Values(ctx.STRING_LITERAL().getText());
+            String strLiteral = ctx.STRING_LITERAL().getText();
+            return new ArrayBody1(null, null, strLiteral);
         } else {
-            value = null;
+            throw new RuntimeException("Invalid arraybody1 content");
         }
-
-        ArrayBody1 arrayElement = new ArrayBody1(value);
-
-//        Row row = new Row();
-//        row.setName("ArrayElement");
-//        row.setValue("Value: " + (value != null ? value.toString() : "null"));
-//        this.st.addRow("ArrayElement", row);
-
-        return arrayElement;
     }
 
     @Override
@@ -833,36 +862,39 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return arrayExpr;
     }
 
+    @Override
+    public ConstructorParameter visitConstructorParam(Parsergrammar.ConstructorParamContext ctx) {
+        String access = ctx.ACCESS() != null ? ctx.ACCESS().getText() : null;
+        String name = ctx.IDENTIFIER(0).getText();
+        String type;
+        if (ctx.IDENTIFIER().size() > 1) {
+            type = ctx.IDENTIFIER(1).getText();
+        } else {
+            type = ctx.ROUTER().getText();
+        }
 
+        return new ConstructorParameter(access, name, type);
+    }
     @Override
     public ASTNode visitConstructorDeclaration(Parsergrammar.ConstructorDeclarationContext ctx) {
-        String access = null;
-        String name = null;
-        String type = null;
+        List<ConstructorParameter> params = new ArrayList<>();
 
-        if(ctx.ACCESS()==null && !ctx.IDENTIFIER().isEmpty()){
-            int line = ctx.CONSTRUCTOR().getSymbol().getLine();
-            MissedConstructorAccessModifierError missedConstructorAccessModifierError = new MissedConstructorAccessModifierError(missedConstructorAccessModifierErrorSymbolTable,line);
-            missedConstructorAccessModifierError.throwException();
+        if (ctx.constructorParam() != null && !ctx.constructorParam().isEmpty()) {
+            for (Parsergrammar.ConstructorParamContext paramCtx : ctx.constructorParam()) {
+                // Check for missing access modifier on each parameter
+                if (paramCtx.ACCESS() == null && !paramCtx.IDENTIFIER().isEmpty()) {
+                    int line = paramCtx.getStart().getLine();
+                    MissedConstructorAccessModifierError missedAccessError =
+                            new MissedConstructorAccessModifierError(missedConstructorAccessModifierErrorSymbolTable, line);
+                    missedAccessError.throwException();
+                }
 
+                ConstructorParameter param = visitConstructorParam(paramCtx);
+                params.add(param);
+            }
         }
-        if (ctx.ACCESS() != null && ctx.IDENTIFIER().size() == 2) {
 
-//            access = ctx.ACCESS().getText();
-            name = ctx.IDENTIFIER(0).getText();
-            type = ctx.IDENTIFIER(1).getText();
-        }
-
-        ConstructorDeclarationStatement constructor = new ConstructorDeclarationStatement(access, name, type);
-//        Row row = new Row();
-//        row.setName("Constructor");
-//        row.setValue(name != null
-//                ? "Constructor with param " + name + ": " + type
-//                : "Constructor with no parameters");
-//        row.setScope("class");
-//        this.st.addRow("Constructor", row);
-
-        return constructor;
+        return new ConstructorDeclarationStatement(params);
     }
 
 
@@ -901,6 +933,11 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitArrayExprTwoStatement(Parsergrammar.ArrayExprTwoStatementContext ctx) {
         return visit(ctx.arrayExpression2());
+    }
+
+    @Override
+    public ASTNode visitArrayExprThreeStatement(Parsergrammar.ArrayExprThreeStatementContext ctx) {
+        return visit(ctx.arrayExpression3());
     }
 
     @Override

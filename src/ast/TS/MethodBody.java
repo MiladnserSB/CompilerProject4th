@@ -1,34 +1,57 @@
-
 package ast.TS;
 
 import ast.ASTNode;
 
 public class MethodBody implements ASTNode {
-    private String returnTarget; // could be an identifier or literal
-    private boolean isThisReference;
+    private boolean isThisAccessed;
+    private String identifier;
+    private ASTNode valueNode;
+    private boolean hasDotValue;
 
-    public MethodBody(String returnTarget, boolean isThisReference) {
-        this.returnTarget = returnTarget;
-        this.isThisReference = isThisReference;
+    public MethodBody(boolean isThisAccessed, String identifier, ASTNode valueNode, boolean hasDotValue) {
+        this.isThisAccessed = isThisAccessed;
+        this.identifier = identifier;
+        this.valueNode = valueNode;
+        this.hasDotValue = hasDotValue;
     }
 
-    public String getReturnTarget() {
-        return returnTarget;
+    public boolean isThisAccessed() {
+        return isThisAccessed;
     }
 
-    public boolean isThisReference() {
-        return isThisReference;
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public ASTNode getValueNode() {
+        return valueNode;
+    }
+
+    public boolean hasDotValue() {
+        return hasDotValue;
     }
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "MethodBody:");
-        System.out.println(indent + "  Return: " +
-                (isThisReference ? "this." : "") + returnTarget);
+        System.out.println(indent + "Return Statement:");
+        if (isThisAccessed) {
+            System.out.println(indent + "  Accessing this.");
+        }
+        if (identifier != null) {
+            System.out.println(indent + "  Identifier: " + identifier);
+        } else if (valueNode != null) {
+            System.out.println(indent + "  Value Node:");
+            valueNode.prettyPrint(indent + "    ");
+        }
+        if (hasDotValue) {
+            System.out.println(indent + "  Has dot value");
+        }
     }
 
     @Override
     public String toString() {
-        return "return " + (isThisReference ? "this." : "") + returnTarget + ";";
+        return "Return " + (isThisAccessed ? "this." : "") +
+                (identifier != null ? identifier : valueNode) +
+                (hasDotValue ? ".VALUE" : "");
     }
 }

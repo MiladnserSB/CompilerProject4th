@@ -436,6 +436,16 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	 */
 	void exitConstructorDeclaration(Parsergrammar.ConstructorDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Parsergrammar#constructorParam}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructorParam(Parsergrammar.ConstructorParamContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Parsergrammar#constructorParam}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructorParam(Parsergrammar.ConstructorParamContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Parsergrammar#variableDeclaration}.
 	 * @param ctx the parse tree
 	 */

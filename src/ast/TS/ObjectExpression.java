@@ -1,42 +1,46 @@
 package ast.TS;
 
 import ast.ASTNode;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 public class ObjectExpression implements ASTNode {
-    private Map<String, ASTNode> properties;
+    private String assignIdentifier; // nullable
+    private List<String> keys;
+    private List<ASTNode> values;
 
-    public ObjectExpression(Map<String, ASTNode> properties) {
-        this.properties = properties;
+    public ObjectExpression(String assignIdentifier, List<String> keys, List<ASTNode> values) {
+        this.assignIdentifier = assignIdentifier;
+        this.keys = keys;
+        this.values = values;
     }
 
-    public Map<String, ASTNode> getProperties() {
-        return properties;
+    public String getAssignIdentifier() {
+        return assignIdentifier;
+    }
+
+    public List<String> getKeys() {
+        return keys;
+    }
+
+    public List<ASTNode> getValues() {
+        return values;
     }
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "ObjectExpression:");
-        for (Map.Entry<String, ASTNode> entry : properties.entrySet()) {
-            System.out.print(indent + "  " + entry.getKey() + ": ");
-            if (entry.getValue() != null) {
-                entry.getValue().prettyPrint("");
-            } else {
-                System.out.println("null");
-            }
+        if (assignIdentifier != null) {
+            System.out.println(indent + "Assign Identifier: " + assignIdentifier);
+        }
+        System.out.println(indent + "Object Properties:");
+        for (int i = 0; i < keys.size(); i++) {
+            System.out.print(indent + "  " + keys.get(i) + ": ");
+            values.get(i).prettyPrint("");
         }
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("{ ");
-        for (Map.Entry<String, ASTNode> entry : properties.entrySet()) {
-            sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(", ");
-        }
-        if (!properties.isEmpty()) sb.setLength(sb.length() - 2); // remove last comma
-        sb.append(" }");
-        return sb.toString();
+        return "ObjectExpression" + (assignIdentifier != null ? " assign " + assignIdentifier : "") +
+                " with " + keys.size() + " properties";
     }
 }
