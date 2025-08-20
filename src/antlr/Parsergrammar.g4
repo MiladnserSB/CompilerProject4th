@@ -119,9 +119,9 @@ signature ASSIGN NEW BEHAVIOR_SUBJECT observableArray LPAREN LBRACKET arraybody1
 //////////modified
 constructorDeclaration:
 CONSTRUCTOR LPAREN (ACCESS? IDENTIFIER COLON IDENTIFIER (COMMA ACCESS IDENTIFIER COLON ROUTER)?)? RPAREN LBRACE RBRACE;
-//modified
+
 variableDeclaration:
-signature COLON TYPE (ASSIGN values)? SEMICOLON;
+signature COLON TYPE ASSIGN values SEMICOLON;
 
 variableAssign:
 IDENTIFIER ASSIGN values SEMICOLON ;
@@ -135,42 +135,42 @@ methodvoidbody:
     ;
 
 methodAssignment:
-    thisDotIdentifierAssign |
-    thisDotIdentifierAssignValues |
-    identifierAssignment |
-    thisDotIdentifierAssignWithBraces |
-    staticAssignment
+      thisDotIdentifierAssign       # ThisDotIdentifierAssignRule
+    | thisDotIdentifierAssignValues # ThisDotIdentifierAssignValuesRule
+    | identifierAssignment          # IdentifierAssignmentRule
+    | thisDotIdentifierAssignWithBraces # ThisDotIdentifierAssignWithBracesRule
+    | staticAssignment              # StaticAssignmentRule
     ;
 
-thisDotIdentifierAssign:
+thisDotIdentifierAssign:    //DONE
     THIS DOT IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT IDENTIFIER DOLLAR_SIGN SEMICOLON
     ;
 
-thisDotIdentifierAssignValues:
+thisDotIdentifierAssignValues:      //DONE
     THIS DOT IDENTIFIER ASSIGN (IDENTIFIER | values) SEMICOLON
     ;
 
-identifierAssignment:
+identifierAssignment:   //DONE
     (THIS DOT)? IDENTIFIER (ASSIGN THIS DOT IDENTIFIER (DOT methodcall) | DOT methodcall) SEMICOLON
     ;
 
-crudBodyRule:
+crudBodyRule:   //DONE
     crudBody nextCall SEMICOLON
     ;
 
-thisDotIdentifierAssignWithBraces:
+thisDotIdentifierAssignWithBraces:  //DONE
     THIS DOT IDENTIFIER ASSIGN LBRACE THREE_DOTS IDENTIFIER RBRACE SEMICOLON
     ;
 
-staticAssignment:
+staticAssignment:   //DONE
     STATIC IDENTIFIER ASSIGN LBRACE THREE_DOTS THIS DOT IDENTIFIER COMMA IDENTIFIER COLON DATE DOT methodcall RBRACE SEMICOLON
     ;
 
-ifStatement:
+ifStatement:        //DONE
     IF LPAREN THIS DOT IDENTIFIER QUESTION_MARK DOT IDENTIFIER THREE_ASSIGN IDENTIFIER RPAREN LBRACE ifBody RBRACE
     ;
 
-ifBody:
+ifBody:     //DONE
     (THIS DOT IDENTIFIER ASSIGN values SEMICOLON)+
     ;
 

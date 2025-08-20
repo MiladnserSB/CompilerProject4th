@@ -545,13 +545,61 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) { }
+	@Override public void enterThisDotIdentifierAssignRule(Parsergrammar.ThisDotIdentifierAssignRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) { }
+	@Override public void exitThisDotIdentifierAssignRule(Parsergrammar.ThisDotIdentifierAssignRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterThisDotIdentifierAssignValuesRule(Parsergrammar.ThisDotIdentifierAssignValuesRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitThisDotIdentifierAssignValuesRule(Parsergrammar.ThisDotIdentifierAssignValuesRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifierAssignmentRule(Parsergrammar.IdentifierAssignmentRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifierAssignmentRule(Parsergrammar.IdentifierAssignmentRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterThisDotIdentifierAssignWithBracesRule(Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitThisDotIdentifierAssignWithBracesRule(Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

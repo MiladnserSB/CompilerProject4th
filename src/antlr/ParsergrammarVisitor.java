@@ -199,7 +199,7 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	T visitSignature(Parsergrammar.SignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code values}
-	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
+	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementmethodAssignmentmethodAssignmentmethodAssignmentmethodAssignmentmethodAssignmenthtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
@@ -289,11 +289,40 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Parsergrammar#methodAssignment}.
+	 * Visit a parse tree produced by the {@code ThisDotIdentifierAssignRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
+	T visitThisDotIdentifierAssignRule(Parsergrammar.ThisDotIdentifierAssignRuleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ThisDotIdentifierAssignValuesRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThisDotIdentifierAssignValuesRule(Parsergrammar.ThisDotIdentifierAssignValuesRuleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code IdentifierAssignmentRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierAssignmentRule(Parsergrammar.IdentifierAssignmentRuleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ThisDotIdentifierAssignWithBracesRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThisDotIdentifierAssignWithBracesRule(Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code StaticAssignmentRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssign}.
 	 * @param ctx the parse tree

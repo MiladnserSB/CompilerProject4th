@@ -325,13 +325,13 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	void exitSignature(Parsergrammar.SignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code values}
-	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
+	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementmethodAssignmentmethodAssignmentmethodAssignmentmethodAssignmentmethodAssignmenthtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
 	 * @param ctx the parse tree
 	 */
 	void enterValues(Parsergrammar.ValuesContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code values}
-	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
+	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementmethodAssignmentmethodAssignmentmethodAssignmentmethodAssignmentmethodAssignmenthtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
 	 * @param ctx the parse tree
 	 */
 	void exitValues(Parsergrammar.ValuesContext ctx);
@@ -476,15 +476,65 @@ public interface ParsergrammarListener extends ParseTreeListener {
 	 */
 	void exitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Parsergrammar#methodAssignment}.
+	 * Enter a parse tree produced by the {@code ThisDotIdentifierAssignRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
 	 * @param ctx the parse tree
 	 */
-	void enterMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
+	void enterThisDotIdentifierAssignRule(Parsergrammar.ThisDotIdentifierAssignRuleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Parsergrammar#methodAssignment}.
+	 * Exit a parse tree produced by the {@code ThisDotIdentifierAssignRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
 	 * @param ctx the parse tree
 	 */
-	void exitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
+	void exitThisDotIdentifierAssignRule(Parsergrammar.ThisDotIdentifierAssignRuleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ThisDotIdentifierAssignValuesRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterThisDotIdentifierAssignValuesRule(Parsergrammar.ThisDotIdentifierAssignValuesRuleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ThisDotIdentifierAssignValuesRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitThisDotIdentifierAssignValuesRule(Parsergrammar.ThisDotIdentifierAssignValuesRuleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code IdentifierAssignmentRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierAssignmentRule(Parsergrammar.IdentifierAssignmentRuleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code IdentifierAssignmentRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierAssignmentRule(Parsergrammar.IdentifierAssignmentRuleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ThisDotIdentifierAssignWithBracesRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterThisDotIdentifierAssignWithBracesRule(Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ThisDotIdentifierAssignWithBracesRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitThisDotIdentifierAssignWithBracesRule(Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code StaticAssignmentRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code StaticAssignmentRule}
+	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssign}.
 	 * @param ctx the parse tree
