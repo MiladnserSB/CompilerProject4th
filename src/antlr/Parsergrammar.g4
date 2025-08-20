@@ -17,16 +17,21 @@ IMPLEMENTS (IDENTIFIER | CROISNN) (COMMA (IDENTIFIER | CROISNN))*;
 classBody:
 classBodyStatement*;
 
+////////modified
 classBodyStatement
   : variableAssign              #VariableAssignmentStatement
   | methodvoid                  #VoidMethodDeclarationStatement
   | variableDeclaration         #VariableDeclarationStatement
   | arrayExpression1            #ArrayExprOneStatement
   | arrayExpression2            #ArrayExprTwoStatement
+  | arrayExpression3            #ArrayExprThreeStatement
   | methodDeclaration           #TypedMethodDeclarationStatement
   | constructorDeclaration      #ConstructorDeclarationStatement
   | signalDeclaration           #SignalDeclarationStatement
   | ngOnInitMETHOD              #NgOnInitMethodStatement
+  | asObservable                #AsObservableStatement
+  | observable                  #ObservableStatement
+  | objectExpression            #ObjectExpressionStatement
   ;
 
 //mod
@@ -40,6 +45,9 @@ IDENTIFIER
 |CROISNN
 |COMPONENT
 |INJECTABLE
+|BEHAVIOR_SUBJECT
+|OBSERVABLE
+|ROUTER
 ;
 
 //mod
@@ -82,17 +90,20 @@ IDENTIFIER COLON TYPE (COMMA IDENTIFIER COLON TYPE)*;
 methodDeclaration:
 signature LPAREN parameters? RPAREN LBRACE methodBody RBRACE;
 
+////////////modified (DOT VALUE)?
 methodBody:
-RETURN (THIS DOT)? (IDENTIFIER|values)SEMICOLON ;
+RETURN (THIS DOT)? (IDENTIFIER|values) (DOT VALUE)? SEMICOLON ;
 
+////////modified
 objectExpression:
-LBRACE (IDENTIFIER COLON values COMMA?)* RBRACE COMMA?;
+(IDENTIFIER ASSIGN)?LBRACE (IDENTIFIER COLON values COMMA?)* RBRACE SEMICOLON?;
 
 arrayExpression1:
 signature ASSIGN LBRACKET arraybody1* RBRACKET SEMICOLON? ;
 
+/////modified
 arraybody1:
-objectExpression | NUMBER COMMA? | STRING_LITERAL COMMA?;
+objectExpression COMMA? | NUMBER COMMA? | STRING_LITERAL COMMA?;
 
 arrayExpression2:
 signature COLON TYPE LBRACKET RBRACKET ASSIGN LBRACKET arraybody2* RBRACKET SEMICOLON;
@@ -100,32 +111,127 @@ signature COLON TYPE LBRACKET RBRACKET ASSIGN LBRACKET arraybody2* RBRACKET SEMI
 arraybody2:
 objectExpression COMMA NUMBER COMMA STRING_LITERAL;
 
+////modifiedddddd new rule
+arrayExpression3:
+signature ASSIGN NEW BEHAVIOR_SUBJECT observableArray LPAREN LBRACKET arraybody1* RBRACKET RPAREN SEMICOLON? ;
+
+
+//////////modified
 constructorDeclaration:
-CONSTRUCTOR LPAREN (ACCESS? IDENTIFIER COLON IDENTIFIER)? RPAREN LBRACE RBRACE;
+CONSTRUCTOR LPAREN (ACCESS? IDENTIFIER COLON IDENTIFIER (COMMA ACCESS IDENTIFIER COLON ROUTER)?)? RPAREN LBRACE RBRACE;
 
 variableDeclaration:
 signature COLON TYPE ASSIGN values SEMICOLON;
 
 variableAssign:
 IDENTIFIER ASSIGN values SEMICOLON ;
-
+////modified (COLON VOIDTYPE)?
 methodvoid:
-signature LPAREN parameters? RPAREN COLON VOIDTYPE LBRACE methodvoidbody RBRACE ;
+signature LPAREN parameters? RPAREN (COLON VOIDTYPE)? LBRACE methodvoidbody RBRACE ;
 
+////////////// all modified
 methodvoidbody:
-(THIS DOT)? IDENTIFIER ASSIGN (THIS DOT)? IDENTIFIER (DOT methodcall)? SEMICOLON;
+    (methodAssignment | crudBodyRule | ifStatement)*
+    ;
 
-//////no mod
-methodcall:
-IDENTIFIER LPAREN IDENTIFIER? RPAREN ;
+methodAssignment:
+      thisDotIdentifierAssign       # ThisDotIdentifierAssignRule
+    | thisDotIdentifierAssignValues # ThisDotIdentifierAssignValuesRule
+    | identifierAssignment          # IdentifierAssignmentRule
+    | thisDotIdentifierAssignWithBraces # ThisDotIdentifierAssignWithBracesRule
+    | staticAssignment              # StaticAssignmentRule
+    ;
 
-ngOnInitMETHOD:
-ACCESS? NGONINIT LPAREN  RPAREN COLON VOIDTYPE LBRACE methodvoidbody RBRACE ;
+thisDotIdentifierAssign:    //DONE
+    THIS DOT IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT IDENTIFIER DOLLAR_SIGN SEMICOLON
+    ;
 
+thisDotIdentifierAssignValues:      //DONE
+    THIS DOT IDENTIFIER ASSIGN (IDENTIFIER | values) SEMICOLON
+    ;
+
+identifierAssignment:   //DONE
+    (THIS DOT)? IDENTIFIER (ASSIGN THIS DOT IDENTIFIER (DOT methodcall) | DOT methodcall) SEMICOLON
+    ;
+
+crudBodyRule:   //DONE
+    crudBody nextCall SEMICOLON
+    ;
+
+thisDotIdentifierAssignWithBraces:  //DONE
+    THIS DOT IDENTIFIER ASSIGN LBRACE THREE_DOTS IDENTIFIER RBRACE SEMICOLON
+    ;
+
+staticAssignment:   //DONE
+    STATIC IDENTIFIER ASSIGN LBRACE THREE_DOTS THIS DOT IDENTIFIER COMMA IDENTIFIER COLON DATE DOT methodcall RBRACE SEMICOLON
+    ;
+
+ifStatement:        //DONE
+    IF LPAREN THIS DOT IDENTIFIER QUESTION_MARK DOT IDENTIFIER THREE_ASSIGN IDENTIFIER RPAREN LBRACE ifBody RBRACE
+    ;
+
+ifBody:     //DONE
+    (THIS DOT IDENTIFIER ASSIGN values SEMICOLON)+
+    ;
+
+
+//(THIS DOT IDENTIFIER DOLLAR_SIGN? ASSIGN
+ //(LBRACE THREE_DOTS IDENTIFIER RBRACE)|
+//(THIS DOT IDENTIFIER ((DOT IDENTIFIER DOLLAR_SIGN)|(DOT methodcall)|(crudBody nextCall))|values) SEMICOLON);
+
+
+methodcall:         //DONE
+(IDENTIFIER | NAVIGATE | NOW) LPAREN ((THIS DOT)?IDENTIFIER|(LBRACKET STRING_LITERAL RBRACKET))? RPAREN ;
+
+
+ngOnInitMETHOD:     //DONE
+ACCESS? NGONINIT LPAREN  RPAREN (COLON VOIDTYPE)? LBRACE methodvoidbody RBRACE ;
+
+
+/////////
 signalDeclaration:
 IDENTIFIER ASSIGN CROISNN LPAREN STRING_LITERAL RPAREN SEMICOLON ;
+///////
 
 
+
+
+crudBody: //DONE
+THIS DOT IDENTIFIER DOT (NEXT|VALUE);
+
+nextCall: //DONE
+ LPAREN (addCall | edit_delete_call) RPAREN;
+
+addCall: //DONE
+LBRACKET THREE_DOTS  crudBody COMMA IDENTIFIER RBRACKET;
+
+edit_delete_call: //DONE
+ crudBody DOT (map | filter) ;
+
+map: //DONE
+MAP LPAREN leftMapFilterAssign THREE_ASSIGN rightMapFilterAssign RPAREN;
+
+filter: //DONE
+FILTER LPAREN leftMapFilterAssign NOT_THREE_ASSIGN rightMapFilterAssign RPAREN;
+
+leftMapFilterAssign: //DONE
+IDENTIFIER ASSIGN_TAG mapFilterIDENTIFIER;
+
+rightMapFilterAssign: //DONE
+(mapFilterIDENTIFIER QUESTION_MARK mapFilterIDENTIFIER) | IDENTIFIER;
+
+mapFilterIDENTIFIER: //DONE
+(IDENTIFIER DOT IDENTIFIER) | (IDENTIFIER COLON IDENTIFIER);
+
+asObservable:       //DONE
+IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT methodcall SEMICOLON  ;
+
+observable:         //DONE
+IDENTIFIER DOLLAR_SIGN INTERJECTION COLON OBSERVABLE observableArray SEMICOLON;
+
+
+observableArray:    //DONE
+TAG_OPEN ANY LBRA RBRA TAG_CLOSE;
 
 ///////////////////////////////////////////////// قواعد الـ CSS /////////////////////////////////////////////
 
@@ -184,7 +290,7 @@ tsTag:
 TAG_OPEN TAG_NAME htmlAttribute* TAG_SLASH_CLOSE ;
 //mod
 noEndTag:
-TAG_OPEN TAGS_VOID htmlAttribute* TAG_CLOSE ;
+TAG_OPEN TAGS_VOID htmlAttribute* REQUIRED? (TAG_SLASH_CLOSE| TAG_CLOSE) ;
 //mod
 normalTag:
 TAG_OPEN TAGS htmlAttribute* TAG_CLOSE htmlContent? TAG_OPEN_SLASH TAGS TAG_CLOSE ;
@@ -225,5 +331,6 @@ htmlMisc:
 htmlComment:
      HTML_COMMENT
     | HTML_CONDITIONAL_COMMENT;
+
 
 

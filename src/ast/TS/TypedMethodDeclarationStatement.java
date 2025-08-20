@@ -2,12 +2,13 @@ package ast.TS;
 
 import ast.ASTNode;
 
-public class TypedMethodDeclarationStatement implements ASTNode {
+public class TypedMethodDeclarationStatement extends ClassBodyStatement {
     private Signature signature;
-    private Parameters parameters; // can be null
+    private Parameters parameters;
     private MethodBody methodBody;
 
     public TypedMethodDeclarationStatement(Signature signature, Parameters parameters, MethodBody methodBody) {
+        super(signature);
         this.signature = signature;
         this.parameters = parameters;
         this.methodBody = methodBody;
@@ -27,19 +28,14 @@ public class TypedMethodDeclarationStatement implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Method Declaration:");
-        signature.prettyPrint(indent + "  ");
-        if (parameters != null) {
-            parameters.prettyPrint(indent + "  ");
-        } else {
-            System.out.println(indent + "  Parameters: (none)");
-        }
+        super.prettyPrint(indent);
+        if (parameters != null) parameters.prettyPrint(indent + "  ");
         methodBody.prettyPrint(indent + "  ");
     }
 
     @Override
     public String toString() {
-        return "Method(" + signature.toString() + ", Params: " +
-                (parameters != null ? parameters.toString() : "none") + ")";
+        return super.toString() + signature + "(" +
+                (parameters != null ? parameters.toString() : "") + ")";
     }
 }

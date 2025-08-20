@@ -4,13 +4,13 @@ import ast.ASTNode;
 
 public class VoidMethodDeclarationStatement implements ASTNode {
     private Signature signature;
-    private Parameters parameters; // Can be null
-    private MethodVoidBody body;
+    private Parameters parameters; // nullable
+    private MethodVoidBody methodBody;
 
-    public VoidMethodDeclarationStatement(Signature signature, Parameters parameters, MethodVoidBody body) {
+    public VoidMethodDeclarationStatement(Signature signature, Parameters parameters, MethodVoidBody methodBody) {
         this.signature = signature;
         this.parameters = parameters;
-        this.body = body;
+        this.methodBody = methodBody;
     }
 
     public Signature getSignature() {
@@ -21,24 +21,34 @@ public class VoidMethodDeclarationStatement implements ASTNode {
         return parameters;
     }
 
-    public MethodVoidBody getBody() {
-        return body;
+    public MethodVoidBody getMethodBody() {
+        return methodBody;
     }
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Method (void):");
-        signature.prettyPrint(indent + "  ");
-        if (parameters != null)
+        System.out.println(indent + "Void Method Declaration:");
+        if (signature != null) {
+            signature.prettyPrint(indent + "  ");
+        }
+        if (parameters != null) {
             parameters.prettyPrint(indent + "  ");
-        body.prettyPrint(indent + "  ");
+        } else {
+            System.out.println(indent + "  <No parameters>");
+        }
+        if (methodBody != null) {
+            methodBody.prettyPrint(indent + "  ");
+        } else {
+            System.out.println(indent + "  <Empty method body>");
+        }
     }
 
     @Override
     public String toString() {
-        return signature.toString() + "(" +
-                (parameters != null ? parameters.toString() : "") +
-                "): void {\n" +
-                "  " + body.toString() + "\n}";
+        return "VoidMethodDeclarationStatement{" +
+                "signature=" + signature +
+                ", parameters=" + parameters +
+                ", methodBody=" + methodBody +
+                '}';
     }
 }

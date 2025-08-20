@@ -2,12 +2,13 @@ package ast.TS;
 
 import ast.ASTNode;
 
-public class SignalDeclarationStatement implements ASTNode {
+public class SignalDeclarationStatement extends ClassBodyStatement {
     private String name;
-    private String signalType; // Value of CROISNN, e.g. "signal"
-    private String argument;   // The string literal passed to the signal
+    private String signalType;
+    private String argument;
 
     public SignalDeclarationStatement(String name, String signalType, String argument) {
+        super(null);
         this.name = name;
         this.signalType = signalType;
         this.argument = argument;
@@ -27,7 +28,7 @@ public class SignalDeclarationStatement implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Signal Declaration:");
+        super.prettyPrint(indent);
         System.out.println(indent + "  Name: " + name);
         System.out.println(indent + "  Type: " + signalType);
         System.out.println(indent + "  Argument: " + argument);
@@ -35,6 +36,6 @@ public class SignalDeclarationStatement implements ASTNode {
 
     @Override
     public String toString() {
-        return name + " = " + signalType + "(\"" + argument + "\");";
+        return super.toString() + name + " = " + signalType + "(\"" + argument + "\");";
     }
 }

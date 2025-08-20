@@ -139,23 +139,18 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         boolean hasSignalDeclaration = false;
         int signalLine = -1;
 
-        // Visit all direct children in the class body (bypassing classBodyStatement)
-        if(ctx.children!=null) {
-            for (ParseTree child : ctx.children) {
-                if (child instanceof TerminalNode) continue; // skip '{' or '}'
+        for (Parsergrammar.ClassBodyStatementContext stmtCtx : ctx.classBodyStatement()) {
+            ClassBodyStatement statement = (ClassBodyStatement) visit(stmtCtx); // must return a concrete subclass
+            if (statement == null) continue;
 
-                ASTNode node = visit(child);
-                if (node == null) continue;
+            body.addMember(statement);
 
-                ClassBodyStatement wrapped = new ClassBodyStatement(node);
-                body.addMember(wrapped);
-
-                if (node instanceof SignalDeclarationStatement) {
-                    hasSignalDeclaration = true;
-                    signalLine = ((ParserRuleContext) child).getStart().getLine();
-                }
+            if (statement instanceof SignalDeclarationStatement) {
+                hasSignalDeclaration = true;
+                signalLine = stmtCtx.getStart().getLine();
             }
         }
+
         if (hasSignalDeclaration && !undefinedImportsErrorSymbolTable.check("signal")) {
             NotImportedSignalError notImportedSignalError =
                     new NotImportedSignalError(undefinedImportsErrorSymbolTable, signalLine);
@@ -164,6 +159,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
         return body;
     }
+
 
 
     @Override
@@ -278,40 +274,210 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
     @Override
     public ASTNode visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) {
+        List<ASTNode> statements = new ArrayList<>();
+        for (var stmtCtx : ctx.methodAssignment()) {
+            statements.add(visit(stmtCtx));
+        }
+        for (var crudCtx : ctx.crudBodyRule()) {
+            statements.add(visit(crudCtx));
+        }
+        for (var ifCtx : ctx.ifStatement()) {
+            statements.add(visit(ifCtx));
+        }
+        return new MethodVoidBody(statements);
+    }
 
-        boolean leftThis = ctx.THIS().size() > 0 && ctx.THIS(0) != null;
-        boolean rightThis = ctx.THIS().size() > 1 || (!leftThis && ctx.THIS().size() > 0);
-        String leftId = ctx.IDENTIFIER(0).getText();
-        String rightId = ctx.IDENTIFIER(1).getText();
-        String methodCall = null;
-        if (ctx.methodcall() != null) {
-            methodCall = ctx.methodcall().getText();
-            String methodName = ctx.methodcall().IDENTIFIER(0).getText();
-            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
-            if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
-                UndefinedMethodCallError error = new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
-                error.throwException();
+    @Override
+    public ASTNode visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) {
+        // Check each labeled alternative dynamically
+        if (ctx.getChildCount() > 0) {
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                var child = ctx.getChild(i);
+                if (child instanceof Parsergrammar.ThisDotIdentifierAssignRuleContext
+                        || child instanceof Parsergrammar.ThisDotIdentifierAssignValuesRuleContext
+                        || child instanceof Parsergrammar.IdentifierAssignmentRuleContext
+                        || child instanceof Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext
+                        || child instanceof Parsergrammar.StaticAssignmentRuleContext) {
+                    return visit(child);
+                }
             }
         }
-        MethodVoidBody body = new MethodVoidBody(leftThis, leftId, rightThis, rightId, methodCall);
-//        Row row = new Row();
-//        row.setName(leftId);
-//        row.setValue("Assigned " + (rightThis ? "this." : "") + rightId +
-//                (methodCall != null ? "." + methodCall + "()" : ""));
-//        this.st.addRow(leftId, row);
-        return body;
+        return null; // or throw an exception if nothing matched
     }
+
+
+
+
     @Override
-    public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
-        String methodName = ctx.IDENTIFIER(0).getText();
-        String argument = ctx.IDENTIFIER().size() > 1 ? ctx.IDENTIFIER(1).getText() : null;
-        MethodCall methodCall = new MethodCall(methodName, argument);
-        Row row = new Row();
-        row.setName("MethodCall");
-        row.setValue("Method: " + methodName + (argument != null ? ", Arg: " + argument : ""));
-        this.undefinedMethodCallErrorSymbolTable.addRow("MethodCall", row);
-        return methodCall;
+    public ASTNode visitThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx) {
+        // matches constructor: (leftIdentifier, rightIdentifier1, rightIdentifier2)
+        return new ThisDotIdentifierAssign(
+                ctx.IDENTIFIER(0).getText(),
+                ctx.IDENTIFIER(1).getText(),
+                ctx.IDENTIFIER(2).getText()
+        );
     }
+
+    @Override
+    public ASTNode visitThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx) {
+        // matches constructor: (leftIdentifier, value)
+        String left = ctx.IDENTIFIER(0).getText();
+        String value;
+        if (ctx.IDENTIFIER().size() > 1) {
+            value = ctx.IDENTIFIER(1).getText();
+        } else {
+            value = ctx.values().getText();
+        }
+        return new ThisDotIdentifierAssignValues(left, value);
+    }
+
+    @Override
+    public ASTNode visitIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx) {
+        // IdentifierAssignment(String left, String right, MethodCall methodCall)
+        String left = ctx.IDENTIFIER(0).getText();
+        String right = ctx.IDENTIFIER().size() > 1 ? ctx.IDENTIFIER(1).getText() : null;
+
+        MethodCall methodCall = null;
+        if (ctx.methodcall() != null) {
+            String methodName = ctx.methodcall().IDENTIFIER(0).getText();
+            String argument = ctx.methodcall().IDENTIFIER().size() > 1
+                    ? ctx.methodcall().IDENTIFIER(1).getText()
+                    : null;
+
+            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
+
+            // error check for undefined method
+            if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
+                UndefinedMethodCallError error =
+                        new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
+                error.throwException();
+            }
+
+            methodCall = new MethodCall(methodName, argument);
+        }
+
+        return new IdentifierAssignment(left, right, methodCall);
+    }
+
+    @Override
+    public ASTNode visitThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx) {
+        // matches constructor: (leftIdentifier, spreadIdentifier)
+        return new ThisDotIdentifierAssignWithBraces(
+                ctx.IDENTIFIER(0).getText(),
+                ctx.IDENTIFIER(1).getText()
+        );
+    }
+
+    @Override
+    public ASTNode visitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) {
+        // StaticAssignment(String identifier, String spreadThisIdentifier, String dateIdentifier, MethodCall methodCall)
+        String identifier = ctx.IDENTIFIER(0).getText();
+        String spreadThis = ctx.IDENTIFIER(1).getText();
+        String dateField = ctx.IDENTIFIER(2).getText();
+
+        String methodName = ctx.methodcall().IDENTIFIER(0).getText();
+        String argument = ctx.methodcall().IDENTIFIER().size() > 1
+                ? ctx.methodcall().IDENTIFIER(1).getText()
+                : null;
+
+        MethodCall methodCall = new MethodCall(methodName, argument);
+
+        return new StaticAssignment(identifier, spreadThis, dateField, methodCall);
+    }
+
+    @Override
+    public ASTNode visitCrudBodyRule(Parsergrammar.CrudBodyRuleContext ctx) {
+        // String form like: "this.<id>.next" or "this.<id>.value"
+        String crudExpression = ctx.crudBody().getText();
+
+        // Determine the method name from crudBody: NEXT or VALUE
+        Parsergrammar.CrudBodyContext cb = ctx.crudBody();
+        String methodName = null;
+        if (cb.NEXT() != null) {
+            methodName = cb.NEXT().getText();   // typically "next"
+        } else if (cb.VALUE() != null) {
+            methodName = cb.VALUE().getText();  // typically "value"
+        }
+
+        // Extract the argument inside nextCall's parentheses
+        Parsergrammar.NextCallContext nc = ctx.nextCall();
+        String argument;
+        if (nc.addCall() != null) {
+            // e.g. "[...this.x.next, item]"
+            argument = nc.addCall().getText();
+        } else {
+            // e.g. "this.x.value.map(...)" or "this.x.value.filter(...)"
+            argument = nc.edit_delete_call().getText();
+        }
+
+        MethodCall next = new MethodCall(methodName, argument);
+        return new CrudBodyRule(crudExpression, next);
+    }
+
+
+    @Override
+    public ASTNode visitIfStatement(Parsergrammar.IfStatementContext ctx) {
+        String left = ctx.IDENTIFIER(0).getText();   // condition lhs: this.<left>?.
+        String right = ctx.IDENTIFIER(1).getText();  // condition rhs after ?.
+        String compareTo = ctx.IDENTIFIER(2).getText(); // identifier compared with ===
+
+        // Build the body list from the single ifBody
+        List<IfBody> bodyList = new ArrayList<>();
+        Parsergrammar.IfBodyContext bodyCtx = ctx.ifBody();
+        int n = bodyCtx.IDENTIFIER().size(); // one per assignment in the body
+        for (int i = 0; i < n; i++) {
+            String assignLeft = bodyCtx.IDENTIFIER(i).getText();
+            String value = bodyCtx.values(i).getText();
+            bodyList.add(new IfBody(assignLeft, value));
+        }
+
+        return new IfStatement(left, right, compareTo, bodyList);
+    }
+
+
+
+    @Override
+    public ASTNode visitIfBody(Parsergrammar.IfBodyContext ctx) {
+        // Return the first assignment; the full list is constructed in visitIfStatement.
+        String left = ctx.IDENTIFIER(0).getText();
+        String value = ctx.values(0).getText();
+        return new IfBody(left, value);
+    }
+
+
+
+
+    @Override
+   public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
+       // method name can be IDENTIFIER, NAVIGATE, or NOW
+       String methodName = ctx.IDENTIFIER() != null
+               ? ctx.IDENTIFIER(0).getText()
+               : (ctx.NAVIGATE() != null ? ctx.NAVIGATE().getText() : ctx.NOW().getText());
+
+       String argument = null;
+       if (ctx.IDENTIFIER().size() > 1) {
+           // case: IDENTIFIER(...) or this.IDENTIFIER
+           if (ctx.THIS() != null) {
+               argument = "this." + ctx.IDENTIFIER(1).getText();
+           } else {
+               argument = ctx.IDENTIFIER(1).getText();
+           }
+       } else if (ctx.STRING_LITERAL() != null) {
+           // case: ["string"]
+           argument = "[\"" + ctx.STRING_LITERAL().getText().replaceAll("\"", "") + "\"]";
+       }
+
+       MethodCall methodCall = new MethodCall(methodName, argument);
+
+       // Symbol table tracking (optional logging)
+       Row row = new Row();
+       row.setName("MethodCall");
+       row.setValue("Method: " + methodName + (argument != null ? ", Arg: " + argument : ""));
+       this.undefinedMethodCallErrorSymbolTable.addRow("MethodCall", row);
+
+       return methodCall;
+   }
+
 
     @Override
     public ASTNode visitMethodvoid(Parsergrammar.MethodvoidContext ctx) {
@@ -333,17 +499,25 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitNgOnInitMETHOD(Parsergrammar.NgOnInitMETHODContext ctx) {
         this.incorrectlyOnInitImplementErrorSymbolTable.enterScope("local");
+
         String accessModifier = ctx.ACCESS() != null ? ctx.ACCESS().getText() : null;
+        boolean hasVoidType = ctx.VOIDTYPE() != null;
+
         MethodVoidBody body = (MethodVoidBody) visit(ctx.methodvoidbody());
-        NgOnInitMethodStatement method = new NgOnInitMethodStatement(accessModifier, body);
+
+        NgOnInitMethodStatement method =
+                new NgOnInitMethodStatement(accessModifier, hasVoidType, body);
+
+        // Symbol table tracking
         Row row = new Row();
         row.setName("ngOnInit");
         row.setValue(method.toString());
-       // row.setScope("class");
         this.incorrectlyOnInitImplementErrorSymbolTable.addRow("ngOnInit", row);
+
         this.incorrectlyOnInitImplementErrorSymbolTable.exitScope();
         return method;
     }
+
 
     @Override
     public ASTNode visitValues(Parsergrammar.ValuesContext ctx) {
@@ -464,11 +638,11 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             componentProperties = (ComponentProperties) visit(ctx.componentProperties());
 
 
-            if (!missedTemplateErrorSymbolTable.check("TemplateUrl")) {
-                int line = ctx.componentProperties().styleurl().STYLEURL().getSymbol().getLine();
-                MissedTemplateError error = new MissedTemplateError(missedTemplateErrorSymbolTable, line);
-                error.throwException();
-            }
+//            if (!missedTemplateErrorSymbolTable.check("TemplateUrl")) {
+//                int line = ctx.componentProperties().styleurl().STYLEURL().getSymbol().getLine();
+//                MissedTemplateError error = new MissedTemplateError(missedTemplateErrorSymbolTable, line);
+//                error.throwException();
+//            }
         }
         ComponentDecorator decorator = new ComponentDecorator(componentProperties);
 
@@ -674,7 +848,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         }
         if (ctx.ACCESS() != null && ctx.IDENTIFIER().size() == 2) {
 
-            access = ctx.ACCESS().getText();
+//            access = ctx.ACCESS().getText();
             name = ctx.IDENTIFIER(0).getText();
             type = ctx.IDENTIFIER(1).getText();
         }
@@ -694,20 +868,16 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
     @Override
     public ASTNode visitVariableDeclaration(Parsergrammar.VariableDeclarationContext ctx) {
-
         String signature = ctx.signature().IDENTIFIER().getText();
         String type = ctx.TYPE().getText();
         String value = ctx.values().getText();
         int line =  ctx.signature().IDENTIFIER().getSymbol().getLine();
-
         VariableDeclarationStatement variableDeclaration = new VariableDeclarationStatement(signature, type, value);
-
         Row row = new Row();
         row.setName(signature);
         row.setType(type);
         row.setValue( value);
         row.setScope(this.alreadyDefinedVariableErrorSymbolTable.getCurrentScope());
-
         AlreadyDefinedVariableError error = new AlreadyDefinedVariableError(signature,alreadyDefinedVariableErrorSymbolTable,line);
         if(error.alreadyDefinedVariableErrorSymbolTable.check(signature)){
             error.throwException();
@@ -716,6 +886,51 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             error.alreadyDefinedVariableErrorSymbolTable.addRow(signature, row);
         }
         return variableDeclaration;
+    }
+
+    @Override
+    public ASTNode visitVariableDeclarationStatement(Parsergrammar.VariableDeclarationStatementContext ctx) {
+        return visit(ctx.variableDeclaration());
+    }
+
+    @Override
+    public ASTNode visitArrayExprOneStatement(Parsergrammar.ArrayExprOneStatementContext ctx) {
+        return visit(ctx.arrayExpression1());
+    }
+
+    @Override
+    public ASTNode visitArrayExprTwoStatement(Parsergrammar.ArrayExprTwoStatementContext ctx) {
+        return visit(ctx.arrayExpression2());
+    }
+
+    @Override
+    public ASTNode visitTypedMethodDeclarationStatement(Parsergrammar.TypedMethodDeclarationStatementContext ctx) {
+        return visit(ctx.methodDeclaration());
+    }
+
+    @Override
+    public ASTNode visitConstructorDeclarationStatement(Parsergrammar.ConstructorDeclarationStatementContext ctx) {
+         return visit(ctx.constructorDeclaration());
+    }
+
+    @Override
+    public ASTNode visitSignalDeclarationStatement(Parsergrammar.SignalDeclarationStatementContext ctx) {
+        return visit(ctx.signalDeclaration());
+    }
+
+    @Override
+    public ASTNode visitNgOnInitMethodStatement(Parsergrammar.NgOnInitMethodStatementContext ctx) {
+        return visit(ctx.ngOnInitMETHOD());
+    }
+
+    @Override
+    public ASTNode visitProvidedin(Parsergrammar.ProvidedinContext ctx) {
+        return super.visitProvidedin(ctx);
+    }
+
+    @Override
+    public ASTNode visitMethodcall(Parsergrammar.MethodcallContext ctx) {
+        return super.visitMethodcall(ctx);
     }
 
     @Override
@@ -775,6 +990,98 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         this.incorrectlyOnInitImplementErrorSymbolTable.addRow("implements",row);
         return clause;
     }
+
+
+
+    @Override
+    public ASTNode visitAsObservable(Parsergrammar.AsObservableContext ctx) {
+        String variableName = ctx.IDENTIFIER(0).getText();  // left IDENTIFIER before $
+        String sourceIdentifier = ctx.IDENTIFIER(1).getText(); // the one after this.
+        MethodCall methodCall = null;
+
+        if (ctx.methodcall() != null) {
+            methodCall = (MethodCall) visit(ctx.methodcall());
+        }
+
+        return new AsObservable(variableName, sourceIdentifier, methodCall);
+    }
+
+    @Override
+    public ASTNode visitObservable(Parsergrammar.ObservableContext ctx) {
+        String variableName = ctx.IDENTIFIER().getText();
+        ObservableArray observableArray = null;
+
+        if (ctx.observableArray() != null) {
+            observableArray = (ObservableArray) visit(ctx.observableArray());
+        }
+
+        return new Observable(variableName, observableArray != null ? observableArray.toString() : null);
+    }
+
+    @Override
+    public ASTNode visitObservableArray(Parsergrammar.ObservableArrayContext ctx) {
+        // reconstruct something like <any[]>
+        String type = "<" + ctx.ANY().getText() + "[]>";
+        return new ObservableArray(type);
+    }
+
+    @Override
+    public ASTNode visitCrudBody(Parsergrammar.CrudBodyContext ctx) {
+        String identifier = ctx.IDENTIFIER().getText();
+        String action = ctx.NEXT() != null ? "next" : "value";
+        return new CrudBody(identifier, action);
+    }
+
+    @Override
+    public ASTNode visitNextCall(Parsergrammar.NextCallContext ctx) {
+        if (ctx.addCall() != null) {
+            return new NextCall(visit(ctx.addCall()));
+        } else {
+            return new NextCall(visit(ctx.edit_delete_call()));
+        }
+    }
+
+    @Override
+    public ASTNode visitAddCall(Parsergrammar.AddCallContext ctx) {
+        CrudBody crudBody = (CrudBody) visit(ctx.crudBody());
+        String identifier = ctx.IDENTIFIER().getText();
+        return new AddCall(crudBody, identifier);
+    }
+
+    @Override
+    public ASTNode visitEdit_delete_call(Parsergrammar.Edit_delete_callContext ctx) {
+        CrudBody crudBody = (CrudBody) visit(ctx.crudBody());
+        ASTNode operation = ctx.map() != null ? visit(ctx.map()) : visit(ctx.filter());
+        return new EditDeleteCall(crudBody, operation);
+    }
+
+    @Override
+    public ASTNode visitMap(Parsergrammar.MapContext ctx) {
+        LeftMapFilterAssign left = (LeftMapFilterAssign) visit(ctx.leftMapFilterAssign());
+        RightMapFilterAssign right = (RightMapFilterAssign) visit(ctx.rightMapFilterAssign());
+        return new MapCall(left, right);
+    }
+
+    @Override
+    public ASTNode visitFilter(Parsergrammar.FilterContext ctx) {
+        LeftMapFilterAssign left = (LeftMapFilterAssign) visit(ctx.leftMapFilterAssign());
+        RightMapFilterAssign right = (RightMapFilterAssign) visit(ctx.rightMapFilterAssign());
+        return new FilterCall(left, right);
+    }
+
+    @Override
+    public ASTNode visitLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx) {
+        String identifier = ctx.IDENTIFIER().getText();
+        String mapFilterId = ctx.mapFilterIDENTIFIER().getText();
+        return new LeftMapFilterAssign(identifier, mapFilterId);
+    }
+
+    @Override
+    public ASTNode visitRightMapFilterAssign(Parsergrammar.RightMapFilterAssignContext ctx) {
+        return new RightMapFilterAssign(ctx.getText());
+    }
+
+
 
     ////////////////////// CSS VISITORS/////////////////////////////
 
@@ -1023,6 +1330,33 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         System.err.println("Unrecognized HTML element: " + ctx.getText());
         return null;
     }
+
+
+    @Override
+    public ASTNode visitTsTagElement(Parsergrammar.TsTagElementContext ctx) {
+        return visit(ctx.tsTag());
+    }
+
+    @Override
+    public ASTNode visitNoEndTagElement(Parsergrammar.NoEndTagElementContext ctx) {
+        return visit(ctx.noEndTag());
+    }
+
+    @Override
+    public ASTNode visitNormalTagElement(Parsergrammar.NormalTagElementContext ctx) {
+        return visit(ctx.normalTag());
+    }
+
+    @Override
+    public ASTNode visitScriptletElement(Parsergrammar.ScriptletElementContext ctx) {
+        return visit(ctx.SCRIPTLET());
+    }
+
+    @Override
+    public ASTNode visitInterpolationElement(Parsergrammar.InterpolationElementContext ctx) {
+        return visit(ctx.INTERPOLATION());
+    }
+
     @Override
     public ASTNode visitTsTag(Parsergrammar.TsTagContext ctx) {
         String tagName = ctx.TAG_NAME().getText();
@@ -1046,6 +1380,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitNoEndTag(Parsergrammar.NoEndTagContext ctx) {
         String tagName = ctx.TAGS_VOID().getText();
+
         List<ASTNode> attributes = new ArrayList<>();
         if (ctx.htmlAttribute() != null) {
             for (var attrCtx : ctx.htmlAttribute()) {
@@ -1055,12 +1390,15 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
                 }
             }
         }
-        /*Row row = new Row();
-        row.setName(tagName);
-        row.setValue("Void HTML tag: " + tagName);
-        this.st.addRow(tagName, row);*/
-        return new NoEndTag(tagName, attributes);
+        boolean required = ctx.REQUIRED() != null;
+    /*Row row = new Row();
+    row.setName(tagName);
+    row.setValue("Void HTML tag: " + tagName);
+    this.st.addRow(tagName, row);*/
+
+        return new NoEndTag(tagName, attributes, required);
     }
+
 
     @Override
     public ASTNode visitNormalTag(Parsergrammar.NormalTagContext ctx) {
@@ -1128,6 +1466,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitHtmlContentStatement(Parsergrammar.HtmlContentStatementContext ctx) {
         ASTNode inner = null;
+
         if (ctx instanceof Parsergrammar.HtmlCharDataStatementContext charCtx) {
             String text = charCtx.getText();
             if (text.contains("{{") && text.contains("}}")) {
@@ -1136,6 +1475,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             } else {
                 inner = new TextContent(text.trim());
             }
+
         } else if (ctx instanceof Parsergrammar.HtmlElementStatementContext elementCtx) {
             inner = visitHtmlElement(elementCtx.htmlElement());
 
@@ -1151,8 +1491,46 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         } else if (ctx instanceof Parsergrammar.HtmlIdentifierStatementContext identCtx) {
             inner = new TextContent(identCtx.IDENTIFIER().getText());
         }
-        return new HtmlContentStatement(inner);
+
+        return new HtmlContentStatementImpl(inner);
+
     }
+
+    @Override
+    public ASTNode visitHtmlCharDataStatement(Parsergrammar.HtmlCharDataStatementContext ctx) {
+        return visit(ctx.htmlChardata());
+    }
+
+    @Override
+    public ASTNode visitHtmlElementStatement(Parsergrammar.HtmlElementStatementContext ctx) {
+        return visit(ctx.htmlElement());
+    }
+
+    @Override
+    public ASTNode visitHtmlCDataStatement(Parsergrammar.HtmlCDataStatementContext ctx) {
+        return visit(ctx.CDATA());
+    }
+
+    @Override
+    public ASTNode visitHtmlCommentStatement(Parsergrammar.HtmlCommentStatementContext ctx) {
+        return visit(ctx.htmlComment());
+    }
+
+    @Override
+    public ASTNode visitHtmlScriptletStatement(Parsergrammar.HtmlScriptletStatementContext ctx) {
+        return visit(ctx.SCRIPTLET());
+    }
+
+    @Override
+    public ASTNode visitHtmlIdentifierStatement(Parsergrammar.HtmlIdentifierStatementContext ctx) {
+        return visit(ctx.IDENTIFIER());
+    }
+
+    @Override
+    public ASTNode visitHtmlColonStatement(Parsergrammar.HtmlColonStatementContext ctx) {
+        return visit(ctx.COLON());
+    }
+
     @Override
     public ASTNode visitHtmlChardata(Parsergrammar.HtmlChardataContext ctx) {
         String content;

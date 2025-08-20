@@ -23,10 +23,22 @@ BOOLEAN        : 'true' | 'false';
 TYPE           : 'any' |'number'| 'string' |'boolean';
 STATIC         : 'let'|'var'|'static'|'const';
 ACCESS         : 'private'|'public';
-CROISNN        : 'RouterOutlet' | 'OnInit' | 'signal' | 'NgFor' | 'NgIf';
-COMPONENT      :'Component' ;
-INJECTABLE     :'Injectable';
-
+CROISNN        : 'RouterOutlet' | 'OnInit' | 'signal' | 'NgFor' | 'NgIf' | 'AsyncPipe';
+ROUTER         : 'Router'    ;
+BEHAVIOR_SUBJECT: 'BehaviorSubject';
+OBSERVABLE     : 'Observable';
+NAVIGATE       : 'navigate';
+COMPONENT      : 'Component' ;
+INJECTABLE     : 'Injectable';
+REQUIRED       : 'required';
+VALUE          : 'value';
+NEXT           : 'next';
+MAP            : 'map';
+FILTER         : 'filter';
+NEW            : 'new';
+DATE            : 'Date';
+NOW            : 'now';
+IF            : 'if';
 // Punctuation
 LBRACE         : '{';
 RBRACE         : '}';
@@ -37,20 +49,31 @@ RBRACKET       : ']';
 COLON          : ':';
 COMMA          : ',';
 SEMICOLON      : ';';
+NOT_THREE_ASSIGN: '!==';
+THREE_ASSIGN   : '===';
 ASSIGN         : '=';
 DOT            : '.';
 THIS           : 'this';
 HASH           : '#';
+THREE_DOTS     : '...';
+ASSIGN_TAG     : '=>';
+
+
+QUESTION_MARK  : '?';
+//OPEN_TS_TAG: '<';
+//CLOSE_TS_TAG: '>';
+DOLLAR_SIGN: '$';
+INTERJECTION: '!';
 // Units
 UNIT           : 'px' | 'em' | 'rem' | '%' | 'vh' | 'vw';
 COLOR          : '#' [0-9a-fA-F]+;
 
 PROPERTY_NAME
-    : 'padding-block' | 'margin' | 'padding-inline' | 'display' | 'justify-content'
+    : 'padding-block' | 'margin' | 'padding-inline' | 'display' | 'justify-content' | 'right'
     | 'padding' | 'width' | 'height' | 'flex-direction' | 'align-items' | 'flex-wrap'
-    | 'gap' | 'text-align' | 'border' | 'background-color' | 'background-image'
-    | 'background-size' | 'object-fit' | 'position' | 'left' | 'top' | 'cursor'
-    | 'z-index' | 'color' | 'outline' | 'border-right' | 'margin-bottom'|'margin-right'|'border-radius';
+    | 'gap' | 'text-align' | 'border' | 'background-color' | 'background-image' | 'margin-top'
+    | 'background-size' | 'object-fit' | 'position' | 'left' | 'top' | 'cursor' | 'background' | 'padding-top'
+    | 'z-index' | 'color' | 'outline' | 'border-right' | 'margin-bottom'|'margin-right'|'border-radius' | 'font-size';
 
 VALUE_KEYWORD
     : 'flex' | 'space-between' | 'column' | 'wrap' | 'center' | 'absolute' | 'pointer'
@@ -106,12 +129,16 @@ TAG_OPEN                 : '<' -> pushMode(TAG);
 
 /////////// Tag
 mode TAG;
+ANY : 'any';
+LBRA: '[';
+RBRA: ']';
+
 TAGS
     : 'html' | 'head' | 'body' | 'div' | 'span' | 'p' | 'a' | 'ul' | 'ol' | 'li' | 'table' | 'thead'
     | 'tbody' | 'tr' | 'td' | 'th' | 'form' | 'button' | 'label' | 'select' | 'option' | 'h1' | 'h2'
     | 'h3' | 'h4' | 'h5' | 'h6' | 'script' | 'style' | 'footer' | 'header' | 'nav'
     | 'article' | 'section' | 'aside' | 'main' | 'figure' | 'figcaption' | 'video' | 'audio' | 'iframe'
-    | 'canvas' | 'blockquote' | 'pre' | 'code' | 'small' | 'b' | 'i' | 'u' | 'strong' | 'em' | 'br' |
+    | 'canvas' | 'blockquote' | 'pre' | 'code' | 'small' | 'b' | 'i' | 'u' | 'strong' | 'em' | 'router-outlet'
     ;
 
 TAGS_VOID:
@@ -128,9 +155,11 @@ TAGS_VOID:
                | 'param'
                | 'source'
                | 'track'
-               | 'wbr';
-
+               | 'wbr'
+               ;
+SLASH: '/';
 HTML_TEXT : [^<]+ ;
+
 TAG_CLOSE                : '>' -> popMode;
 TAG_SLASH_CLOSE          : '/>' -> popMode;
 TAG_EQUALS               : ASSIGN -> pushMode(ATTVALUE);
@@ -166,17 +195,17 @@ METHOD_CALL_VALUE
 
  ATTVALUE_VALUE
         : ' '* ATTRIBUTE -> popMode;
-
+//
 ATTRIBUTE
     : DOUBLE_QUOTE_STRING
     | SINGLE_QUOTE_STRING
     | ATTCHARS
     | HEXCHARS
     | DECCHARS;
-
+//
 ATTCHARS
     : ATTCHAR+ ' '?;
-
+//
 ATTCHAR
     : MINUS
     | '_'
@@ -190,16 +219,16 @@ ATTCHAR
     | SEMICOLON
     | HASH
     | [0-9a-zA-Z];
-
+//
 HEXCHARS
     : COLOR;
-
+//
 DECCHARS
     : [0-9]+ '%'?;
-
+//
 DOUBLE_QUOTE_STRING
     : '"' ~[<"]* '"';
-
+//
 SINGLE_QUOTE_STRING
     : '\'' ~[<']* '\'';
 

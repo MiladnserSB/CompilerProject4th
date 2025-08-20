@@ -2,7 +2,7 @@ package ast.HTML;
 
 import ast.ASTNode;
 
-public class HtmlContentStatement implements ASTNode {
+public abstract class HtmlContentStatement implements ASTNode {
     private ASTNode statement;
 
     public HtmlContentStatement(ASTNode statement) {
@@ -25,3 +25,4 @@ public class HtmlContentStatement implements ASTNode {
         return "HtmlContentStatement: " + (statement != null ? statement.toString() : "null");
     }
 }
+
