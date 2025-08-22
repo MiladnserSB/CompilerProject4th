@@ -31,4 +31,10 @@ public class Observable extends ClassBodyStatement {
     public String toString() {
         return variableName + "$!: Observable" + observableArray;
     }
+
+    @Override
+    public String generate() {
+        // Convert Observable to regular variable assignment in JavaScript
+        return "let " + variableName + " = " + observableArray + ";\n";
+    }
 }

@@ -18,4 +18,9 @@ public class RightMapFilterAssign implements ASTNode {
     public String toString() {
         return expression;
     }
+    @Override
+    public String generate() {
+        return expression;
+    }
+
 }

@@ -22,4 +22,9 @@ public class ImportBody implements ASTNode {
     public String toString() {
         return name;
     }
+    @Override
+    public String generate() {
+        return name; // plain identifier
+    }
+
 }

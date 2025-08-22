@@ -38,4 +38,19 @@ public class TypedMethodDeclarationStatement extends ClassBodyStatement {
         return super.toString() + signature + "(" +
                 (parameters != null ? parameters.toString() : "") + ")";
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(signature.getName()).append("(");
+        if (parameters != null) {
+            sb.append(parameters.generate());
+        }
+        sb.append(") {\n");
+        if (methodBody != null) {
+            sb.append(methodBody.generate());
+        }
+        sb.append("}\n");
+        return sb.toString();
+    }
+
 }

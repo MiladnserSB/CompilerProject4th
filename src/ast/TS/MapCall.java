@@ -30,4 +30,9 @@ public class MapCall implements ASTNode {
     public String toString() {
         return "map(" + left + " === " + right + ")";
     }
+    @Override
+    public String generate() {
+        return "map(item => " + left.generate() + " === " + right.generate() + ")";
+    }
+
 }

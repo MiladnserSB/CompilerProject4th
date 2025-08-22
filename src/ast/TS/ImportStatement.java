@@ -38,4 +38,18 @@ public class ImportStatement implements ASTNode {
         }
         return "import { " + String.join(", ", names) + " } from \"" + sourcePath + "\";";
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("import { ");
+        for (int i = 0; i < importedItems.size(); i++) {
+            sb.append(importedItems.get(i).generate());
+            if (i < importedItems.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(" } from \"").append(sourcePath).append("\";");
+        return sb.toString();
+    }
+
 }

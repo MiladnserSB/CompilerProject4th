@@ -30,4 +30,9 @@ public class AddCall implements ASTNode {
     public String toString() {
         return "[... " + crudBody + ", " + identifier + "]";
     }
+    @Override
+    public String generate() {
+        return "[..." + crudBody.generate() + ", " + identifier + "]";
+    }
+
 }

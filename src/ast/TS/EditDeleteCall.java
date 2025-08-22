@@ -30,4 +30,14 @@ public class EditDeleteCall implements ASTNode {
     public String toString() {
         return crudBody + "." + operation;
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(crudBody.generate());
+        if (operation != null) {
+            sb.append(".").append(operation.generate());
+        }
+        return sb.toString();
+    }
+
 }

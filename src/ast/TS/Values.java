@@ -22,4 +22,9 @@ public class Values implements ASTNode {
     public String toString() {
         return value;
     }
+    @Override
+    public String generate() {
+        return value;
+    }
+
 }

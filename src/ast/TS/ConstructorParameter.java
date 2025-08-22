@@ -38,4 +38,9 @@ public class ConstructorParameter implements ASTNode {
     public String toString() {
         return (access != null ? access + " " : "") + name + ": " + type;
     }
+    @Override
+    public String generate() {
+        return name; // ignore access + type in JS
+    }
+
 }

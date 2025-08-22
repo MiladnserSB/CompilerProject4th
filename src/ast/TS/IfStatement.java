@@ -29,4 +29,22 @@ public class IfStatement implements ASTNode {
     public String toString() {
         return "if (this." + conditionLeft + "?." + conditionRight + " === " + assignIdentifier + ") { " + body + " }";
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("if (this.")
+                .append(conditionLeft)
+                .append("?.")
+                .append(conditionRight)
+                .append(" === ")
+                .append(assignIdentifier)
+                .append(") {\n");
+
+        for (IfBody stmt : body) {
+            sb.append("  ").append(stmt.generate()).append("\n");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
 }

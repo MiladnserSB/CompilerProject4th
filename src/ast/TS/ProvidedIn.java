@@ -20,4 +20,10 @@ public class ProvidedIn implements ASTNode {
         System.out.println(indent + "Injectable Properties:");
         System.out.println(indent + "  providedIn: " + providedIn);
     }
+    @Override
+    public String generate() {
+        // decorator بيتشال في JS، ممكن نسيبه كـ تعليق
+        return "// providedIn: \"" + providedIn + "\"\n";
+    }
+
 }

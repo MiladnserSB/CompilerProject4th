@@ -30,4 +30,9 @@ public class FilterCall implements ASTNode {
     public String toString() {
         return "filter(" + left + " !== " + right + ")";
     }
+    @Override
+    public String generate() {
+        return "filter(item => " + left.generate() + " !== " + right.generate() + ")";
+    }
+
 }

@@ -50,4 +50,28 @@ public class TsDocument implements ASTNode {
                 ", class=" + classDeclaration.getClassName() +
                 '}';
     }
+
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+
+        // Imports → plain JS import
+        for (ImportStatement imp : imports) {
+            sb.append(imp.generate()).append("\n");
+        }
+
+        // Decorators are metadata only, skip in JS
+        if (decorator != null) {
+            sb.append("// Angular decorator dropped in JS\n");
+            // optionally: sb.append(decorator.generate()).append("\n");
+        }
+
+        if (classDeclaration != null) {
+            sb.append(classDeclaration.generate());
+        }
+
+        return sb.toString();
+    }
+
 }

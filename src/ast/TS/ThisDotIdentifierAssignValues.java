@@ -19,4 +19,9 @@ public class ThisDotIdentifierAssignValues extends MethodAssignment {
     public String toString() {
         return "this." + leftIdentifier + " = " + value;
     }
+    @Override
+    public String generate() {
+        return "this." + leftIdentifier + " = " + value + ";\n";
+    }
+
 }

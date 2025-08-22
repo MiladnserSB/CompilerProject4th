@@ -44,4 +44,19 @@ public class ObjectExpression extends ClassBodyStatement {
         return "ObjectExpression" + (assignIdentifier != null ? " assign " + assignIdentifier : "") +
                 " with " + keys.size() + " properties";
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        if (assignIdentifier != null) {
+            sb.append("const ").append(assignIdentifier).append(" = ");
+        }
+        sb.append("{\n");
+        for (int i = 0; i < keys.size(); i++) {
+            sb.append("  ").append(keys.get(i))
+                    .append(": ").append(values.get(i).generate()).append(",\n");
+        }
+        sb.append("};\n");
+        return sb.toString();
+    }
+
 }

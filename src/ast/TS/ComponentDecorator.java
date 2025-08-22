@@ -21,4 +21,9 @@ public class ComponentDecorator implements ASTNode {
             System.out.println(indent + "  No properties");
         }
     }
+    @Override
+    public String generate() {
+        return ""; // drop entirely (no @Component in JS)
+    }
+
 }

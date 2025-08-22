@@ -47,4 +47,24 @@ public class ClassDeclaration implements ASTNode {
     public String toString() {
         return "Class " + className + (implementsClause != null ? " " + implementsClause.toString() : "");
     }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ").append(className).append(" {\n");
+
+        if (classBody != null) {
+            for (ASTNode node : classBody) {
+                String code = node.generate();
+                if (code != null && !code.isEmpty()) {
+                    sb.append("  ").append(code).append("\n");
+                }
+            }
+        }
+
+        sb.append("}\n");
+        return sb.toString();
+    }
+
+
 }

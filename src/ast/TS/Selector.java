@@ -22,5 +22,12 @@ public class Selector implements ASTNode {
     public String toString() {
         return "Selector='" + value + "'";
     }
+    @Override
+    public String generate() {
+        // في TS بتستخدم @Component({ selector: '...' })
+        // في JS نخليها مجرد تعليق
+        return "// selector: '" + value + "'\n";
+    }
+
 }
 

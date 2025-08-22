@@ -27,4 +27,8 @@ public class InjectableDecorator implements ASTNode {
     public String toString() {
         return "@Injectable(" + (providedIn != null ? providedIn.toString() : "") + ")";
     }
+    @Override
+    public String generate() {
+        return "";
+    }
 }

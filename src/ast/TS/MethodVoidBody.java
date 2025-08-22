@@ -32,4 +32,13 @@ public class MethodVoidBody implements ASTNode {
                 "statements=" + statements +
                 '}';
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        for (ASTNode stmt : statements) {
+            sb.append(stmt.generate()).append("\n");
+        }
+        return sb.toString();
+    }
+
 }

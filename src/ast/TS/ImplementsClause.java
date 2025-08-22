@@ -35,4 +35,10 @@ public class ImplementsClause implements ASTNode {
     public String toString() {
         return "Implements " + String.join(", ", interfaces);
     }
+    @Override
+    public String generate() {
+        // Drop Angular-only imports
+        return "";
+    }
+
 }

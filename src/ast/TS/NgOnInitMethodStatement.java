@@ -42,4 +42,15 @@ public class NgOnInitMethodStatement extends ClassBodyStatement {
                 "ngOnInit() " + (hasVoidType ? ": void " : "") +
                 "{ ... }";
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ngOnInit() {\n");
+        if (body != null) {
+            sb.append(body.generate());
+        }
+        sb.append("}\n");
+        return sb.toString();
+    }
+
 }

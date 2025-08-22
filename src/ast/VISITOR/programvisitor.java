@@ -73,7 +73,8 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         ClassDeclaration classDecl = (ClassDeclaration) visit(ctx.classDeclaration());
         int line = -1;
         if(ctx.componentDecorator()!=null)
-        { line = ctx.componentDecorator().RBRACE().getSymbol().getLine();}
+        {if(ctx.componentDecorator().RBRACE()!=null)
+            line = ctx.componentDecorator().RBRACE().getSymbol().getLine();}
        else if(ctx.injectableDecorator()!=null)
         { line = ctx.injectableDecorator().RBRACE().getSymbol().getLine();}
                 ClassDeclarationExpectedError classDeclarationExpectedError = new ClassDeclarationExpectedError(classDeclarationOrDecoratorExpectedErrorSymbolTable,line);
@@ -598,8 +599,14 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             items.add(item);
         }
 
-        String source = ctx.STRING_LITERAL().getText();
-        source = source.substring(1, source.length() - 1);
+        String source;
+        if(ctx.STRING_LITERAL() != null){
+            source = ctx.STRING_LITERAL().getText();
+        }else{
+            source="";
+        }
+        if(ctx.STRING_LITERAL() != null)
+        {source = source.substring(1, source.length() - 1);}
 
         ImportStatement stmt = new ImportStatement(items, source);
         for(var i: items) {
@@ -1313,6 +1320,11 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
                 public void prettyPrint(String indent) {
                     System.out.println(indent + "Whitespace:");
                     System.out.println(indent + "  " + whitespace.replace("\n", "\\n"));
+                }
+
+                @Override
+                public String generate() {
+                    return "";
                 }
             };
         }

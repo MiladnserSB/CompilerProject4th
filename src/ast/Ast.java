@@ -4,6 +4,9 @@ import ast.CSS.CssDocument;
 import ast.HTML.HTMLDocument;
 import ast.TS.TsDocument;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Ast implements ASTNode {
     private TsDocument tsDecument;
     private CssDocument cssDocument;
@@ -75,4 +78,51 @@ public class Ast implements ASTNode {
             System.out.println("///////////////Empty CSS");
         }
     }
+
+
+
+
+    @Override
+    public String generate() {
+        String cssCode = cssDocument != null ? cssDocument.generate() : "";
+        String jsCode = tsDecument != null ? tsDecument.generate() : "";
+        String htmlCode = htmlDocument != null ? htmlDocument.generate() : "";
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<!DOCTYPE html>\n")
+                .append("<html lang=\"ar\">\n")
+                .append("<head>\n")
+                .append("    <meta charset=\"UTF-8\">\n")
+                .append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n")
+                .append("    <title>قالب HTML مع Style و Script</title>\n")
+                .append("    <style>\n")
+                .append(cssCode).append("\n")
+                .append("    </style>\n")
+                .append("</head>\n")
+                .append("<body>\n")
+                .append("    <h1>مرحبا بك في موقعي!</h1>\n")
+                .append("    <button class=\"button\" id=\"myButton\">اضغط هنا</button>\n\n")
+                .append(htmlCode).append("\n")
+                .append("    <script>\n")
+                .append(jsCode).append("\n")
+                .append("    </script>\n")
+                .append("</body>\n")
+                .append("</html>\n");
+
+        String generatedCode = sb.toString();
+
+        // Write directly to file inside generate()
+        String filePath = "project.html"; // default file path
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(generatedCode);
+            System.out.println("✅ Project successfully written to " + filePath);
+        } catch (IOException e) {
+            System.err.println("❌ Error writing to file: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return generatedCode;
+    }
+
 }

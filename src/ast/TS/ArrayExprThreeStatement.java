@@ -43,4 +43,22 @@ public class ArrayExprThreeStatement extends ClassBodyStatement {
     public String toString() {
         return signature.toString() + " = new BehaviorSubject" + observableType + "(...)";
     }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(signature.generate())
+                .append(" = new BehaviorSubject([");
+
+        for (int i = 0; i < elements.size(); i++) {
+            sb.append(elements.get(i).generate());
+            if (i < elements.size() - 1) {
+                sb.append(", ");
+            }
+        }
+
+        sb.append("]);");
+        return sb.toString();
+    }
+
 }

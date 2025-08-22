@@ -35,4 +35,13 @@ public class ClassBody implements ASTNode {
         }
         return sb.toString().trim();
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        for (ClassBodyStatement member : members) {
+            sb.append(member.generate()).append("\n");
+        }
+        return sb.toString();
+    }
+
 }

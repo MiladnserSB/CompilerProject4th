@@ -28,4 +28,9 @@ public class CrudBody implements ASTNode {
     public String toString() {
         return "this." + identifier + "." + action;
     }
+    @Override
+    public String generate() {
+        return "this." + identifier + "." + action;
+    }
+
 }

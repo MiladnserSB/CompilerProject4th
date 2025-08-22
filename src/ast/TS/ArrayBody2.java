@@ -40,4 +40,25 @@ public class ArrayBody2 implements ASTNode {
     public String toString() {
         return objectExpr + ", " + number + ", " + stringLiteral;
     }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder("{ ");
+
+        if (objectExpr != null) {
+            sb.append("obj: ").append(objectExpr.generate());
+        }
+        if (number != null) {
+            if (sb.length() > 2) sb.append(", ");
+            sb.append("num: ").append(number.generate());
+        }
+        if (stringLiteral != null) {
+            if (sb.length() > 2) sb.append(", ");
+            sb.append("str: \"").append(stringLiteral.generate()).append("\"");
+        }
+
+        sb.append(" }");
+        return sb.toString();
+    }
+
 }

@@ -32,4 +32,22 @@ public class MethodCall implements ASTNode {
     public String toString() {
         return methodName + "(" + (argument != null ? argument : "") + ")";
     }
+
+    @Override
+    public String generate() {
+        // Handle specific Angular method conversions
+        if ("asObservable".equals(methodName)) {
+            // Remove asObservable() call in JavaScript
+            return "";
+        } else if ("next".equals(methodName)) {
+            // Convert BehaviorSubject.next() to direct assignment
+            return argument != null ? " = " + argument : "";
+        } else if ("navigate".equals(methodName)) {
+            // Convert router.navigate() to window.location change
+            return "window.location.hash = " + argument + ";";
+        }
+
+        // Regular method call
+        return methodName + "(" + (argument != null ? argument : "") + ")";
+    }
 }

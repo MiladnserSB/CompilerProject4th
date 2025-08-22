@@ -25,4 +25,10 @@ public class StaticAssignment extends MethodAssignment {
         return "static " + identifier + " = { ... this." + spreadThisIdentifier +
                 ", " + dateIdentifier + ": Date." + methodCall + " }";
     }
+    @Override
+    public String generate() {
+        return "static " + identifier + " = { ...this." + spreadThisIdentifier +
+                ", " + dateIdentifier + ": Date." + methodCall.generate() + " };\n";
+    }
+
 }

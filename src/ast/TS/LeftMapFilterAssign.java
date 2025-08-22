@@ -20,4 +20,9 @@ public class LeftMapFilterAssign implements ASTNode {
     public String toString() {
         return identifier + " => " + mapFilterIdentifier;
     }
+    @Override
+    public String generate() {
+        return identifier + " => " + mapFilterIdentifier;
+    }
+
 }

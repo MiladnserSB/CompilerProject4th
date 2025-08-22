@@ -49,4 +49,9 @@ public class ComponentProperties implements ASTNode {
                 (styleUrl != null ? styleUrl.toString() : "") +
                 " }";
     }
+    @Override
+    public String generate() {
+        return ""; // drop entirely (no @Component in JS)
+    }
+
 }

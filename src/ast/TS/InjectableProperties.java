@@ -22,4 +22,8 @@ public class InjectableProperties implements ASTNode {
         System.out.println(indent + "Injectable Properties:");
         System.out.println(indent + "  providedIn: " + providedIn);
     }
+    @Override
+    public String generate() {
+        return "";
+    }
 }

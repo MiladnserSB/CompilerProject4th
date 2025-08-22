@@ -22,4 +22,10 @@ public class ObservableArray implements ASTNode {
     public String toString() {
         return type;
     }
+
+    @Override
+    public String generate() {
+        // Convert Observable<T> to regular array in JavaScript
+        return "[]";
+    }
 }

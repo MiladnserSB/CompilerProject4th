@@ -22,4 +22,9 @@ public class IdentifierAssignment extends MethodAssignment {
     public String toString() {
         return left + " = " + right + (methodCall != null ? "." + methodCall : "");
     }
+    @Override
+    public String generate() {
+        return left + " = " + right + (methodCall != null ? "." + methodCall.generate() : "") + ";";
+    }
+
 }

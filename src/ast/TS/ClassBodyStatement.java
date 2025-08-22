@@ -26,4 +26,10 @@ public abstract class ClassBodyStatement implements ASTNode {
     public String toString() {
         return getClass().getSimpleName() + ": " + (statement != null ? statement.toString() : "null");
     }
+
+    @Override
+    public String generate() {
+        return statement != null ? statement.generate() : "";
+    }
+
 }

@@ -34,4 +34,20 @@ public class ArrayExprOneStatement extends ClassBodyStatement {
     public String toString() {
         return super.toString() + " = [" + elements + "]";
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(signature.generate()).append(" = [");
+
+        for (int i = 0; i < elements.size(); i++) {
+            sb.append(elements.get(i).generate());
+            if (i < elements.size() - 1) {
+                sb.append(", ");
+            }
+        }
+
+        sb.append("];");
+        return sb.toString();
+    }
+
 }

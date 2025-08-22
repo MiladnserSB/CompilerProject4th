@@ -24,5 +24,12 @@ public class Imports implements ASTNode {
     public String toString() {
         return "Imports=[" + String.join(", ", identifiers) + "]";
     }
+
+    @Override
+    public String generate() {
+        // Drop Angular-only imports
+        return "";
+    }
+
 }
 

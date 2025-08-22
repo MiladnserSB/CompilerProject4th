@@ -22,5 +22,12 @@ public class TemplateUrl implements ASTNode {
     public String toString() {
         return "TemplateUrl='" + url + "'";
     }
+    @Override
+    public String generate() {
+        // في Angular TS -> templateUrl: 'x.html'
+        // في JS نعتبرها مجرد إشارة للملف
+        return "// template: '" + url + "'\n";
+    }
+
 }
 

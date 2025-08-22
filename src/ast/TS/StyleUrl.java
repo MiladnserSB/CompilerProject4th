@@ -22,4 +22,10 @@ import ast.ASTNode;
         public String toString() {
             return "StyleUrl='" + url + "'";
         }
+        @Override
+        public String generate() {
+            // في JS/HTML مش عندنا styleUrls، نخليها تعليق
+            return "// style: '" + url + "'\n";
+        }
+
     }

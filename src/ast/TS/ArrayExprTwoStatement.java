@@ -41,4 +41,20 @@ public class ArrayExprTwoStatement extends ClassBodyStatement {
     public String toString() {
         return super.toString() + ": " + type + "[] = " + arrayElements;
     }
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(signature.generate()).append(" = [");
+
+        for (int i = 0; i < arrayElements.size(); i++) {
+            sb.append(arrayElements.get(i).generate());
+            if (i < arrayElements.size() - 1) {
+                sb.append(", ");
+            }
+        }
+
+        sb.append("];");
+        return sb.toString();
+    }
+
 }

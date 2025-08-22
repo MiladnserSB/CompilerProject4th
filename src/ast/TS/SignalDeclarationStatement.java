@@ -38,4 +38,13 @@ public class SignalDeclarationStatement extends ClassBodyStatement {
     public String toString() {
         return super.toString() + name + " = " + signalType + "(\"" + argument + "\");";
     }
+
+    @Override
+    public String generate() {
+        // Convert Angular signals to regular variables in JavaScript
+        if ("signal".equals(signalType)) {
+            return "let " + name + " = " + argument + ";\n";
+        }
+        return "let " + name + " = " + signalType + "(\"" + argument + "\");\n";
+    }
 }
