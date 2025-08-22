@@ -10,13 +10,8 @@ public class ScriptletOrSeaWs extends HtmlContentStatement {
         this.isScriptlet = isScriptlet;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public boolean isScriptlet() {
-        return isScriptlet;
-    }
+    public String getContent() { return content; }
+    public boolean isScriptlet() { return isScriptlet; }
 
     @Override
     public void prettyPrint(String indent) {
@@ -27,9 +22,8 @@ public class ScriptletOrSeaWs extends HtmlContentStatement {
     @Override
     public String generate() {
         if (isScriptlet) {
-            // Drop JSP/Angular scriptlet in pure HTML
-            return "";
+            return "<script>" + content + "</script>";
         }
-        return content != null ? content : "";
+        return content; // whitespace or line breaks
     }
 }

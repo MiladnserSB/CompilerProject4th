@@ -51,20 +51,26 @@ public class HtmlElements implements ASTNode {
         }
     }
 
-    @Override
+    /**
+     * Generate vanilla HTML + JS for the whole block
+     */
     public String generate() {
         StringBuilder sb = new StringBuilder();
 
-        for (ASTNode node : leadingComments) {
-            if (node != null) sb.append(node.generate());
+        for (ASTNode comment : leadingComments) {
+            if (comment != null && comment instanceof HtmlMisc) {
+                sb.append(((HtmlMisc) comment).generate());
+            }
         }
 
-        if (htmlElement != null) {
-            sb.append(htmlElement.generate());
+        if (htmlElement != null && htmlElement instanceof HtmlElement) {
+            sb.append(((HtmlElement) htmlElement).generate());
         }
 
-        for (ASTNode node : trailingComments) {
-            if (node != null) sb.append(node.generate());
+        for (ASTNode comment : trailingComments) {
+            if (comment != null && comment instanceof HtmlMisc) {
+                sb.append(((HtmlMisc) comment).generate());
+            }
         }
 
         return sb.toString();

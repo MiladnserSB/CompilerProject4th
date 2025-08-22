@@ -43,20 +43,20 @@ public class NormalTag implements HtmlElement {
 
         if (attributes != null) {
             for (ASTNode attr : attributes) {
-                if (attr != null) {
-                    String attrStr = attr.generate();
-                    if (!attrStr.isBlank()) {
-                        sb.append(" ").append(attrStr);
-                    }
+                if (attr instanceof HtmlAttribute) {
+                    sb.append(" ").append(((HtmlAttribute) attr).generate());
                 }
             }
         }
-
         sb.append(">");
 
         if (content != null) {
             for (ASTNode node : content) {
-                if (node != null) sb.append(node.generate());
+                if (node instanceof HtmlContentStatement) {
+                    sb.append(((HtmlContentStatement) node).generate());
+                } else if (node instanceof HtmlElement) {
+                    sb.append(((HtmlElement) node).generate());
+                }
             }
         }
 

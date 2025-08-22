@@ -42,20 +42,24 @@ public class HtmlContent implements ASTNode {
         }
     }
 
-    @Override
+    /**
+     * Generate vanilla HTML + JS for the full content.
+     */
     public String generate() {
         StringBuilder sb = new StringBuilder();
 
+        // Raw content if present
+        if (rawContent != null && !rawContent.isEmpty()) {
+            sb.append(rawContent);
+        }
+
+        // Generate all statements
         if (contentStatements != null) {
             for (HtmlContentStatement stmt : contentStatements) {
                 if (stmt != null) {
                     sb.append(stmt.generate());
                 }
             }
-        }
-
-        if (rawContent != null && !rawContent.isEmpty()) {
-            sb.append(rawContent);
         }
 
         return sb.toString();

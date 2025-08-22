@@ -21,16 +21,23 @@ public class TagNameAttribute implements HtmlAttribute {
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Tag Name Attribute:");
-        System.out.println(indent + "  Name: " + name);
+        System.out.println(indent + "Tag Name Attribute: " + name);
         if (tagAttribute != null) tagAttribute.prettyPrint(indent + "  ");
     }
 
     @Override
     public String generate() {
-        if (tagAttribute == null || tagAttribute.getValue() == null) {
-            return name; // Boolean attribute like "disabled"
+        // Vanilla JS / HTML: attribute remains as-is
+        StringBuilder sb = new StringBuilder();
+        sb.append(name);
+        if (tagAttribute != null) {
+            String val = tagAttribute.generate();
+            if (val != null && !val.isEmpty()) {
+                sb.append("=\"").append(val).append("\"");
+            } else {
+                sb.append("=\"\"");
+            }
         }
-        return name + "=\"" + tagAttribute.generate() + "\"";
+        return sb.toString();
     }
 }

@@ -16,9 +16,13 @@ public class InterpolationElement implements HtmlElement {
         System.out.println(indent + "Interpolation: " + content);
     }
 
+    /**
+     * Generate vanilla JS for Angular interpolation {{ ... }}
+     */
     @Override
     public String generate() {
-        // Pure HTML: treat interpolation as literal text content
-        return content != null ? content : "";
+        // Remove {{ }} and generate JS string concatenation
+        String expr = content.replace("{{", "").replace("}}", "").trim();
+        return "\" + " + expr + " + \"";
     }
 }

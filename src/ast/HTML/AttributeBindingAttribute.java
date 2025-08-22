@@ -10,28 +10,24 @@ public class AttributeBindingAttribute implements HtmlAttribute {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
     @Override
-    public TagAttribute getTagAttribute() {
-        return tagAttribute;
-    }
+    public TagAttribute getTagAttribute() { return tagAttribute; }
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Attribute Binding Attribute:");
-        System.out.println(indent + "  Name: " + name);
+        System.out.println(indent + "Attribute Binding Attribute: " + name);
         if (tagAttribute != null) tagAttribute.prettyPrint(indent + "  ");
     }
 
     @Override
     public String generate() {
-        // Angular: [src]="imageUrl" → HTML: src=""
-        StringBuilder sb = new StringBuilder();
-        sb.append(name).append("=");
-        sb.append("\"\"");
-        return sb.toString();
+        if (tagAttribute != null) {
+            String value = tagAttribute.generate();
+            String attrName = name.substring(1, name.length() - 1); // remove brackets
+            return attrName + "=\"" + value + "\"";
+        }
+        return "";
     }
 }

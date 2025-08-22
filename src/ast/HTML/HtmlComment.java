@@ -27,8 +27,7 @@ public class HtmlComment extends HtmlContentStatement {
     @Override
     public String generate() {
         if (isConditional) {
-            // Keep conditional comment syntax (e.g., <!--[if IE]> ... <![endif]-->)
-            return "<![" + commentText + "]>";
+            return "<!--[if " + commentText + "]-->";
         } else {
             return "<!-- " + commentText + " -->";
         }
