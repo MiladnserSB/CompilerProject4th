@@ -31,6 +31,6 @@ public class TagNameAttribute implements HtmlAttribute {
         if (tagAttribute == null || tagAttribute.getValue() == null) {
             return name; // Boolean attribute like "disabled"
         }
-        return name + "=" + tagAttribute.generate() + "";
+        return name + "=\"" + tagAttribute.generate() + "\"";
     }
 }

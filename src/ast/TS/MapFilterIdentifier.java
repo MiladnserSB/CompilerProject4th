@@ -37,4 +37,17 @@ public class MapFilterIdentifier implements ASTNode {
     public String toString() {
         return left + " " + operator + " " + right;
     }
+
+    @Override
+    public String generate() {
+        if (".".equals(operator)) {
+            // JS object/field access
+            return left + "." + right;
+        } else if (":".equals(operator)) {
+            // Object literal entry
+            return left + ": " + right;
+        }
+        return left + " " + operator + " " + right;
+    }
+
 }

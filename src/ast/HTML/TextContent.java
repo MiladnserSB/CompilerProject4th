@@ -8,9 +8,7 @@ public class TextContent extends HtmlContentStatement {
         this.text = text;
     }
 
-    public String getText() {
-        return text;
-    }
+    public String getText() { return text; }
 
     @Override
     public void prettyPrint(String indent) {
@@ -19,6 +17,7 @@ public class TextContent extends HtmlContentStatement {
 
     @Override
     public String generate() {
-        return text != null ? text : "";
+        // Escape quotes for JS
+        return text.replace("\"", "\\\"");
     }
 }

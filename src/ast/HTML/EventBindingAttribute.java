@@ -10,28 +10,24 @@ public class EventBindingAttribute implements HtmlAttribute {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
     @Override
-    public TagAttribute getTagAttribute() {
-        return tagAttribute;
-    }
+    public TagAttribute getTagAttribute() { return tagAttribute; }
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Event Binding Attribute:");
-        System.out.println(indent + "  Name: " + name);
+        System.out.println(indent + "Event Binding Attribute: " + name);
         if (tagAttribute != null) tagAttribute.prettyPrint(indent + "  ");
     }
 
     @Override
     public String generate() {
-        // Angular: (click)="doSomething()" → HTML: onclick=""
-        StringBuilder sb = new StringBuilder();
-        sb.append("on").append(name).append("=");
-        sb.append("\"\"");
-        return sb.toString();
+        if (tagAttribute != null) {
+            String value = tagAttribute.generate();
+            String eventName = name.substring(1, name.length() - 1); // remove parentheses
+            return "on" + eventName + "=\"" + value + "\"";
+        }
+        return "";
     }
 }

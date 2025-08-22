@@ -15,8 +15,6 @@ public class CDataContent extends HtmlContentStatement {
 
     @Override
     public String generate() {
-        // Just output the text inside CDATA
-        // Angular CDATA may contain bindings, but here we keep pure text
-        return content != null ? content : "";
+        return "<![CDATA[" + content + "]]>";
     }
 }

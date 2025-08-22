@@ -6,9 +6,25 @@ public interface HtmlAttribute extends ASTNode {
     String getName();
     TagAttribute getTagAttribute();
 
-    @Override
+    // default generate function for normal attributes
     default String generate() {
-        // By default, return empty string, actual subclasses override it
-        return "";
+        TagAttribute tagAttr = getTagAttribute();
+        if (tagAttr == null) return getName();
+        String value = tagAttr.generate();
+
+        // property binding [value]
+        if (getName().startsWith("[") && getName().endsWith("]")) {
+            String plainName = getName().substring(1, getName().length() - 1);
+            return plainName + "=\"" + value + "\"";
+        }
+
+        // event binding (click)
+        if (getName().startsWith("(") && getName().endsWith(")")) {
+            String eventName = getName().substring(1, getName().length() - 1);
+            return "on" + eventName + "=\"" + value + "\"";
+        }
+
+        // normal attribute
+        return getName() + "=\"" + value + "\"";
     }
 }

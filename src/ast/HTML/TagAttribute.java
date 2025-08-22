@@ -11,30 +11,23 @@ public class TagAttribute implements ASTNode {
         this.isMethodCall = isMethodCall;
     }
 
-    public String getValue() {
-        return value;
-    }
+    public String getValue() { return value; }
 
-    public boolean isMethodCall() {
-        return isMethodCall;
-    }
+    public boolean isMethodCall() { return isMethodCall; }
 
     @Override
     public void prettyPrint(String indent) {
         if (isMethodCall) {
-            System.out.println(indent + "Method call value");
-            System.out.println(indent + "  Value: " + value);
+            System.out.println(indent + "Method call value: " + value);
         } else {
-            System.out.println(indent + "Tag Attribute:");
-            System.out.println(indent + "  Value: " + value);
+            System.out.println(indent + "Tag Attribute: " + value);
         }
     }
 
     @Override
     public String generate() {
-        if (isMethodCall || value == null) {
-            // Pure HTML cannot express method calls
-            return "";
+        if (isMethodCall) {
+            return value.replaceAll("[()]", ""); // inline JS-friendly
         }
         return value;
     }

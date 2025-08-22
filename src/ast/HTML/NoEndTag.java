@@ -38,17 +38,17 @@ public class NoEndTag implements HtmlElement {
 
         if (attributes != null) {
             for (ASTNode attr : attributes) {
-                if (attr != null) {
-                    String attrStr = attr.generate();
-                    if (!attrStr.isBlank()) {
-                        sb.append(" ").append(attrStr);
-                    }
+                if (attr instanceof HtmlAttribute) {
+                    sb.append(" ").append(((HtmlAttribute) attr).generate());
                 }
             }
         }
 
-        // In pure HTML5, void elements don’t require self-closing slash
-        sb.append(">");
+        if (required) {
+            sb.append(" required");
+        }
+
+        sb.append(" />");
         return sb.toString();
     }
 }

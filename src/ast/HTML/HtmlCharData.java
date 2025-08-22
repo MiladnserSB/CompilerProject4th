@@ -29,11 +29,6 @@ public class HtmlCharData extends HtmlContentStatement {
 
     @Override
     public String generate() {
-        if (isWhitespace) {
-            // Preserve whitespace so formatting is not broken
-            return content != null ? content : "";
-        } else {
-            return content != null ? content : "";
-        }
+        return content; // preserve whitespace/content as-is
     }
 }
