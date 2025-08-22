@@ -30,4 +30,25 @@ public class NoEndTag implements HtmlElement {
         }
         System.out.println(indent + "  Required: " + required);
     }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<").append(tagName);
+
+        if (attributes != null) {
+            for (ASTNode attr : attributes) {
+                if (attr != null) {
+                    String attrStr = attr.generate();
+                    if (!attrStr.isBlank()) {
+                        sb.append(" ").append(attrStr);
+                    }
+                }
+            }
+        }
+
+        // In pure HTML5, void elements don’t require self-closing slash
+        sb.append(">");
+        return sb.toString();
+    }
 }

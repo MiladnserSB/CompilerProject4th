@@ -26,5 +26,10 @@ public class TsTag implements HtmlElement {
             }
         }
     }
-}
 
+    @Override
+    public String generate() {
+        // TS tags (Angular-specific) do not exist in pure HTML
+        return "";
+    }
+}

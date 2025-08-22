@@ -16,4 +16,9 @@ public class TextContent extends HtmlContentStatement {
     public void prettyPrint(String indent) {
         System.out.println(indent + "Text: " + text);
     }
+
+    @Override
+    public String generate() {
+        return text != null ? text : "";
+    }
 }

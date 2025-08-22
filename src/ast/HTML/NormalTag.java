@@ -29,11 +29,38 @@ public class NormalTag implements HtmlElement {
             }
         }
         if (!content.isEmpty()) {
-
             System.out.println(indent + "  Content:");
             for (ASTNode node : content) {
                 node.prettyPrint(indent + "    ");
             }
         }
+    }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<").append(tagName);
+
+        if (attributes != null) {
+            for (ASTNode attr : attributes) {
+                if (attr != null) {
+                    String attrStr = attr.generate();
+                    if (!attrStr.isBlank()) {
+                        sb.append(" ").append(attrStr);
+                    }
+                }
+            }
+        }
+
+        sb.append(">");
+
+        if (content != null) {
+            for (ASTNode node : content) {
+                if (node != null) sb.append(node.generate());
+            }
+        }
+
+        sb.append("</").append(tagName).append(">");
+        return sb.toString();
     }
 }

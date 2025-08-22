@@ -15,4 +15,10 @@ public class InterpolationElement implements HtmlElement {
     public void prettyPrint(String indent) {
         System.out.println(indent + "Interpolation: " + content);
     }
+
+    @Override
+    public String generate() {
+        // Pure HTML: treat interpolation as literal text content
+        return content != null ? content : "";
+    }
 }

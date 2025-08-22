@@ -5,7 +5,7 @@ public class HtmlCharData extends HtmlContentStatement {
     private final boolean isWhitespace;
 
     public HtmlCharData(String content, boolean isWhitespace) {
-        super(null); // You can set `this` if you want this node as statement
+        super(null);
         this.content = content;
         this.isWhitespace = isWhitespace;
     }
@@ -24,6 +24,16 @@ public class HtmlCharData extends HtmlContentStatement {
             System.out.println(indent + "HTML Character Data (Whitespace)");
         } else {
             System.out.println(indent + "HTML Character Data: " + content);
+        }
+    }
+
+    @Override
+    public String generate() {
+        if (isWhitespace) {
+            // Preserve whitespace so formatting is not broken
+            return content != null ? content : "";
+        } else {
+            return content != null ? content : "";
         }
     }
 }

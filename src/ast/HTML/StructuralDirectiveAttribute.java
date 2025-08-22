@@ -25,4 +25,10 @@ public class StructuralDirectiveAttribute implements HtmlAttribute {
         System.out.println(indent + "  Name: " + name);
         if (tagAttribute != null) tagAttribute.prettyPrint(indent + "  ");
     }
+
+    @Override
+    public String generate() {
+        // Pure HTML ignores Angular structural directives
+        return "";
+    }
 }

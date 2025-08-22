@@ -15,14 +15,18 @@ public abstract class HtmlContentStatement implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-
         if (statement != null) {
             statement.prettyPrint(indent + "  ");
         }
     }
+
     @Override
     public String toString() {
         return "HtmlContentStatement: " + (statement != null ? statement.toString() : "null");
     }
-}
 
+    @Override
+    public String generate() {
+        return statement != null ? statement.generate() : "";
+    }
+}

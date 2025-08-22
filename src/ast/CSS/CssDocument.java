@@ -4,7 +4,7 @@ import ast.ASTNode;
 import java.util.List;
 
 public class CssDocument implements ASTNode {
-    private  List<RuleSet> ruleSets;
+    private List<RuleSet> ruleSets;
 
     public CssDocument(List<RuleSet> ruleSets) {
         this.ruleSets = ruleSets;
@@ -24,5 +24,14 @@ public class CssDocument implements ASTNode {
         for (RuleSet ruleSet : ruleSets) {
             ruleSet.prettyPrint(indent + "  ");
         }
+    }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        for (RuleSet ruleSet : ruleSets) {
+            sb.append(ruleSet.generate()).append("\n");
+        }
+        return sb.toString().trim();
     }
 }

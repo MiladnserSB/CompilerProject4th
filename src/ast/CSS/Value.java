@@ -45,4 +45,14 @@ public class Value implements ASTNode {
     public void prettyPrint(String indent) {
         System.out.print(indent + value + (unit != null ? unit : ""));
     }
+
+    @Override
+    public String generate() {
+        switch (type) {
+            case STRING:
+                return "\"" + value + "\""; // wrap string values
+            default:
+                return value + (unit != null ? unit : "");
+        }
+    }
 }

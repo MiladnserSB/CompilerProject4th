@@ -21,12 +21,21 @@ public class TagAttribute implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
-        if (isMethodCall()){
+        if (isMethodCall) {
             System.out.println(indent + "Method call value");
             System.out.println(indent + "  Value: " + value);
+        } else {
+            System.out.println(indent + "Tag Attribute:");
+            System.out.println(indent + "  Value: " + value);
+        }
+    }
 
-        }else{
-        System.out.println(indent + "Tag Attribute:");
-        System.out.println(indent + "  Value: " + value);
-      }}
+    @Override
+    public String generate() {
+        if (isMethodCall || value == null) {
+            // Pure HTML cannot express method calls
+            return "";
+        }
+        return value;
+    }
 }

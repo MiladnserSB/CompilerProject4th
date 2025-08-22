@@ -2,6 +2,7 @@ package ast.CSS;
 
 import ast.ASTNode;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RuleSetStart implements ASTNode {
     private List<String> selectors;
@@ -28,5 +29,13 @@ public class RuleSetStart implements ASTNode {
                 System.out.println(indent + "  " + selector);
             }
         }
+    }
+
+    @Override
+    public String generate() {
+        if (selectors == null || selectors.isEmpty()) {
+            return "";
+        }
+        return selectors.stream().collect(Collectors.joining(", "));
     }
 }

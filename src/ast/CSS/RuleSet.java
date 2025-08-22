@@ -1,7 +1,6 @@
 package ast.CSS;
 
 import ast.ASTNode;
-
 import java.util.List;
 
 public class RuleSet implements ASTNode {
@@ -41,5 +40,19 @@ public class RuleSet implements ASTNode {
         for (Declaration decl : declarations) {
             decl.prettyPrint(indent + "    ");
         }
+    }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        String selectors = ruleSetStart.generate();
+        if (!selectors.isEmpty()) {
+            sb.append(selectors).append(" {\n");
+            for (Declaration decl : declarations) {
+                sb.append("  ").append(decl.generate()).append("\n");
+            }
+            sb.append("}");
+        }
+        return sb.toString();
     }
 }

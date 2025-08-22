@@ -40,4 +40,18 @@ public class Declaration implements ASTNode {
         }
         System.out.println();
     }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(property_name).append(": ");
+        for (int i = 0; i < values.size(); i++) {
+            sb.append(values.get(i).generate());
+            if (i < values.size() - 1) {
+                sb.append(" ");
+            }
+        }
+        sb.append(";");
+        return sb.toString();
+    }
 }

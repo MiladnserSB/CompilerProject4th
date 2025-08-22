@@ -23,4 +23,14 @@ public class HtmlComment extends HtmlContentStatement {
         System.out.println(indent + (isConditional ? "Conditional Comment:" : "HTML Comment:"));
         System.out.println(indent + "  " + commentText);
     }
+
+    @Override
+    public String generate() {
+        if (isConditional) {
+            // Keep conditional comment syntax (e.g., <!--[if IE]> ... <![endif]-->)
+            return "<![" + commentText + "]>";
+        } else {
+            return "<!-- " + commentText + " -->";
+        }
+    }
 }

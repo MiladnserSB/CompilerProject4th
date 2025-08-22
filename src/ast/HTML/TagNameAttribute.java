@@ -25,4 +25,12 @@ public class TagNameAttribute implements HtmlAttribute {
         System.out.println(indent + "  Name: " + name);
         if (tagAttribute != null) tagAttribute.prettyPrint(indent + "  ");
     }
+
+    @Override
+    public String generate() {
+        if (tagAttribute == null || tagAttribute.getValue() == null) {
+            return name; // Boolean attribute like "disabled"
+        }
+        return name + "=\"" + tagAttribute.generate() + "\"";
+    }
 }

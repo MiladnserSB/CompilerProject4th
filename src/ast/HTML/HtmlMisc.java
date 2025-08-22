@@ -22,4 +22,9 @@ public class HtmlMisc implements ASTNode {
             System.out.println(indent + "  [Empty]");
         }
     }
+
+    @Override
+    public String generate() {
+        return content != null ? content.generate() : "";
+    }
 }

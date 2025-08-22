@@ -19,7 +19,6 @@ public class HtmlElements implements ASTNode {
                 Collections.emptyList();
     }
 
-    // Getters
     public List<ASTNode> getLeadingComments() { return leadingComments; }
     public ASTNode getHtmlElement() { return htmlElement; }
     public List<ASTNode> getTrailingComments() { return trailingComments; }
@@ -50,5 +49,24 @@ public class HtmlElements implements ASTNode {
                 trailingComments.get(i).prettyPrint("");
             }
         }
+    }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+
+        for (ASTNode node : leadingComments) {
+            if (node != null) sb.append(node.generate());
+        }
+
+        if (htmlElement != null) {
+            sb.append(htmlElement.generate());
+        }
+
+        for (ASTNode node : trailingComments) {
+            if (node != null) sb.append(node.generate());
+        }
+
+        return sb.toString();
     }
 }

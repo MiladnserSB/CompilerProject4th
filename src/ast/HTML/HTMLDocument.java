@@ -16,7 +16,6 @@ public class HTMLDocument implements ASTNode {
         this.htmlElements = htmlElements != null ? htmlElements : List.of();
     }
 
-    // Getters
     public List<ASTNode> getScriptletOrSeaWs() { return scriptletOrSeaWs; }
     public String getXml() { return xml; }
     public String getDtd() { return dtd; }
@@ -52,5 +51,31 @@ public class HTMLDocument implements ASTNode {
                 }
             }
         }
+    }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+
+        if (xml != null && !xml.isEmpty()) {
+            sb.append(xml).append("\n");
+        }
+        if (dtd != null && !dtd.isEmpty()) {
+            sb.append(dtd).append("\n");
+        }
+
+        for (ASTNode node : scriptletOrSeaWs) {
+            if (node != null) {
+                sb.append(node.generate());
+            }
+        }
+
+        for (ASTNode node : htmlElements) {
+            if (node != null) {
+                sb.append(node.generate());
+            }
+        }
+
+        return sb.toString();
     }
 }

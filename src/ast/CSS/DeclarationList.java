@@ -25,4 +25,16 @@ public class DeclarationList implements ASTNode {
             decl.prettyPrint(indent + "  ");
         }
     }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < declarations.size(); i++) {
+            sb.append(declarations.get(i).generate());
+            if (i < declarations.size() - 1) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
 }

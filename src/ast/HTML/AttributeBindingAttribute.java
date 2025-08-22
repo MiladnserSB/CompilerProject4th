@@ -25,4 +25,13 @@ public class AttributeBindingAttribute implements HtmlAttribute {
         System.out.println(indent + "  Name: " + name);
         if (tagAttribute != null) tagAttribute.prettyPrint(indent + "  ");
     }
+
+    @Override
+    public String generate() {
+        // Angular: [src]="imageUrl" → HTML: src=""
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append("=");
+        sb.append("\"\"");
+        return sb.toString();
+    }
 }

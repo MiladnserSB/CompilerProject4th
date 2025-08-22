@@ -25,4 +25,13 @@ public class EventBindingAttribute implements HtmlAttribute {
         System.out.println(indent + "  Name: " + name);
         if (tagAttribute != null) tagAttribute.prettyPrint(indent + "  ");
     }
+
+    @Override
+    public String generate() {
+        // Angular: (click)="doSomething()" → HTML: onclick=""
+        StringBuilder sb = new StringBuilder();
+        sb.append("on").append(name).append("=");
+        sb.append("\"\"");
+        return sb.toString();
+    }
 }

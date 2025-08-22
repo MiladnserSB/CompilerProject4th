@@ -20,7 +20,6 @@ public class HtmlContent implements ASTNode {
         return contentStatements;
     }
 
-    // ✅ Alias method to fix getContentElements() usage in visitNormalTag
     public List<HtmlContentStatement> getContentElements() {
         return contentStatements;
     }
@@ -41,5 +40,24 @@ public class HtmlContent implements ASTNode {
         if (rawContent != null && !rawContent.isEmpty()) {
             System.out.println(indent + "  Raw Content: \"" + rawContent + "\"");
         }
+    }
+
+    @Override
+    public String generate() {
+        StringBuilder sb = new StringBuilder();
+
+        if (contentStatements != null) {
+            for (HtmlContentStatement stmt : contentStatements) {
+                if (stmt != null) {
+                    sb.append(stmt.generate());
+                }
+            }
+        }
+
+        if (rawContent != null && !rawContent.isEmpty()) {
+            sb.append(rawContent);
+        }
+
+        return sb.toString();
     }
 }

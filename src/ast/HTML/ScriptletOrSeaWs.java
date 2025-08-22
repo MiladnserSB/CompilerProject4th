@@ -23,4 +23,13 @@ public class ScriptletOrSeaWs extends HtmlContentStatement {
         String type = isScriptlet ? "Scriptlet" : "SeaWs";
         System.out.println(indent + type + ": " + content);
     }
+
+    @Override
+    public String generate() {
+        if (isScriptlet) {
+            // Drop JSP/Angular scriptlet in pure HTML
+            return "";
+        }
+        return content != null ? content : "";
+    }
 }
