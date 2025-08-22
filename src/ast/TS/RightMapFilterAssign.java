@@ -3,20 +3,63 @@ package ast.TS;
 import ast.ASTNode;
 
 public class RightMapFilterAssign implements ASTNode {
-    private String expression;
+    private final String identifier; // for the IDENTIFIER case
+    private final MapFilterIdentifier left;  // left side of ternary
+    private final MapFilterIdentifier right; // right side of ternary
+    private final boolean isConditional;
 
-    public RightMapFilterAssign(String expression) {
-        this.expression = expression;
+    // Constructor for IDENTIFIER form
+    public RightMapFilterAssign(String identifier) {
+        this.identifier = identifier;
+        this.left = null;
+        this.right = null;
+        this.isConditional = false;
+    }
+
+    // Constructor for conditional form
+    public RightMapFilterAssign(MapFilterIdentifier left, MapFilterIdentifier right) {
+        this.identifier = null;
+        this.left = left;
+        this.right = right;
+        this.isConditional = true;
+    }
+
+    public boolean isConditional() {
+        return isConditional;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public MapFilterIdentifier getLeft() {
+        return left;
+    }
+
+    public MapFilterIdentifier getRight() {
+        return right;
     }
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "RightAssign: " + expression);
+        System.out.println(indent + "RightMapFilterAssign:");
+        if (isConditional) {
+            System.out.println(indent + "  Conditional Expression:");
+            System.out.println(indent + "    Left:");
+            left.prettyPrint(indent + "      ");
+            System.out.println(indent + "    Right:");
+            right.prettyPrint(indent + "      ");
+        } else {
+            System.out.println(indent + "  Identifier: " + identifier);
+        }
     }
 
     @Override
     public String toString() {
-        return expression;
+        if (isConditional) {
+            return left.toString() + " ? " + right.toString();
+        }
+        return identifier;
     }
     @Override
     public String generate() {

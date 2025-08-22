@@ -1122,16 +1122,50 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     }
 
     @Override
-    public ASTNode visitLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx) {
-        String identifier = ctx.IDENTIFIER().getText();
-        String mapFilterId = ctx.mapFilterIDENTIFIER().getText();
-        return new LeftMapFilterAssign(identifier, mapFilterId);
+    public ASTNode visitMapFilterIDENTIFIER(Parsergrammar.MapFilterIDENTIFIERContext ctx) {
+        String left = "";
+        String right = "";
+        String operator = "";
+
+        if (ctx.DOT() != null) {
+            // form: IDENTIFIER DOT IDENTIFIER
+            left = ctx.IDENTIFIER(0).getText();
+            operator = ".";
+            right = ctx.IDENTIFIER(1).getText();
+        } else if (ctx.COLON() != null) {
+            // form: IDENTIFIER COLON IDENTIFIER
+            left = ctx.IDENTIFIER(0).getText();
+            operator = ":";
+            right = ctx.IDENTIFIER(1).getText();
+        }
+
+        return new MapFilterIdentifier(left, operator, right);
     }
+
+
+    @Override
+    public ASTNode visitLeftMapFilterAssign(Parsergrammar.LeftMapFilterAssignContext ctx) {
+        String parameter = ctx.IDENTIFIER().getText();
+        MapFilterIdentifier expression = (MapFilterIdentifier) visit(ctx.mapFilterIDENTIFIER());
+
+        return new LeftMapFilterAssign(parameter, expression);
+    }
+
 
     @Override
     public ASTNode visitRightMapFilterAssign(Parsergrammar.RightMapFilterAssignContext ctx) {
-        return new RightMapFilterAssign(ctx.getText());
+        if (ctx.IDENTIFIER() != null) {
+            // IDENTIFIER form
+            String id = ctx.IDENTIFIER().getText();
+            return new RightMapFilterAssign(id);
+        } else {
+            // mapFilterIDENTIFIER ? mapFilterIDENTIFIER form
+            MapFilterIdentifier left = (MapFilterIdentifier) visit(ctx.mapFilterIDENTIFIER(0));
+            MapFilterIdentifier right = (MapFilterIdentifier) visit(ctx.mapFilterIDENTIFIER(1));
+            return new RightMapFilterAssign(left, right);
+        }
     }
+
 
 
 
