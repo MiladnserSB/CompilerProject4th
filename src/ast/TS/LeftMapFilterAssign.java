@@ -3,21 +3,33 @@ package ast.TS;
 import ast.ASTNode;
 
 public class LeftMapFilterAssign implements ASTNode {
-    private String identifier;
-    private String mapFilterIdentifier;
+    private final String parameter;
+    private final MapFilterIdentifier expression;
 
-    public LeftMapFilterAssign(String identifier, String mapFilterIdentifier) {
-        this.identifier = identifier;
-        this.mapFilterIdentifier = mapFilterIdentifier;
+    public LeftMapFilterAssign(String parameter, MapFilterIdentifier expression) {
+        this.parameter = parameter;
+        this.expression = expression;
+    }
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public MapFilterIdentifier getExpression() {
+        return expression;
     }
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "LeftAssign: " + identifier + " => " + mapFilterIdentifier);
+        System.out.println(indent + "LeftMapFilterAssign:");
+        System.out.println(indent + "  Parameter: " + parameter);
+        if (expression != null) {
+            expression.prettyPrint(indent + "  ");
+        }
     }
 
     @Override
     public String toString() {
-        return identifier + " => " + mapFilterIdentifier;
+        return parameter + " => " + (expression != null ? expression.toString() : "");
     }
 }
