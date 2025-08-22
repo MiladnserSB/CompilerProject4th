@@ -3,10 +3,11 @@ package ast.TS;
 import ast.ASTNode;
 import java.util.List;
 
-public class ConstructorDeclarationStatement implements ASTNode {
+public class ConstructorDeclarationStatement extends ClassBodyStatement {
     private List<ConstructorParameter> parameters;
 
     public ConstructorDeclarationStatement(List<ConstructorParameter> parameters) {
+        super(null);
         this.parameters = parameters;
     }
 

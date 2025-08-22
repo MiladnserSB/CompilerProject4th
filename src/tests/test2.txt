@@ -1,22 +1,44 @@
-import { Component } from '@angular/core';
-import { ProductsComponent } from '../components/products/products.component';
-
+import { Component, OnInit } from '@angular/core';
+import { ProductsService } from '../../services/products.service';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-home',
-  imports: [ProductsComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  selector: 'details',
+  imports:[NgIf],
+  templateUrl: './details.component.html',
+  styleUrl: './details.component.css'
 })
-export class HomeComponent {
+export class DetailsComponent implements OnInit {
+  product: any=null;
 
+  constructor(public productsService: ProductsService) {}
+
+  ngOnInit() {
+    this.product = this.productsService.getSelectedProduct();
+  }
 }
 
-<h1>
-    products
-</h1>
-<app-products />
+<div *ngIf="product" class="product-details">
+  <h2>{{ product.name }}</h2>
+  <img [src]="product.image" alt="{{ product.name }}">
+  <p>Price: {{ product.price }} sp</p>
+  <p>Color: {{ product.colors }}</p>
+</div>
 
-h1{
+
+.product-details {
+    width: 50%; 
+    height: 400px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
     text-align: center;
-}
+    position: absolute;
+    left: 200px;
+    top: 180px;
+  }
+  
+  .product-details img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+  }

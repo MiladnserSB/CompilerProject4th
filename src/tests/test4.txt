@@ -1,88 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import { ProductsService } from '../../services/products.service';
-import { NgFor, NgIf } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
+@Injectable({ providedIn: 'root' })
+export class ProductsService {
+  private productsSubject = new BehaviorSubject<any[]>([
+    { id: 1, name: 'hoodie', image: 'https://m.media-amazon.com/images/I/51tEciwZARL.jpg', price: 1000, colors: 'red' },
+    { id: 2, name: 'jeans', image: 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcS-gNnQj5hHFmlvbSZjACGvZ2R3GHfUC6zL3ViZGXTMC8Z5MR-If7jikESuzpUFeMRSgDiMb0FR9xPUSruyylJbc-javHeGNK50HAFKEv3PRXLP3HSIuN38', price: 2000, colors: 'blue' },
+    { id: 3, name: 'shoes', image: 'https://assets.adidas.com/images/w_940,f_auto,q_auto/bdd9f8cd43664fffbd3da8bf01188fca_9366/B75807_07_standard.jpg', price: 3000, colors: 'black' },
+  ]);
 
-@Component({
-  selector: 'app-products',
-  imports: [NgFor,NgIf],
-  templateUrl: './products.component.html',
-  styleUrl: './products.component.css'
-})
-export class ProductsComponent implements OnInit{
-  items: any[] = [];
-  selectedItem:any=null;
+  products$ = this.productsSubject.asObservable();
 
-  constructor(private productsService: ProductsService) { }
-  ngOnInit(): void {
-     this.items = this.productsService.getProducts();
+  private selectedProduct: any = null;
+
+  setSelectedProduct(product: any)
+   { this.selectedProduct = product; }
+
+  getSelectedProduct() 
+  { return this.selectedProduct; }
+
+  getProducts()
+   { return this.productsSubject.value; }
+
+  addProduct(product: any) {
+    this.productsSubject.next([ ...this.productsSubject.value, product]);
   }
 
-  onselect(item: any): void {
-    this.selectedItem = item;
+  editProduct(updated: any) {
+    this.productsSubject.next(this.productsSubject.value.map(pr => pr.id === updated.id ? updated : pr));
+  }
+
+  deleteProduct(id: number) {
+    this.productsSubject.next(this.productsSubject.value.filter(pr => pr.id !== id));
   }
 }
-
-
-<div class="container">
-
-    <div class="product-list">
-      <div *ngFor="let item of items" class="product-card" (click)="onselect(item)">
-        <img [src]="item.image" alt="{{ item.name }}">
-        <h3>{{item.name }}</h3>
-      </div>
-    </div>
-
-
-    <div class="product-details" *ngIf="selectedItem">
-      <h2>{{ selectedItem.name }}</h2>
-      <img [src]="selectedItem.image" alt="{{ selectedItem.name }}">
-      <p>price: {{ selectedItem.price }} sp </p>
-      <p>colorItem: {{ selectedItem.color }}</p>
-    </div>
-  </div>
-
-  .container {
-      display: flex;
-      justify-content: space-between;
-      padding: 20px;
-    }
-
-    .product-list {
-      width: 90%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .product-card {
-      width: 200px;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .product-card img {
-      width: 100%;
-      height: 110px;
-      object-fit: cover;
-    }
-
-
-    .product-details {
-      width: 50%;
-      height: 400px;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      text-align: center;
-      position: absolute;
-      left: 200px;
-      top: 180px;
-    }
-
-    .product-details img {
-      width: 200px;
-      height: 200px;
-      object-fit: cover;
-    }

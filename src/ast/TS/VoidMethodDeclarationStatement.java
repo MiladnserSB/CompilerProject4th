@@ -2,12 +2,13 @@ package ast.TS;
 
 import ast.ASTNode;
 
-public class VoidMethodDeclarationStatement implements ASTNode {
+public class VoidMethodDeclarationStatement extends ClassBodyStatement {
     private Signature signature;
     private Parameters parameters; // nullable
     private MethodVoidBody methodBody;
 
     public VoidMethodDeclarationStatement(Signature signature, Parameters parameters, MethodVoidBody methodBody) {
+        super(null);
         this.signature = signature;
         this.parameters = parameters;
         this.methodBody = methodBody;

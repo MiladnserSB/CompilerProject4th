@@ -3,13 +3,14 @@ package ast.TS;
 import ast.ASTNode;
 import java.util.List;
 
-public class ArrayExprThreeStatement implements ASTNode {
+public class ArrayExprThreeStatement extends ClassBodyStatement {
 
     private Signature signature;
     private String observableType;
     private List<ArrayBody1> elements;
 
     public ArrayExprThreeStatement(Signature signature, String observableType, List<ArrayBody1> elements) {
+        super(null);
         this.signature = signature;
         this.observableType = observableType;
         this.elements = elements;

@@ -337,18 +337,22 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
         MethodCall methodCall = null;
         if (ctx.methodcall() != null) {
-            String methodName = ctx.methodcall().IDENTIFIER(0).getText();
+            String methodName;
+            if(ctx.methodcall().IDENTIFIER(0) != null)
+                methodName = ctx.methodcall().IDENTIFIER(0).getText();
+            else
+                methodName= "";
             String argument = ctx.methodcall().IDENTIFIER().size() > 1
                     ? ctx.methodcall().IDENTIFIER(1).getText()
                     : null;
 
-            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
+//            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
 
             // error check for undefined method
             if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
-                UndefinedMethodCallError error =
-                        new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
-                error.throwException();
+//                UndefinedMethodCallError error =
+//                        new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
+//                error.throwException();
             }
 
             methodCall = new MethodCall(methodName, argument);
@@ -372,8 +376,12 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         String identifier = ctx.IDENTIFIER(0).getText();
         String spreadThis = ctx.IDENTIFIER(1).getText();
         String dateField = ctx.IDENTIFIER(2).getText();
-
-        String methodName = ctx.methodcall().IDENTIFIER(0).getText();
+        String methodName;
+        if(ctx.methodcall().IDENTIFIER(0)!=null)
+        {   methodName = ctx.methodcall().IDENTIFIER(0).getText();}
+        else{
+             methodName="";
+        }
         String argument = ctx.methodcall().IDENTIFIER().size() > 1
                 ? ctx.methodcall().IDENTIFIER(1).getText()
                 : null;

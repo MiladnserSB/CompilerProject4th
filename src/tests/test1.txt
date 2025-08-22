@@ -1,18 +1,89 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './components/header/header.component';
-import { HomeComponent } from './home/home.component';
-
+import { ProductsService } from '../../services/products.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, HomeComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  selector: 'app-add-product',
+  templateUrl: './add-product.component.html',
+  styleUrl: './add-product.component.css'
 })
-export class AppComponent {
-  title = 'first-app';
+
+
+export class AddProductComponent {
+  product = { name: '', image: '', price: 0, colors: '' };
+
+  constructor(private productsService: ProductsService, private router: Router) {}
+
+  onSubmit() {
+    const newProduct = { ...this.product, id: Date.now() };
+    this.productsService.addProduct(newProduct);
+    this.router.navigate(['/products']);
+  }
 }
 
-<app-header />
-<app-home />
+
+  <div class="container"> 
+    <div class="add-product-form">
+  <h2>Add Product</h2>
+  <form (submit)="onSubmit(); $event.preventDefault()">
+    <label>Name:
+      <input name="name" [value]="product.name" (input)="product.name =  $any($event.target).value" required />
+    </label><br />
+    <label>Image:
+      <input name="image" [value]="product.image" (input)="product.image =  $any($event.target).value" required />
+    </label><br />
+    <label>Price:
+      <input type="number" name="price" [value]="product.price" (input)="product.price = + $any($event.target).value" required />
+    </label><br />
+    <label>Color:
+      <input name="color" [value]="product.colors" (input)="product.colors =  $any($event.target).value" required />
+    </label><br />
+    <div class="center-btn">
+    <button type="submit">Add</button>
+    </div>
+  </form>
+</div>
+</div>
+
+
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+h2{
+    color: #ff3c00;
+    padding: 10px;}
+
+.add-product-form {
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+ width: 250px; 
+ height: 300px;
+  padding: 100px;
+  margin: 50px;
+  background: #f9f9f9;
+  
+}
+.add-product-form input{
+width: 250px;
+height: 18px;
+margin: 10px;
+margin-top: 8px;
+}
+.center-btn {
+  display: flex;
+  justify-content: center;
+padding-top: 50px;
+}
+
+.center-btn button {
+    width: 60px;
+    height: 40px;
+  background: #ff3c00;
+  color: #fff;
+  
+}

@@ -3,12 +3,13 @@ package ast.TS;
 import ast.ASTNode;
 import java.util.List;
 
-public class ObjectExpression implements ASTNode {
+public class ObjectExpression extends ClassBodyStatement {
     private String assignIdentifier; // nullable
     private List<String> keys;
     private List<ASTNode> values;
 
     public ObjectExpression(String assignIdentifier, List<String> keys, List<ASTNode> values) {
+        super(null);
         this.assignIdentifier = assignIdentifier;
         this.keys = keys;
         this.values = values;

@@ -42,6 +42,7 @@ public class ClassDeclaration implements ASTNode {
         }
     }
 
+
     @Override
     public String toString() {
         return "Class " + className + (implementsClause != null ? " " + implementsClause.toString() : "");

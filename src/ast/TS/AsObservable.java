@@ -2,12 +2,13 @@ package ast.TS;
 
 import ast.ASTNode;
 
-public class AsObservable implements ASTNode {
+public class AsObservable extends ClassBodyStatement {
     private final String variableName;
     private final String sourceIdentifier;
     private final MethodCall methodCall;
 
     public AsObservable(String variableName, String sourceIdentifier, MethodCall methodCall) {
+        super(null);
         this.variableName = variableName;
         this.sourceIdentifier = sourceIdentifier;
         this.methodCall = methodCall;

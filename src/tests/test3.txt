@@ -1,38 +1,166 @@
-import { Injectable } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ProductsService } from '../../services/products.service';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { NgFor, NgIf,AsyncPipe } from '@angular/common';
 
-@Injectable({
-  providedIn: 'root',
+
+@Component({
+  selector: 'app-products',
+  imports:[NgFor,NgIf,AsyncPipe],
+  templateUrl: './products.component.html',
+  styleUrl: './products.component.css'
 })
-export class ProductsService {
 
- private items = [
-    {
-      id: 1,
-      name: 'hoodie',
-      image: 'https://m.media-amazon.com/images/I/51tEciwZARL.jpg',
-      price: 1000,
-      colors: 'red',
-    },
-    {
-      id: 2,
-      name: 'jeans',
-      image: 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcS-gNnQj5hHFmlvbSZjACGvZ2R3GHfUC6zL3ViZGXTMC8Z5MR-If7jikESuzpUFeMRSgDiMb0FR9xPUSruyylJbc-javHeGNK50HAFKEv3PRXLP3HSIuN38',
-      price: 2000,
-      colors: 'blue',
-    },
-    {
-      id: 3,
-      name: 'shoes',
-      image: 'https://thursdayboots.com/cdn/shop/products/1024x1024-Women-Premier-LowTop-Black-111422-3.4.jpg?v=1668726835&width=816',
-      price: 3000,
-      colors: 'black',
-    },
-  ];
+export class ProductsComponent implements OnInit {
+  products$!: Observable<any[]>;
+  selectedItem: any=null;
+  editMode:boolean = false;
 
-  constructor() { }
+  constructor(private productsService: ProductsService, private router: Router) {}
 
-  getProducts() {
-    return this.items;
+  ngOnInit() {
+    this.products$ = this.productsService.products$;
+  }
+
+  viewDetails(item: any) {
+    this.productsService.setSelectedProduct(item);
+    this.router.navigate(['/details']);
+  }
+
+  onEdit(item: any) {
+    this.selectedItem = { ...item };
+    this.editMode = true;
+  }
+
+  onDelete(id: number) {
+    this.productsService.deleteProduct(id);
+    if (this.selectedItem?.id === id) {
+      this.editMode = false;
+      this.selectedItem = null;
+    }
+  }
+
+  onEditSave() {
+    this.productsService.editProduct(this.selectedItem);
+    this.editMode = false;
+    this.selectedItem = null;
+  }
+
+  onEditCancel() {
+    this.editMode = false;
   }
 }
 
+<div class="container">
+
+  
+  <div class="product-list">
+    <div *ngFor="let item of products$ | async" class="product-card">
+      <img [src]="item.image" alt="{{ item.name }}">
+      <h3>{{ item.name }}</h3>
+      <button (click)="onEdit(item); $event.stopPropagation()">Edit</button>
+      <button (click)="onDelete(item.id); $event.stopPropagation()">Delete</button>
+      <button (click)="viewDetails(item); $event.stopPropagation()">View</button>
+    </div>
+  </div>
+
+  <div class="edit-form" *ngIf="editMode">
+    <h2>Edit Product</h2>
+
+    <form (submit)="onEditSave(); $event.preventDefault()">
+      <label>Name:
+        <input name="name" [value]="selectedItem.name" (input)="selectedItem.name = $any($event.target).value" required />
+      </label><br />
+
+      <label>Image:
+        <input name="image" [value]="selectedItem.image" (input)="selectedItem.image = $any($event.target).value" required />
+      </label><br />
+
+      <label>Price:
+        <input type="number" name="price" [value]="selectedItem.price" (input)="selectedItem.price = +$any($event.target).value" required />
+      </label><br />
+
+      <label>Color:
+        <input name="color" [value]="selectedItem.colors" (input)="selectedItem.colors = $any($event.target).value" required />
+      </label><br />
+
+      <div class="center-btn">
+        <button type="submit">Save</button>
+        <button type="button" (click)="onEditCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+  
+
+</div>
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .product-list {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+     justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .product-card {
+    width: 200px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+  }
+ 
+
+
+.edit-form {
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+ width: 300px; 
+ height: 300px;
+  padding: 50px;
+  margin: 25px;
+  background: #f9f9f9;
+  
+}
+.edit-form input{
+width: 200px;
+height: 18px;
+margin: 10px;
+margin-top: 8px;
+}
+.center-btn {
+  display: flex;
+  justify-content: space-evenly;
+padding-top: 10px;
+}
+
+.center-btn button {
+    width: 50px;
+    height: 30px;
+  background: #ff3c00;
+  color: #fff;
+  font-size: 12px;
+  
+}
+
+  .edit-form h2{
+    color: #ff3c00;
+  }
