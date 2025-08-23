@@ -21,6 +21,7 @@ public class MethodCall implements ASTNode {
 
     @Override
     public void prettyPrint(String indent) {
+        System.out.println("*********************************************************");
         System.out.println(indent + "MethodCall:");
         System.out.println(indent + "  Method: " + methodName);
         if (argument != null) {
@@ -35,19 +36,16 @@ public class MethodCall implements ASTNode {
 
     @Override
     public String generate() {
-        // Handle specific Angular method conversions
-        if ("asObservable".equals(methodName)) {
-            // Remove asObservable() call in JavaScript
-            return "";
-        } else if ("next".equals(methodName)) {
-            // Convert BehaviorSubject.next() to direct assignment
-            return argument != null ? " = " + argument : "";
-        } else if ("navigate".equals(methodName)) {
-            // Convert router.navigate() to window.location change
-            return "window.location.hash = " + argument + ";";
+        StringBuilder sb = new StringBuilder();
+        sb.append(methodName).append("(");
+
+        if (argument != null) {
+            sb.append(argument);
         }
 
-        // Regular method call
-        return methodName + "(" + (argument != null ? argument : "") + ")";
+        sb.append(")");
+        return sb.toString();
     }
+
+
 }

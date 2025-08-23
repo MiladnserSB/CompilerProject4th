@@ -3,8 +3,8 @@ package ast.TS;
 import ast.ASTNode;
 
 public class AddCall implements ASTNode {
-    private CrudBody crudBody;
-    private String identifier;
+    private CrudBody crudBody; // `this.productsSubject.value`
+    private String identifier; // `product`
 
     public AddCall(CrudBody crudBody, String identifier) {
         this.crudBody = crudBody;
@@ -30,6 +30,7 @@ public class AddCall implements ASTNode {
     public String toString() {
         return "[... " + crudBody + ", " + identifier + "]";
     }
+
     @Override
     public String generate() {
         return "[..." + crudBody.generate() + ", " + identifier + "]";

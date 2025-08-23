@@ -10,172 +10,95 @@ public class Main {
     public static void main(String[] args) {
 
 
-        String input = "import { Component, OnInit } from '@angular/core';\n" +
+        String input = "import { Component } from '@angular/core';\n" +
                 "import { ProductsService } from '../../services/products.service';\n" +
-                "import { Observable } from 'rxjs';\n" +
                 "import { Router } from '@angular/router';\n" +
-                "import { NgFor, NgIf,AsyncPipe } from '@angular/common';\n" +
-                "\n" +
                 "\n" +
                 "@Component({\n" +
-                "  selector: 'app-products',\n" +
-                "  imports:[NgFor,NgIf,AsyncPipe],\n" +
-                "  templateUrl: './products.component.html',\n" +
-                "  styleUrl: './products.component.css'\n" +
+                "  selector: 'app-add-product',\n" +
+                "  templateUrl: './add-product.component.html',\n" +
+                "  styleUrl: './add-product.component.css'\n" +
                 "})\n" +
                 "\n" +
-                "export class ProductsComponent implements OnInit {\n" +
-                "  products$!: Observable<any[]>;\n" +
-                "  selectedItem: any=null;\n" +
-                "  editMode:boolean = false;\n" +
+                "\n" +
+                "export class AddProductComponent {\n" +
+                "  product = { name: 'zxxcsdf', image: '', price: 0, colors: '' };\n" +
                 "\n" +
                 "  constructor(private productsService: ProductsService, private router: Router) {}\n" +
                 "\n" +
-                "  ngOnInit() {\n" +
-                "    this.products$ = this.productsService.products$;\n" +
-                "  }\n" +
-                "\n" +
-                "  viewDetails(item: any) {\n" +
-                "    this.productsService.setSelectedProduct(item);\n" +
-                "    this.router.navigate(['/details']);\n" +
-                "  }\n" +
-                "\n" +
-                "  onEdit(item: any) {\n" +
-                "    this.selectedItem = { ...item };\n" +
-                "    this.editMode = true;\n" +
-                "  }\n" +
-                "\n" +
-                "  onDelete(id: number) {\n" +
-                "    this.productsService.deleteProduct(id);\n" +
-                "    if (this.selectedItem?.id === id) {\n" +
-                "      this.editMode = false;\n" +
-                "      this.selectedItem = null;\n" +
-                "    }\n" +
-                "  }\n" +
-                "\n" +
-                "  onEditSave() {\n" +
-                "    this.productsService.editProduct(this.selectedItem);\n" +
-                "    this.editMode = false;\n" +
-                "    this.selectedItem = null;\n" +
-                "  }\n" +
-                "\n" +
-                "  onEditCancel() {\n" +
-                "    this.editMode = false;\n" +
+                "  onSubmit() {\n" +
+                "    const newProduct = { ...this.product, id: Date.now() };\n" +
+                "    this.productsService.addProduct(newProduct);\n" +
+                "    this.router.navigate(['/products']);\n" +
                 "  }\n" +
                 "}\n" +
                 "\n" +
-                "<div class=\"container\">\n" +
                 "\n" +
-                "  \n" +
-                "  <div class=\"product-list\">\n" +
-                "    <div *ngFor=\"let item of products$ | async\" class=\"product-card\">\n" +
-                "      <img [src]=\"item.image\" alt=\"{{ item.name }}\">\n" +
-                "      <h3>{{ item.name }}</h3>\n" +
-                "      <button (click)=\"onEdit(item); $event.stopPropagation()\">Edit</button>\n" +
-                "      <button (click)=\"onDelete(item.id); $event.stopPropagation()\">Delete</button>\n" +
-                "      <button (click)=\"viewDetails(item); $event.stopPropagation()\">View</button>\n" +
+                "  <div class=\"container\"> \n" +
+                "    <div class=\"add-product-form\">\n" +
+                "  <h2>Add Product</h2>\n" +
+                "  <form (submit)=\"onSubmit(); $event.preventDefault()\">\n" +
+                "    <label>Name:\n" +
+                "      <input name=\"name\" [value]=\"product.name\" (input)=\"product.name =  $any($event.target).value\" required />\n" +
+                "    </label><br />\n" +
+                "    <label>Image:\n" +
+                "      <input name=\"image\" [value]=\"product.image\" (input)=\"product.image =  $any($event.target).value\" required />\n" +
+                "    </label><br />\n" +
+                "    <label>Price:\n" +
+                "      <input type=\"number\" name=\"price\" [value]=\"product.price\" (input)=\"product.price = + $any($event.target).value\" required />\n" +
+                "    </label><br />\n" +
+                "    <label>Color:\n" +
+                "      <input name=\"color\" [value]=\"product.colors\" (input)=\"product.colors =  $any($event.target).value\" required />\n" +
+                "    </label><br />\n" +
+                "    <div class=\"center-btn\">\n" +
+                "    <button type=\"submit\">Add</button>\n" +
                 "    </div>\n" +
-                "  </div>\n" +
-                "\n" +
-                "  <div class=\"edit-form\" *ngIf=\"editMode\">\n" +
-                "    <h2>Edit Product</h2>\n" +
-                "\n" +
-                "    <form (submit)=\"onEditSave(); $event.preventDefault()\">\n" +
-                "      <label>Name:\n" +
-                "        <input name=\"name\" [value]=\"selectedItem.name\" (input)=\"selectedItem.name = $any($event.target).value\" required />\n" +
-                "      </label><br />\n" +
-                "\n" +
-                "      <label>Image:\n" +
-                "        <input name=\"image\" [value]=\"selectedItem.image\" (input)=\"selectedItem.image = $any($event.target).value\" required />\n" +
-                "      </label><br />\n" +
-                "\n" +
-                "      <label>Price:\n" +
-                "        <input type=\"number\" name=\"price\" [value]=\"selectedItem.price\" (input)=\"selectedItem.price = +$any($event.target).value\" required />\n" +
-                "      </label><br />\n" +
-                "\n" +
-                "      <label>Color:\n" +
-                "        <input name=\"color\" [value]=\"selectedItem.colors\" (input)=\"selectedItem.colors = $any($event.target).value\" required />\n" +
-                "      </label><br />\n" +
-                "\n" +
-                "      <div class=\"center-btn\">\n" +
-                "        <button type=\"submit\">Save</button>\n" +
-                "        <button type=\"button\" (click)=\"onEditCancel()\">Cancel</button>\n" +
-                "      </div>\n" +
-                "\n" +
-                "    </form>\n" +
-                "  </div>\n" +
-                "  \n" +
-                "\n" +
+                "  </form>\n" +
+                "</div>\n" +
                 "</div>\n" +
                 "\n" +
-                ".container {\n" +
+                "\n" +
+                ".container{\n" +
                 "    display: flex;\n" +
-                "    justify-content: space-between;\n" +
+                "    align-items: center;\n" +
                 "    justify-content: center;\n" +
-                "    align-items: center;\n" +
-                "    padding: 20px;\n" +
-                "  }\n" +
-                "  \n" +
-                "  .product-list {\n" +
-                "    width: 90%;\n" +
-                "    display: flex;\n" +
                 "    flex-direction: column;\n" +
-                "     justify-content: center;\n" +
-                "    align-items: center;\n" +
-                "    flex-wrap: wrap;\n" +
-                "    gap: 20px;\n" +
-                "  }\n" +
-                "  \n" +
-                "  .product-card {\n" +
-                "    width: 200px;\n" +
-                "    text-align: center;\n" +
-                "    cursor: pointer;\n" +
-                "  }\n" +
-                "  \n" +
-                "  .product-card img {\n" +
-                "    width: 100%;\n" +
-                "    height: 110px;\n" +
-                "    object-fit: cover;\n" +
-                "  }\n" +
-                " \n" +
+                "}\n" +
+                "h2{\n" +
+                "    color: #ff3c00;\n" +
+                "    padding: 10px;}\n" +
                 "\n" +
-                "\n" +
-                ".edit-form {\n" +
+                ".add-product-form {\n" +
                 "display: flex;\n" +
                 "align-items: center;\n" +
                 "justify-content: center;\n" +
                 "flex-direction: column;\n" +
-                " width: 300px; \n" +
+                " width: 250px; \n" +
                 " height: 300px;\n" +
-                "  padding: 50px;\n" +
-                "  margin: 25px;\n" +
+                "  padding: 100px;\n" +
+                "  margin: 50px;\n" +
                 "  background: #f9f9f9;\n" +
                 "  \n" +
                 "}\n" +
-                ".edit-form input{\n" +
-                "width: 200px;\n" +
+                ".add-product-form input{\n" +
+                "width: 250px;\n" +
                 "height: 18px;\n" +
                 "margin: 10px;\n" +
                 "margin-top: 8px;\n" +
                 "}\n" +
                 ".center-btn {\n" +
                 "  display: flex;\n" +
-                "  justify-content: space-evenly;\n" +
-                "padding-top: 10px;\n" +
+                "  justify-content: center;\n" +
+                "padding-top: 50px;\n" +
                 "}\n" +
                 "\n" +
                 ".center-btn button {\n" +
-                "    width: 50px;\n" +
-                "    height: 30px;\n" +
+                "    width: 60px;\n" +
+                "    height: 40px;\n" +
                 "  background: #ff3c00;\n" +
                 "  color: #fff;\n" +
-                "  font-size: 12px;\n" +
                 "  \n" +
-                "}\n" +
-                "\n" +
-                "  .edit-form h2{\n" +
-                "    color: #ff3c00;\n" +
-                "  }"
+                "}\n"
                 ;
         Lexergrammmar lexer = new Lexergrammmar(CharStreams.fromString(input));
         CommonTokenStream tokens = new CommonTokenStream(lexer);

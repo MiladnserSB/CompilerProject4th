@@ -3,7 +3,7 @@ package ast.TS;
 import ast.ASTNode;
 
 public class NextCall implements ASTNode {
-    private ASTNode call;
+    private ASTNode call; // e.g., AddCall or EditDeleteCall
 
     public NextCall(ASTNode call) {
         this.call = call;
@@ -25,7 +25,7 @@ public class NextCall implements ASTNode {
     }
     @Override
     public String generate() {
-        return "next(" + (call != null ? call.generate() : "") + ")";
+        return "(" + (call != null ? call.generate() : "") + ")";
     }
 
 }

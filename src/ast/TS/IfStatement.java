@@ -29,6 +29,7 @@ public class IfStatement implements ASTNode {
     public String toString() {
         return "if (this." + conditionLeft + "?." + conditionRight + " === " + assignIdentifier + ") { " + body + " }";
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
@@ -46,5 +47,4 @@ public class IfStatement implements ASTNode {
         sb.append("}");
         return sb.toString();
     }
-
 }

@@ -31,19 +31,25 @@ public class ConstructorDeclarationStatement extends ClassBodyStatement {
     public String toString() {
         return "Constructor(" + (parameters != null ? parameters.toString() : "") + ")";
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder("constructor(");
         if (parameters != null && !parameters.isEmpty()) {
             for (int i = 0; i < parameters.size(); i++) {
-                sb.append(parameters.get(i).getName()); // drop :type and access
+                sb.append(parameters.get(i).getName());
                 if (i < parameters.size() - 1) {
                     sb.append(", ");
                 }
             }
         }
-        sb.append(") {\n    // TODO: init\n  }");
+        sb.append(") {\n");
+        if (parameters != null) {
+            for (ConstructorParameter param : parameters) {
+                sb.append("this.").append(param.getName()).append(" = ").append(param.getName()).append(";\n");
+            }
+        }
+        sb.append("}\n");
         return sb.toString();
     }
-
 }

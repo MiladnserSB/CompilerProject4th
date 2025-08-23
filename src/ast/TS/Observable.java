@@ -4,7 +4,7 @@ import ast.ASTNode;
 
 public class Observable extends ClassBodyStatement {
     private final String variableName;
-    private final String observableArray;
+    private final String observableArray; // This will actually be the initial value if directly assigned
 
     public Observable(String variableName, String observableArray) {
         super(null);
@@ -34,7 +34,11 @@ public class Observable extends ClassBodyStatement {
 
     @Override
     public String generate() {
-        // Convert Observable to regular variable assignment in JavaScript
-        return "let " + variableName + " = " + observableArray + ";\n";
+        String generatedVariableName = variableName.endsWith("$")
+                ? variableName.substring(0, variableName.length() - 1)
+                : variableName;
+        return "this." + generatedVariableName + " = " + observableArray + ";\n";
     }
+
+
 }

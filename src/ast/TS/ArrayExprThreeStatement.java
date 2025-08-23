@@ -47,8 +47,7 @@ public class ArrayExprThreeStatement extends ClassBodyStatement {
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
-        sb.append(signature.generate())
-                .append(" = new BehaviorSubject([");
+        sb.append(signature.generate()).append(" = new BehaviorSubject([");
 
         for (int i = 0; i < elements.size(); i++) {
             sb.append(elements.get(i).generate());
@@ -57,8 +56,7 @@ public class ArrayExprThreeStatement extends ClassBodyStatement {
             }
         }
 
-        sb.append("]);");
+        sb.append("]);\n");
         return sb.toString();
     }
-
 }

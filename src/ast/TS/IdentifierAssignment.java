@@ -22,9 +22,25 @@ public class IdentifierAssignment extends MethodAssignment {
     public String toString() {
         return left + " = " + right + (methodCall != null ? "." + methodCall : "");
     }
+
     @Override
     public String generate() {
-        return left + " = " + right + (methodCall != null ? "." + methodCall.generate() : "") + ";";
+        StringBuilder sb = new StringBuilder();
+
+        // Left-hand side (with optional "this.")
+        sb.append("this.");
+        sb.append(left);
+
+        if (right != null && methodCall != null) {
+            // Case: assignment (IDENTIFIER = this.IDENTIFIER.methodCall)
+            sb.append(" = ").append("this.").append(right).append(".").append(methodCall.generate());
+        } else if (methodCall != null) {
+            // Case: method call (this.IDENTIFIER.methodCall)
+            sb.append(".").append(methodCall.generate());
+        }
+
+        sb.append(";\n");
+        return sb.toString();
     }
 
 }

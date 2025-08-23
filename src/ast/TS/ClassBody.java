@@ -1,3 +1,4 @@
+// file: ast/TS/ClassBody.java
 package ast.TS;
 
 import ast.ASTNode;
@@ -35,13 +36,23 @@ public class ClassBody implements ASTNode {
         }
         return sb.toString().trim();
     }
+
     @Override
     public String generate() {
+        // Concatenate only real code; skip empty fragments from decorators, interfaces, etc.
         StringBuilder sb = new StringBuilder();
+        boolean first = true;
         for (ClassBodyStatement member : members) {
-            sb.append(member.generate()).append("\n");
+            String piece = member.generate();
+            if (piece != null) {
+                piece = piece.trim();
+            }
+            if (piece != null && !piece.isEmpty()) {
+                if (!first) sb.append("\n");
+                sb.append(piece);
+                first = false;
+            }
         }
         return sb.toString();
     }
-
 }

@@ -44,8 +44,8 @@ public class Parameters implements ASTNode {
     }
     @Override
     public String generate() {
-        // في JavaScript بنرجّع الأسماء فقط، من غير types
         return String.join(", ", names);
     }
+
 
 }

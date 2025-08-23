@@ -56,10 +56,10 @@ public class TsDocument implements ASTNode {
     public String generate() {
         StringBuilder sb = new StringBuilder();
 
-        // Imports → plain JS import
-        for (ImportStatement imp : imports) {
-            sb.append(imp.generate()).append("\n");
-        }
+//        // Imports → plain JS import
+//        for (ImportStatement imp : imports) {
+//            sb.append(imp.generate()).append("\n");
+//        }
 
         // Decorators are metadata only, skip in JS
         if (decorator != null) {

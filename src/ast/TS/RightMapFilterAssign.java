@@ -64,11 +64,14 @@ public class RightMapFilterAssign implements ASTNode {
     @Override
     public String generate() {
         if (isConditional) {
-            // Convert Angular's filter conditional to JS
-            return left.generate() + " === " + right.generate();
+            // pr.id === updated.id ? updated : pr
+            return left.generate() + " === " + right.generate() +
+                    " ? " + right.getRight() + " : " + left.getLeft();
         }
+        // Just return identifier for filter, e.g. "id"
         return identifier;
     }
+
 
 
 }

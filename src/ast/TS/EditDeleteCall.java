@@ -3,8 +3,8 @@ package ast.TS;
 import ast.ASTNode;
 
 public class EditDeleteCall implements ASTNode {
-    private CrudBody crudBody;
-    private ASTNode operation; // Map or Filter
+    private CrudBody crudBody; // e.g., 'this.productsSubject.value'
+    private ASTNode operation; // MapCall or FilterCall
 
     public EditDeleteCall(CrudBody crudBody, ASTNode operation) {
         this.crudBody = crudBody;
@@ -30,6 +30,7 @@ public class EditDeleteCall implements ASTNode {
     public String toString() {
         return crudBody + "." + operation;
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();

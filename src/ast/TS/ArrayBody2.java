@@ -60,5 +60,4 @@ public class ArrayBody2 implements ASTNode {
         sb.append(" }");
         return sb.toString();
     }
-
 }

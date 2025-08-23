@@ -38,6 +38,7 @@ public class TypedMethodDeclarationStatement extends ClassBodyStatement {
         return super.toString() + signature + "(" +
                 (parameters != null ? parameters.toString() : "") + ")";
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
@@ -52,5 +53,4 @@ public class TypedMethodDeclarationStatement extends ClassBodyStatement {
         sb.append("}\n");
         return sb.toString();
     }
-
 }

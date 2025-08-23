@@ -54,6 +54,7 @@ public class MethodBody implements ASTNode {
                 (identifier != null ? identifier : valueNode) +
                 (hasDotValue ? ".VALUE" : "");
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();

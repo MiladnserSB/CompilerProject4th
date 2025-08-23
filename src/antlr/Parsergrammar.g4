@@ -156,7 +156,7 @@ thisDotIdentifierAssignValues:      //DONE
     ;
 
 identifierAssignment:   //DONE
-    (THIS DOT)? IDENTIFIER (ASSIGN THIS DOT IDENTIFIER (DOT methodcall) | DOT methodcall) SEMICOLON
+    (THIS DOT)? IDENTIFIER ((ASSIGN THIS DOT IDENTIFIER DOT methodcall) | (DOT methodcall)) SEMICOLON
     ;
 
 crudBodyRule:   //DONE

@@ -31,9 +31,9 @@ public class VariableAssignmentStatement extends ClassBodyStatement {
     public String toString() {
         return super.toString() + identifier + " = " + value;
     }
+
     @Override
     public String generate() {
         return identifier + " = " + value + ";\n";
     }
-
 }

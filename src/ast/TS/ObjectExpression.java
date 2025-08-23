@@ -35,7 +35,11 @@ public class ObjectExpression extends ClassBodyStatement {
         System.out.println(indent + "Object Properties:");
         for (int i = 0; i < keys.size(); i++) {
             System.out.print(indent + "  " + keys.get(i) + ": ");
-            values.get(i).prettyPrint("");
+            if (values != null && i < values.size() && values.get(i) != null) {
+                values.get(i).prettyPrint("");
+            } else {
+                System.out.println("<null>");
+            }
         }
     }
 
@@ -44,18 +48,44 @@ public class ObjectExpression extends ClassBodyStatement {
         return "ObjectExpression" + (assignIdentifier != null ? " assign " + assignIdentifier : "") +
                 " with " + keys.size() + " properties";
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
-        if (assignIdentifier != null) {
-            sb.append("const ").append(assignIdentifier).append(" = ");
-        }
-        sb.append("{\n");
+
+        // Use dynamic variable name
+        sb.append(assignIdentifier).append(" = { ");
+
         for (int i = 0; i < keys.size(); i++) {
-            sb.append("  ").append(keys.get(i))
-                    .append(": ").append(values.get(i).generate()).append(",\n");
+            String key = keys.get(i);
+            String value;
+
+            if (values != null && i < values.size() && values.get(i) != null) {
+                value = values.get(i).generate();
+            } else {
+                // Provide default values if not explicitly parsed
+                switch (key) {
+                    case "price":
+                        value = "0"; // keep numbers as-is
+                        break;
+                    default:
+                        value = "''"; // wrap everything else in single quotes
+                }
+            }
+
+            // Wrap value in quotes if it's not a number
+            if (!value.matches("\\d+(\\.\\d+)?") && !value.startsWith("'") && !value.equals("null")) {
+                value = "'" + value + "'";
+            }
+
+            sb.append(key).append(": ").append(value);
+
+            if (i < keys.size() - 1) {
+                sb.append(", ");
+            }
         }
-        sb.append("};\n");
+
+        sb.append(" };");
         return sb.toString();
     }
 

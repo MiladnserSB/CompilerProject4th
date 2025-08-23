@@ -456,11 +456,12 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
     @Override
     public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
+        System.out.println("*********************************************************");
        // method name can be IDENTIFIER, NAVIGATE, or NOW
        String methodName = ctx.IDENTIFIER() != null
                ? ctx.IDENTIFIER(0).getText()
                : (ctx.NAVIGATE() != null ? ctx.NAVIGATE().getText() : ctx.NOW().getText());
-
+        System.out.println("//////////////////////////////////////////////////////////////////////"+methodName);
        String argument = null;
        if (ctx.IDENTIFIER().size() > 1) {
            // case: IDENTIFIER(...) or this.IDENTIFIER

@@ -41,10 +41,20 @@ public class SignalDeclarationStatement extends ClassBodyStatement {
 
     @Override
     public String generate() {
-        // Convert Angular signals to regular variables in JavaScript
-        if ("signal".equals(signalType)) {
-            return "let " + name + " = " + argument + ";\n";
-        }
-        return "let " + name + " = " + signalType + "(\"" + argument + "\");\n";
+        // Convert a signal into a reactive-like property with getter/setter
+        String jsName = name.replace("signal", "").trim();
+        if (jsName.isEmpty()) jsName = name; // fallback if no "signal" in name
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("this._").append(jsName).append(" = ").append(argument).append(";\n");
+        sb.append("Object.defineProperty(this, '").append(jsName).append("', {\n");
+        sb.append("  get() { return this._").append(jsName).append("; },\n");
+        sb.append("  set(newValue) {\n");
+        sb.append("    this._").append(jsName).append(" = newValue;\n");
+        sb.append("    if (typeof this.render === 'function') this.render();\n");
+        sb.append("  }\n");
+        sb.append("});\n");
+        return sb.toString();
     }
+
 }

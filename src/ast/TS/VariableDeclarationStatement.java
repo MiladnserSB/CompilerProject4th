@@ -38,9 +38,9 @@ public class VariableDeclarationStatement extends ClassBodyStatement {
     public String toString() {
         return super.toString() + signature + ": " + type + " = " + value;
     }
+
     @Override
     public String generate() {
         return "let " + signature + " = " + value + ";\n";
     }
-
 }

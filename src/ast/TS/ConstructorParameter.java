@@ -3,7 +3,7 @@ package ast.TS;
 import ast.ASTNode;
 
 public class ConstructorParameter implements ASTNode {
-    private String access;  // can be null
+    private String access;
     private String name;
     private String type;
 
@@ -38,9 +38,9 @@ public class ConstructorParameter implements ASTNode {
     public String toString() {
         return (access != null ? access + " " : "") + name + ": " + type;
     }
+
     @Override
     public String generate() {
-        return name; // ignore access + type in JS
+        return name;
     }
-
 }

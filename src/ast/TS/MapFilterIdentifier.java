@@ -41,13 +41,12 @@ public class MapFilterIdentifier implements ASTNode {
     @Override
     public String generate() {
         if (".".equals(operator)) {
-            // JS object/field access
+            // JS object/field access: item.id
             return left + "." + right;
         } else if (":".equals(operator)) {
-            // Object literal entry
+            // Object literal entry: { id: newId } (less common in map/filter directly)
             return left + ": " + right;
         }
-        return left + " " + operator + " " + right;
+        return left + operator + right; // Fallback for other operators
     }
-
 }

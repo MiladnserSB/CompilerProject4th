@@ -3,8 +3,8 @@ package ast.TS;
 import ast.ASTNode;
 
 public class LeftMapFilterAssign implements ASTNode {
-    private final String parameter;
-    private final MapFilterIdentifier expression;
+    private final String parameter; // e.g., 'pr' or 'item'
+    private final MapFilterIdentifier expression; // e.g., 'pr.id' or 'item.id'
 
     public LeftMapFilterAssign(String parameter, MapFilterIdentifier expression) {
         this.parameter = parameter;
@@ -32,9 +32,12 @@ public class LeftMapFilterAssign implements ASTNode {
     public String toString() {
         return parameter + " => " + (expression != null ? expression.toString() : "");
     }
+
     @Override
     public String generate() {
-        return identifier + " => " + mapFilterIdentifier;
+        // Only return the parameter name (like "pr").
+        // The map/filter generator will wrap it in an arrow function.
+        return parameter;
     }
 
 }

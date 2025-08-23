@@ -3,8 +3,8 @@ package ast.TS;
 import ast.ASTNode;
 
 public class MapCall implements ASTNode {
-    private LeftMapFilterAssign left;
-    private RightMapFilterAssign right;
+    private LeftMapFilterAssign left;  // Parameter for the map callback
+    private RightMapFilterAssign right; // The transformation or condition
 
     public MapCall(LeftMapFilterAssign left, RightMapFilterAssign right) {
         this.left = left;
@@ -30,9 +30,12 @@ public class MapCall implements ASTNode {
     public String toString() {
         return "map(" + left + " === " + right + ")";
     }
+
     @Override
     public String generate() {
-        return "map(item => " + left.generate() + " === " + right.generate() + ")";
+        return "map(" + left.getParameter() + " => " +
+                left.getExpression().generate() + " === " + right.getIdentifier() +
+                " ? " + right.getIdentifier() + " : " + left.getParameter() + ")";
     }
 
 }

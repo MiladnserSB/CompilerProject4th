@@ -3,8 +3,8 @@ package ast.TS;
 import ast.ASTNode;
 
 public class CrudBody implements ASTNode {
-    private String identifier;
-    private String action; // "next" or "value"
+    private String identifier; // e.g., 'productsSubject'
+    private String action;     // e.g., 'next' or 'value'
 
     public CrudBody(String identifier, String action) {
         this.identifier = identifier;
@@ -28,6 +28,7 @@ public class CrudBody implements ASTNode {
     public String toString() {
         return "this." + identifier + "." + action;
     }
+
     @Override
     public String generate() {
         return "this." + identifier + "." + action;

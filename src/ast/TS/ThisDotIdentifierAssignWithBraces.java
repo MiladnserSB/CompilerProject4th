@@ -19,9 +19,9 @@ public class ThisDotIdentifierAssignWithBraces extends MethodAssignment {
     public String toString() {
         return "this." + leftIdentifier + " = { ... " + spreadIdentifier + " }";
     }
+
     @Override
     public String generate() {
-        return "this." + leftIdentifier + " = { ... " + spreadIdentifier + " };\n";
+        return "this." + leftIdentifier + " = { ..." + spreadIdentifier + " };\n";
     }
-
 }

@@ -8,7 +8,7 @@ public class ArrayExprOneStatement extends ClassBodyStatement {
     private List<ASTNode> elements;
 
     public ArrayExprOneStatement(Signature signature, List<ASTNode> elements) {
-        super(signature);  // or pass a wrapper ASTNode if needed
+        super(signature);
         this.signature = signature;
         this.elements = elements;
     }
@@ -34,6 +34,7 @@ public class ArrayExprOneStatement extends ClassBodyStatement {
     public String toString() {
         return super.toString() + " = [" + elements + "]";
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
@@ -45,9 +46,7 @@ public class ArrayExprOneStatement extends ClassBodyStatement {
                 sb.append(", ");
             }
         }
-
-        sb.append("];");
+        sb.append("];\n");
         return sb.toString();
     }
-
 }

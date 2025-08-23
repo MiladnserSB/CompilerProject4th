@@ -3,8 +3,8 @@ package ast.TS;
 import ast.ASTNode;
 
 public class FilterCall implements ASTNode {
-    private LeftMapFilterAssign left;
-    private RightMapFilterAssign right;
+    private LeftMapFilterAssign left; // Parameter for the filter callback
+    private RightMapFilterAssign right; // The condition to check against
 
     public FilterCall(LeftMapFilterAssign left, RightMapFilterAssign right) {
         this.left = left;
@@ -30,9 +30,11 @@ public class FilterCall implements ASTNode {
     public String toString() {
         return "filter(" + left + " !== " + right + ")";
     }
+
     @Override
     public String generate() {
-        return "filter(item => " + left.generate() + " !== " + right.generate() + ")";
+        return "filter(" + left.getParameter() + " => " +
+                left.getExpression().generate() + " !== " + right.getIdentifier() + ")";
     }
 
 }

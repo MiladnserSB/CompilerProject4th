@@ -4,7 +4,7 @@ import ast.ASTNode;
 import java.util.List;
 
 public class MethodVoidBody implements ASTNode {
-    private List<ASTNode> statements; // methodAssignment | crudBodyRule | ifStatement
+    private List<ASTNode> statements;
 
     public MethodVoidBody(List<ASTNode> statements) {
         this.statements = statements;
@@ -32,12 +32,27 @@ public class MethodVoidBody implements ASTNode {
                 "statements=" + statements +
                 '}';
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
-        for (ASTNode stmt : statements) {
-            sb.append(stmt.generate()).append("\n");
+        if (statements == null || statements.isEmpty()) {
+            return ""; // empty body
         }
+
+        for (ASTNode stmt : statements) {
+            if (stmt != null) {
+                String generated = stmt.generate();
+
+                // Ensure each statement ends with semicolon/newline if not already
+                if (!generated.trim().endsWith(";") && !generated.trim().endsWith("}")) {
+                    generated = generated.trim() + ";";
+                }
+
+                sb.append("    ").append(generated).append("\n");
+            }
+        }
+
         return sb.toString();
     }
 

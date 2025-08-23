@@ -3,8 +3,8 @@ package ast.TS;
 import ast.ASTNode;
 
 public class NgOnInitMethodStatement extends ClassBodyStatement {
-    private String accessModifier; // public/private/protected
-    private boolean hasVoidType;   // whether ": void" is present
+    private String accessModifier;
+    private boolean hasVoidType;
     private MethodVoidBody body;
 
     public NgOnInitMethodStatement(String accessModifier, boolean hasVoidType, MethodVoidBody body) {
@@ -42,6 +42,7 @@ public class NgOnInitMethodStatement extends ClassBodyStatement {
                 "ngOnInit() " + (hasVoidType ? ": void " : "") +
                 "{ ... }";
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();

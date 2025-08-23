@@ -48,12 +48,12 @@ public class ArrayBody1 implements ASTNode {
         if (stringLiteral != null) return "String: " + stringLiteral;
         return "<Empty>";
     }
+
     @Override
     public String generate() {
         if (objectExpression != null) return objectExpression.generate();
         if (number != null) return number;
-        if (stringLiteral != null) return "\"" + stringLiteral + "\"";
+        if (stringLiteral != null) return "'" + stringLiteral + "'";
         return "null";
     }
-
 }

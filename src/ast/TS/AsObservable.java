@@ -43,10 +43,9 @@ public class AsObservable extends ClassBodyStatement {
 
     @Override
     public String generate() {
-        // Convert asObservable() to direct assignment in JavaScript
         String methodCallStr = methodCall != null ? methodCall.generate() : "";
-        // Remove Observable-specific syntax and convert to regular assignment
         return "this." + variableName + " = this." + sourceIdentifier +
                 (methodCallStr.isEmpty() ? "" : "." + methodCallStr) + ";\n";
     }
+
 }

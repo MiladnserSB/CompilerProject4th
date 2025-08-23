@@ -4,7 +4,7 @@ import ast.ASTNode;
 
 public class VoidMethodDeclarationStatement extends ClassBodyStatement {
     private Signature signature;
-    private Parameters parameters; // nullable
+    private Parameters parameters;
     private MethodVoidBody methodBody;
 
     public VoidMethodDeclarationStatement(Signature signature, Parameters parameters, MethodVoidBody methodBody) {
@@ -52,10 +52,11 @@ public class VoidMethodDeclarationStatement extends ClassBodyStatement {
                 ", methodBody=" + methodBody +
                 '}';
     }
+
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
-        sb.append(signature.getName()).append("(");
+        sb.append("  ").append(signature.getName()).append("(");
         if (parameters != null) {
             sb.append(parameters.generate());
         }
@@ -63,7 +64,7 @@ public class VoidMethodDeclarationStatement extends ClassBodyStatement {
         if (methodBody != null) {
             sb.append(methodBody.generate());
         }
-        sb.append("}\n");
+        sb.append("  }\n");
         return sb.toString();
     }
 

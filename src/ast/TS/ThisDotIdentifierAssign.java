@@ -21,9 +21,12 @@ public class ThisDotIdentifierAssign extends MethodAssignment {
     public String toString() {
         return "this." + leftIdentifier + "$ = this." + rightIdentifier1 + "." + rightIdentifier2 + "$";
     }
+
     @Override
     public String generate() {
-        return "this." + leftIdentifier + " = this." + rightIdentifier1 + "." + rightIdentifier2 + ";\n";
+        // Remove the '$' from observable properties when generating vanilla JS
+        String generatedLeft = leftIdentifier.endsWith("$") ? leftIdentifier.substring(0, leftIdentifier.length() - 1) : leftIdentifier;
+        String generatedRight2 = rightIdentifier2.endsWith("$") ? rightIdentifier2.substring(0, rightIdentifier2.length() - 1) : rightIdentifier2;
+        return "this." + generatedLeft + " = this." + rightIdentifier1 + "." + generatedRight2 + ";\n";
     }
-
 }
