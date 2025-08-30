@@ -6,7 +6,7 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/src/antlr/Parsergrammar.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="C:\Users\Lenovo\IdeaProjects\untitledCompiler\src" />
+          <option name="outputDir" value="C:\Users\Lenovo\IdeaProjects\CompilerProject4th\src" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="" />

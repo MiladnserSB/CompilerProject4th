@@ -1,4 +1,4 @@
-// Generated from C:/Users/USER/IdeaProjects/untitled1/src/antlr/Parsergrammar.g4 by ANTLR 4.13.2
+// Generated from C:/Users/Lenovo/IdeaProjects/CompilerProject4th/src/antlr/Parsergrammar.g4 by ANTLR 4.13.2
 package antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;

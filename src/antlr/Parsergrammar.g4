@@ -287,7 +287,7 @@ ruleSet*;
 //mod
 
 selectorincss
-    : (DOT | HASH) IDENTIFIER
+    : (DOT | HASH) IDENTIFIER (DOT IDENTIFIER)?
     | TAGSFORCSS
     ;
 ruleSetStart:

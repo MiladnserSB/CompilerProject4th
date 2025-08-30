@@ -2,47 +2,51 @@ package ast.CSS;
 
 import ast.ASTNode;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RuleSetStart implements ASTNode {
-    private List<String> selectors;
+    private List<SelectorInCss> selectors;
+    private List<String> tags; // For TAGSFORCSS elements
 
-    public RuleSetStart(List<String> selectors) {
+    public RuleSetStart(List<SelectorInCss> selectors, List<String> tags) {
         this.selectors = selectors;
+        this.tags = tags;
     }
 
-    public List<String> getSelectors() {
+    public List<SelectorInCss> getSelectors() {
         return selectors;
     }
 
-    public void setSelectors(List<String> selectors) {
-        this.selectors = selectors;
+    public List<String> getTags() {
+        return tags;
     }
 
     @Override
     public void prettyPrint(String indent) {
-        System.out.println(indent + "Selectors:");
-        if (selectors == null || selectors.isEmpty()) {
-            System.out.println(indent + "  (Empty)");
-        } else {
-            for (String selector : selectors) {
-                System.out.println(indent + "  " + selector);
-            }
+        System.out.println(indent + "RuleSetStart:");
+        for (SelectorInCss selector : selectors) {
+            selector.prettyPrint(indent + "  ");
+        }
+        for (String tag : tags) {
+            System.out.println(indent + "  Tag: " + tag);
         }
     }
 
     @Override
     public String generate() {
-        if (selectors == null || selectors.isEmpty()) {
-            return "";
+        StringBuilder sb = new StringBuilder();
+
+        // Add CSS selectors
+        for (int i = 0; i < selectors.size(); i++) {
+            if (i > 0) sb.append(" ");
+            sb.append(selectors.get(i).generate());
         }
-        // join selectors with comma
-        if(selectors.size()>2)
-        return String.join(", ", selectors);
-        else{
-            return String.join(" ",selectors);
+
+        // Add tags
+        for (int i = 0; i < tags.size(); i++) {
+            if (sb.length() > 0) sb.append(" ");
+            sb.append(tags.get(i));
         }
+
+        return sb.toString();
     }
-
-
 }

@@ -139,7 +139,7 @@ padding:0;
 
 
 .edit-form {
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             flex-direction: column;
@@ -148,6 +148,10 @@ padding:0;
             padding: 50px;
             margin: 25px;
             background: #f9f9f9;
+        }
+
+.edit-form.active{
+        display:flex;
         }
 
 .edit-form input{

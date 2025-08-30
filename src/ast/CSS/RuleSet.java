@@ -16,20 +16,16 @@ public class RuleSet implements ASTNode {
         return ruleSetStart;
     }
 
+    public List<Declaration> getDeclarations() {
+        return declarations;
+    }
+
     public void setRuleSetStart(RuleSetStart ruleSetStart) {
         this.ruleSetStart = ruleSetStart;
     }
 
     public void setDeclarations(List<Declaration> declarations) {
         this.declarations = declarations;
-    }
-
-    public RuleSetStart getSelector() {
-        return ruleSetStart;
-    }
-
-    public List<Declaration> getDeclarations() {
-        return declarations;
     }
 
     @Override
@@ -56,5 +52,4 @@ public class RuleSet implements ASTNode {
         sb.append("}\n");
         return sb.toString();
     }
-
 }

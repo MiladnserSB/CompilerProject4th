@@ -1,4 +1,4 @@
-// Generated from C:/Users/USER/IdeaProjects/untitled1/src/antlr/Parsergrammar.g4 by ANTLR 4.13.2
+// Generated from C:/Users/Lenovo/IdeaProjects/CompilerProject4th/src/antlr/Parsergrammar.g4 by ANTLR 4.13.2
 package antlr;
 import ast.ASTNode;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
@@ -199,9 +199,9 @@ public abstract class ParsergrammarBaseVisitor<T> extends AbstractParseTreeVisit
 	 */
 	@Override public T visitTemplateurl(Parsergrammar.TemplateurlContext ctx) { return visitChildren(ctx); }
 
-    public abstract ASTNode visitProvidedIn(Parsergrammar.ProvidedinContext ctx);
+	public abstract ASTNode visitProvidedIn(Parsergrammar.ProvidedinContext ctx);
 
-    /**
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling

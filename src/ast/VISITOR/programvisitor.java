@@ -1545,41 +1545,72 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     }
     @Override
     public ASTNode visitRuleSet(Parsergrammar.RuleSetContext ctx) {
-        RuleSetStart selector = (RuleSetStart) visit(ctx.ruleSetStart());
+        RuleSetStart ruleSetStart = (RuleSetStart) visit(ctx.ruleSetStart());
+
         List<Declaration> declarations = new ArrayList<>();
         if (ctx.declarationList() != null) {
             for (Parsergrammar.DeclarationContext declCtx : ctx.declarationList().declaration()) {
                 declarations.add((Declaration) visit(declCtx));
             }
         }
-/*
-        Row row = new Row();
-        row.setName(selector.toString());
-        row.setValue(selector.toString() + " with " + declarations.size() + " declarations");
-       this.st.addRow(row.getName(), row);*/
-        return new RuleSet(selector, declarations);
+
+    /*
+    Row row = new Row();
+    row.setName(ruleSetStart.toString());
+    row.setValue(ruleSetStart.toString() + " with " + declarations.size() + " declarations");
+    this.st.addRow(row.getName(), row);
+    */
+
+        return new RuleSet(ruleSetStart, declarations);
+    }
+
+    @Override
+    public ASTNode visitSelectorincss(Parsergrammar.SelectorincssContext ctx) {
+        if (ctx.TAGSFORCSS() != null) {
+            // Case: TAGSFORCSS
+            return new SelectorInCss(ctx.TAGSFORCSS().getText());
+        } else {
+            // Case: (DOT | HASH) IDENTIFIER (DOT IDENTIFIER)?
+            String prefix = ctx.getChild(0).getText(); // DOT or HASH
+            String identifier = ctx.IDENTIFIER(0).getText();
+            String subIdentifier = null;
+
+            // Check if there's a second IDENTIFIER (for the optional part)
+            if (ctx.IDENTIFIER().size() > 1) {
+                subIdentifier = ctx.IDENTIFIER(1).getText();
+            }
+
+            return new SelectorInCss(prefix, identifier, subIdentifier);
+        }
     }
 
     @Override
     public ASTNode visitRuleSetStart(Parsergrammar.RuleSetStartContext ctx) {
-        List<String> selectors = new ArrayList<>();
-        selectors.add(ctx.first.getText());
-        for (int i = 1; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-            if (child instanceof TerminalNode terminal) {
-                if (terminal.getSymbol().getType() == Lexergrammmar.TAGSFORCSS) {
-                    selectors.add(terminal.getText());
-                }
+        List<SelectorInCss> selectors = new ArrayList<>();
+        List<String> tags = new ArrayList<>();
+
+        // Process the first selector
+        ASTNode firstSelector = visit(ctx.selectorincss());
+        if (firstSelector instanceof SelectorInCss) {
+            SelectorInCss selector = (SelectorInCss) firstSelector;
+            if (selector.isTag()) {
+                tags.add(selector.getIdentifier());
+            } else {
+                selectors.add(selector);
             }
         }
-        /*
-        Row row = new Row();
-        row.setName("List");
-        row.setType("List");
-        row.setValue(selectors.toString());
-        this.st.addRow("List", row);*/
-        return new RuleSetStart(selectors);
+
+        // Process additional TAGSFORCSS elements
+        if (ctx.TAGSFORCSS() != null) {
+            for (int i = 0; i < ctx.TAGSFORCSS().size(); i++) {
+                tags.add(ctx.TAGSFORCSS(i).getText());
+            }
+        }
+
+        return new RuleSetStart(selectors, tags);
     }
+
+
     @Override
     public ASTNode visitValue(Parsergrammar.ValueContext ctx) {
         Value value = null;
