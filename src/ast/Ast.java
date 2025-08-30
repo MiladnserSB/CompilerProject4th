@@ -90,39 +90,41 @@ public class Ast implements ASTNode {
         String jsCode   = (tsDecument != null) ? tsDecument.generate() : "";
 
         StringBuilder sb = new StringBuilder();
+if(outputFileName != "products-service.js") {
+    // ================= DOCTYPE + <html> =================
+    sb.append("<!DOCTYPE html>\n")
+            .append("<html lang=\"en\">\n")
+            .append("<head>\n")
+            .append("    <meta charset=\"UTF-8\">\n")
+            .append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n")
+            .append("    <title>Generated App</title>\n");
 
-        // ================= DOCTYPE + <html> =================
-        sb.append("<!DOCTYPE html>\n")
-                .append("<html lang=\"en\">\n")
-                .append("<head>\n")
-                .append("    <meta charset=\"UTF-8\">\n")
-                .append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n")
-                .append("    <title>Generated App</title>\n");
+    // ================= CSS inside <style> =================
+    if (!cssCode.isEmpty()) {
+        sb.append("    <style>\n")
+                .append(cssCode)
+                .append("\n    </style>\n");
+    }
 
-        // ================= CSS inside <style> =================
-        if (!cssCode.isEmpty()) {
-            sb.append("    <style>\n")
-                    .append(cssCode)
-                    .append("\n    </style>\n");
-        }
+    sb.append("</head>\n<body>\n");
 
-        sb.append("</head>\n<body>\n");
+    // ================= HTML Elements =================
+    if (!htmlCode.isEmpty()) {
+        sb.append(htmlCode).append("\n");
+    }
 
-        // ================= HTML Elements =================
-        if (!htmlCode.isEmpty()) {
-            sb.append(htmlCode).append("\n");
-        }
+    // ================= JS inside <script> =================
+    if (!jsCode.isEmpty()) {
+        sb.append("<script src=\"products-service.js\"></script>\n");
+        sb.append("    <script>\n")
+                .append(jsCode)
+                .append("\n    </script>\n");
+    }
 
-        // ================= JS inside <script> =================
-        if (!jsCode.isEmpty()) {
-            sb.append("<script src=\"products-service.js\"></script>\n");
-            sb.append("    <script>\n")
-                    .append(jsCode)
-                    .append("\n    </script>\n");
-        }
-
-        sb.append("</body>\n</html>\n");
-
+    sb.append("</body>\n</html>\n");
+}else{
+    sb.append(jsCode);
+}
         // ================= Write to file =================
         try (java.io.FileWriter writer = new java.io.FileWriter(outputFileName)) {
             writer.write(sb.toString());
@@ -133,5 +135,8 @@ public class Ast implements ASTNode {
 
         return sb.toString();
     }
+
+
+
 
 }
