@@ -2,6 +2,7 @@ package ast.HTML;
 
 import ast.ASTNode;
 import java.util.List;
+import java.util.Objects;
 
 public class NoEndTag implements HtmlElement {
     private String tagName;
@@ -33,22 +34,61 @@ public class NoEndTag implements HtmlElement {
 
     @Override
     public String generate() {
+        if(Objects.equals(this.tagName, "img"))
+            return "";
         StringBuilder sb = new StringBuilder();
-        sb.append("<").append(tagName);
 
-        if (attributes != null) {
+        sb.append("<").append(tagName);
+        if ("input".equalsIgnoreCase(tagName)) {
+            String inputNameValue = null;
+            System.out.println("I am here EEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            if (attributes != null && !attributes.isEmpty()) {
+                for (ASTNode attr : attributes) {
+                    if (attr instanceof TagNameAttribute) {
+                        TagNameAttribute tagAttr = (TagNameAttribute) attr;
+                        if ("name".equalsIgnoreCase(tagAttr.getName())) {
+                            String value = tagAttr.getTagAttribute() != null ?
+                                    tagAttr.getTagAttribute().getValue() : "";
+                            // Remove quotes from the value
+                            inputNameValue = value.replace("\"", "").replace("'", "");
+                        }
+                    }
+                }
+            }
+
+            // Add id attribute based on the name value
+            if (inputNameValue != null) {
+                String idValue;
+
+                if (inputNameValue.startsWith("add-")) {
+                    // For add- prefix: name="add-name" → id="name"
+                    idValue = inputNameValue.substring(4); // remove "add-" prefix
+                } else {
+                    // For other names: name="name" → id="edit-name"
+
+                    idValue = "edit-" + inputNameValue;
+                }
+
+                sb.append(" id=\"").append(idValue).append("\"");
+            }
+        }
+        // Add attributes
+        if (attributes != null && !attributes.isEmpty()) {
             for (ASTNode attr : attributes) {
-                if (attr instanceof HtmlAttribute) {
-                    sb.append(" ").append(((HtmlAttribute) attr).generate());
+                String generatedAttr = attr.generate();
+                if (!generatedAttr.isEmpty()) {
+                    sb.append(" ").append(generatedAttr);
                 }
             }
         }
 
+        // Add required attribute if needed
         if (required) {
             sb.append(" required");
         }
 
-        sb.append(" />");
+        sb.append(">");
+        sb.append("\n");
         return sb.toString();
     }
 }

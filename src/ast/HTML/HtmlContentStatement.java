@@ -25,43 +25,11 @@ public abstract class HtmlContentStatement implements ASTNode {
         return "HtmlContentStatement: " + (statement != null ? statement.toString() : "null");
     }
 
-    /**
-     * Generate vanilla HTML + JS for this statement.
-     */
+    @Override
     public String generate() {
-        if (statement == null) return "";
-
-        // Plain text or whitespace
-        if (statement.getClass().getSimpleName().equals("ASTNodeToken")) {
-            // replace ASTNodeToken with whatever class your raw tokens use
-            String type = statement.getClass().getSimpleName();
-            String text = statement.toString();
-            return text;
+        if (statement != null) {
+            return statement.generate();
         }
-
-        // Interpolation {{ value }}
-        if (statement.getClass().getSimpleName().equals("Interpolation")) {
-            String expr = statement.toString().replace("{{", "").replace("}}", "").trim();
-            return "\" + " + expr + " + \"";
-        }
-
-        // Nested HTML element
-        if (statement instanceof HtmlElement) {
-            return ((HtmlElement) statement).generate();
-        }
-
-        // Structural directive
-        if (statement instanceof StructuralDirectiveAttribute) {
-            return ((StructuralDirectiveAttribute) statement).generate();
-        }
-
-        // Normal attribute
-        if (statement instanceof HtmlAttribute) {
-            HtmlAttribute attr = (HtmlAttribute) statement;
-            return " " + attr.getName() + "=\"" + attr.getTagAttribute().generate() + "\"";
-        }
-
-        // Fallback
         return "";
     }
 }

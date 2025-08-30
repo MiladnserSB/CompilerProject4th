@@ -42,18 +42,13 @@ public class HtmlContent implements ASTNode {
         }
     }
 
-    /**
-     * Generate vanilla HTML + JS for the full content.
-     */
+    @Override
     public String generate() {
-        StringBuilder sb = new StringBuilder();
-
-        // Raw content if present
         if (rawContent != null && !rawContent.isEmpty()) {
-            sb.append(rawContent);
+            return rawContent;
         }
 
-        // Generate all statements
+        StringBuilder sb = new StringBuilder();
         if (contentStatements != null) {
             for (HtmlContentStatement stmt : contentStatements) {
                 if (stmt != null) {
@@ -61,7 +56,6 @@ public class HtmlContent implements ASTNode {
                 }
             }
         }
-
         return sb.toString();
     }
 }

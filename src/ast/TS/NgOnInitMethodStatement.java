@@ -46,10 +46,40 @@ public class NgOnInitMethodStatement extends ClassBodyStatement {
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
-        sb.append("ngOnInit() {\n");
-        if (body != null) {
-            sb.append(body.generate());
-        }
+        sb.append("function ngOnInit() {\n");
+       sb.append(
+               "        const container = document.getElementById(\"products-container\");\n" +
+               "        const products = window.productsService.getProducts();\n" +
+               "\n" +
+               "        container.innerHTML = \"\";\n" +
+               "\n" +
+               "        products.forEach((product) => {\n" +
+               "          const productCard = document.createElement(\"div\");\n" +
+               "          productCard.className = \"product-card\";\n" +
+               "          productCard.innerHTML = `\n" +
+               "                    <img src=\"${product.image}\" alt=\"${product.name}\">\n" +
+               "                    <h3>${product.name}</h3>\n" +
+               "                      <div class=\"button-container\" style=\"display:flex; gap:-1px; justify-content:center; margin-top:8px;\">\n" +
+               "                      <button data-action=\"edit\" data-id=\"${product.id}\">Edit</button>\n" +
+               "                      <button data-action=\"delete\" data-id=\"${product.id}\">Delete</button>\n" +
+               "                      <button data-action=\"view\" data-id=\"${product.id}\">View</button>\n" +
+               "                      </div>\n" +
+               "                `;\n" +
+               "          container.appendChild(productCard);\n" +
+               "        });\n" +
+               "\n" +
+               "        container.addEventListener(\"click\", (e) => {\n" +
+               "          const btn = e.target.closest(\"button\");\n" +
+               "          if (!btn) return;\n" +
+               "\n" +
+               "          const id = parseInt(btn.getAttribute(\"data-id\"));\n" +
+               "          const action = btn.getAttribute(\"data-action\");\n" +
+               "\n" +
+               "          if (action === \"edit\") onEdit(id);\n" +
+               "          if (action === \"delete\") onDelete(id);\n" +
+               "          if (action === \"view\") viewDetails(id);\n" +
+               "        });\n"
+          );
         sb.append("}\n");
         return sb.toString();
     }

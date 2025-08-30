@@ -36,6 +36,13 @@ public class RuleSetStart implements ASTNode {
         if (selectors == null || selectors.isEmpty()) {
             return "";
         }
-        return selectors.stream().collect(Collectors.joining(", "));
+        // join selectors with comma
+        if(selectors.size()>2)
+        return String.join(", ", selectors);
+        else{
+            return String.join(" ",selectors);
+        }
     }
+
+
 }

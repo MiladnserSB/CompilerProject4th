@@ -2,5 +2,5 @@ package ast;
 
 public interface ASTNode {
     void prettyPrint(String indent);
-    public String generate();
+    String generate(); // only for code generation (no file writing)
 }

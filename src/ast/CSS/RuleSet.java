@@ -44,15 +44,17 @@ public class RuleSet implements ASTNode {
 
     @Override
     public String generate() {
-        StringBuilder sb = new StringBuilder();
         String selectors = ruleSetStart.generate();
-        if (!selectors.isEmpty()) {
-            sb.append(selectors).append(" {\n");
-            for (Declaration decl : declarations) {
-                sb.append("  ").append(decl.generate()).append("\n");
-            }
-            sb.append("}");
+        if (selectors.isEmpty()) {
+            return "";
         }
+        StringBuilder sb = new StringBuilder();
+        sb.append(selectors).append(" {\n");
+        for (Declaration decl : declarations) {
+            sb.append("  ").append(decl.generate()).append("\n");
+        }
+        sb.append("}\n");
         return sb.toString();
     }
+
 }

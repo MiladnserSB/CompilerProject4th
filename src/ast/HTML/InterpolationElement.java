@@ -16,13 +16,27 @@ public class InterpolationElement implements HtmlElement {
         System.out.println(indent + "Interpolation: " + content);
     }
 
-    /**
-     * Generate vanilla JS for Angular interpolation {{ ... }}
-     */
     @Override
     public String generate() {
-        // Remove {{ }} and generate JS string concatenation
-        String expr = content.replace("{{", "").replace("}}", "").trim();
-        return "\" + " + expr + " + \"";
+        return "";
     }
+//        // Convert Angular interpolation syntax {{ expression }} to JavaScript template literal syntax ${expression}
+//        // Also handle cases where the expression might need to be accessed from a global object
+//
+//        String expression = content.trim();
+//
+//        // Handle common Angular expressions
+//        if (expression.startsWith("{{") && expression.endsWith("}}")) {
+//            expression = expression.substring(2, expression.length() - 2).trim();
+//        }
+//
+//        // Convert simple property access to JavaScript
+//        if (expression.contains(".")) {
+//            // Handle expressions like product.name, product.price, etc.
+//            return "${" + expression + "}";
+//        } else {
+//            // Handle simple variables
+//            return "${" + expression + "}";
+//        }
+//    }
 }

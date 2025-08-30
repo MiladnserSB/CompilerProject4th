@@ -23,11 +23,8 @@ public class EventBindingAttribute implements HtmlAttribute {
 
     @Override
     public String generate() {
-        if (tagAttribute != null) {
-            String value = tagAttribute.generate();
-            String eventName = name.substring(1, name.length() - 1); // remove parentheses
-            return "on" + eventName + "=\"" + value + "\"";
-        }
+        // For pure HTML, we don't want Angular event bindings
+        // These will be handled by external JavaScript files
         return "";
     }
 }

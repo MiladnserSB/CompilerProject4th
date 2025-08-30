@@ -17,7 +17,11 @@ public class TextContent extends HtmlContentStatement {
 
     @Override
     public String generate() {
-        // Escape quotes for JS
-        return text.replace("\"", "\\\"");
+        // Escape HTML entities and return
+        return text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 }

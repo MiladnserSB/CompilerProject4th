@@ -29,6 +29,16 @@ public class HtmlCharData extends HtmlContentStatement {
 
     @Override
     public String generate() {
-        return content; // preserve whitespace/content as-is
+        // For whitespace, we might want to preserve it for formatting
+        if (isWhitespace) {
+            return content;
+        }
+
+        // For non-whitespace content, escape HTML entities
+        return content.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 }

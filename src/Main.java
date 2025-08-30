@@ -6,113 +6,75 @@ import ast.VISITOR.programvisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-public class Main {
-    public static void main(String[] args) {
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
-        String input = "import { Component } from '@angular/core';\n" +
-                "import { ProductsService } from '../../services/products.service';\n" +
-                "import { Router } from '@angular/router';\n" +
-                "\n" +
-                "@Component({\n" +
-                "  selector: 'app-add-product',\n" +
-                "  templateUrl: './add-product.component.html',\n" +
-                "  styleUrl: './add-product.component.css'\n" +
-                "})\n" +
-                "\n" +
-                "\n" +
-                "export class AddProductComponent {\n" +
-                "  product = { name: 'zxxcsdf', image: '', price: 0, colors: '' };\n" +
-                "\n" +
-                "  constructor(private productsService: ProductsService, private router: Router) {}\n" +
-                "\n" +
-                "  onSubmit() {\n" +
-                "    const newProduct = { ...this.product, id: Date.now() };\n" +
-                "    this.productsService.addProduct(newProduct);\n" +
-                "    this.router.navigate(['/products']);\n" +
-                "  }\n" +
-                "}\n" +
-                "\n" +
-                "\n" +
-                "  <div class=\"container\"> \n" +
-                "    <div class=\"add-product-form\">\n" +
-                "  <h2>Add Product</h2>\n" +
-                "  <form (submit)=\"onSubmit(); $event.preventDefault()\">\n" +
-                "    <label>Name:\n" +
-                "      <input name=\"name\" [value]=\"product.name\" (input)=\"product.name =  $any($event.target).value\" required />\n" +
-                "    </label><br />\n" +
-                "    <label>Image:\n" +
-                "      <input name=\"image\" [value]=\"product.image\" (input)=\"product.image =  $any($event.target).value\" required />\n" +
-                "    </label><br />\n" +
-                "    <label>Price:\n" +
-                "      <input type=\"number\" name=\"price\" [value]=\"product.price\" (input)=\"product.price = + $any($event.target).value\" required />\n" +
-                "    </label><br />\n" +
-                "    <label>Color:\n" +
-                "      <input name=\"color\" [value]=\"product.colors\" (input)=\"product.colors =  $any($event.target).value\" required />\n" +
-                "    </label><br />\n" +
-                "    <div class=\"center-btn\">\n" +
-                "    <button type=\"submit\">Add</button>\n" +
-                "    </div>\n" +
-                "  </form>\n" +
-                "</div>\n" +
-                "</div>\n" +
-                "\n" +
-                "\n" +
-                ".container{\n" +
-                "    display: flex;\n" +
-                "    align-items: center;\n" +
-                "    justify-content: center;\n" +
-                "    flex-direction: column;\n" +
-                "}\n" +
-                "h2{\n" +
-                "    color: #ff3c00;\n" +
-                "    padding: 10px;}\n" +
-                "\n" +
-                ".add-product-form {\n" +
-                "display: flex;\n" +
-                "align-items: center;\n" +
-                "justify-content: center;\n" +
-                "flex-direction: column;\n" +
-                " width: 250px; \n" +
-                " height: 300px;\n" +
-                "  padding: 100px;\n" +
-                "  margin: 50px;\n" +
-                "  background: #f9f9f9;\n" +
-                "  \n" +
-                "}\n" +
-                ".add-product-form input{\n" +
-                "width: 250px;\n" +
-                "height: 18px;\n" +
-                "margin: 10px;\n" +
-                "margin-top: 8px;\n" +
-                "}\n" +
-                ".center-btn {\n" +
-                "  display: flex;\n" +
-                "  justify-content: center;\n" +
-                "padding-top: 50px;\n" +
-                "}\n" +
-                "\n" +
-                ".center-btn button {\n" +
-                "    width: 60px;\n" +
-                "    height: 40px;\n" +
-                "  background: #ff3c00;\n" +
-                "  color: #fff;\n" +
-                "  \n" +
-                "}\n"
-                ;
-        Lexergrammmar lexer = new Lexergrammmar(CharStreams.fromString(input));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        Parsergrammar parser = new Parsergrammar(tokens);
-        ParseTree tree = parser.ast();
-        programvisitor visitor = new programvisitor();
-        ASTNode ast = visitor.visit(tree);
+    public class Main {
+        public static void main(String[] args) {
+            String[] fileNames = {"test1.txt", "test2.txt", "test3.txt", "test4.txt"};
 
-        if (ast != null) {
-            ast.prettyPrint("");
-            ast.generate();
+            for (int i = 0; i < fileNames.length; i++) {
+                String fileName = fileNames[i];
+                String outputFileName;
 
-        } else {
-            System.out.println("AST is null. Check the grammar and visitor implementation.");
+                // Special handling for the 4th file (products service)
+                if (i == 3) { // 4th file (index 3)
+                    outputFileName = "products-service.js";
+                } else {
+                    switch (i) {
+                        case 0:
+                            outputFileName = "add-product.html";
+                            break;
+                        case 1:
+                            outputFileName = "details.html";
+                            break;
+                        case 2:
+                            outputFileName = "products.html";
+                            break;
+                        default:
+                            outputFileName = "output" + (i + 1) + ".html";
+                            break;
+                    }
+                }
+
+                try {
+                    System.out.println("Processing file: " + fileName);
+                    String input = readFile(fileName);
+
+                    Lexergrammmar lexer = new Lexergrammmar(CharStreams.fromString(input));
+                    CommonTokenStream tokens = new CommonTokenStream(lexer);
+                    Parsergrammar parser = new Parsergrammar(tokens);
+                    ParseTree tree = parser.ast();
+                    programvisitor visitor = new programvisitor();
+                    ASTNode ast = visitor.visit(tree);
+
+                    if (ast != null) {
+                        ast.prettyPrint("");
+                        // Set the output file name before generating
+                        setOutputFileName(outputFileName);
+                        ((Ast) ast).generate(outputFileName);
+                    } else {
+                        System.out.println("AST is null for file: " + fileName + ". Check the grammar and visitor implementation.");
+                    }
+
+                    System.out.println("\n" + "=".repeat(50) + "\n");
+
+                } catch (IOException e) {
+                    System.out.println("Error reading file: " + fileName + " - " + e.getMessage());
+                }
+            }
+        }
+
+        private static String readFile(String fileName) throws IOException {
+            return new String(Files.readAllBytes(Paths.get(fileName)));
+        }
+
+        private static void setOutputFileName(String fileName) {
+            // This method would need to be implemented to set the output file name
+            // You might need to modify the Ast class to accept a filename parameter
+            // or use a static variable to control the output filename
+            System.setProperty("outputFileName", fileName);
         }
     }
-}

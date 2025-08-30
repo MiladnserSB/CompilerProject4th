@@ -29,18 +29,22 @@ public class TsTag implements HtmlElement {
 
     @Override
     public String generate() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<").append(tagName);
-
-        if (attributes != null) {
-            for (ASTNode attr : attributes) {
-                if (attr instanceof HtmlAttribute) {
-                    sb.append(" ").append(((HtmlAttribute) attr).generate());
-                }
-            }
-        }
-
-        sb.append("></").append(tagName).append(">");
-        return sb.toString();
+//        System.out.println("-----------------------------------------------------------------------");
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("<").append(tagName);
+//
+//        // Add attributes
+//        if (attributes != null && !attributes.isEmpty()) {
+//            for (ASTNode attr : attributes) {
+//                String generatedAttr = attr.generate();
+//                if (!generatedAttr.isEmpty()) {
+//                    sb.append(" ").append(generatedAttr);
+//                }
+//            }
+//        }
+//
+//        sb.append("></").append(tagName).append(">");
+//        return sb.toString();
+        return "";
     }
 }

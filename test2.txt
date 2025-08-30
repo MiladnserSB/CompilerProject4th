@@ -17,7 +17,13 @@ export class DetailsComponent implements OnInit {
     this.product = this.productsService.getSelectedProduct();
   }
 }
-
+ <header>
+        <h1>Product Management</h1>
+        <nav>
+<a routerLink="/products">All Products</a>
+        <a routerLink="/add-product">Add Product</a>
+        </nav>
+    </header>
 <div *ngIf="product" class="product-details">
   <h2>{{ product.name }}</h2>
   <img [src]="product.image" alt="{{ product.name }}">
@@ -25,7 +31,10 @@ export class DetailsComponent implements OnInit {
   <p>Color: {{ product.colors }}</p>
 </div>
 
-
+body{
+margin:0;
+padding:0;
+}
 .product-details {
     width: 50%; 
     height: 400px;
@@ -42,3 +51,21 @@ export class DetailsComponent implements OnInit {
     height: 200px;
     object-fit: cover;
   }
+
+  header{
+      display: flex;
+      padding-inline: 50px;
+      padding-block: 8px;
+      background-color: black;
+      color: aliceblue;
+      }
+
+      nav{
+          display: flex;
+          gap: 16px;
+          position: absolute;
+          right: 50px;
+      }
+      a{
+          color: white;
+      }

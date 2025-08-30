@@ -25,12 +25,9 @@ public class HtmlMisc implements ASTNode {
 
     @Override
     public String generate() {
-        if (content == null) return "";
-        // If it’s a comment
-        if (content.getClass().getSimpleName().equals("HtmlComment")) {
-            return "<!-- " + content.toString() + " -->";
+        if (content != null) {
+            return content.generate();
         }
-        // Whitespace or unknown
-        return content.toString();
+        return "";
     }
 }

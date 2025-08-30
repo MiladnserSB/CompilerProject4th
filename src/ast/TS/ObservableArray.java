@@ -3,7 +3,7 @@ package ast.TS;
 import ast.ASTNode;
 
 public class ObservableArray implements ASTNode {
-    private final String type;
+    private final String type; // e.g., "<any[]>"
 
     public ObservableArray(String type) {
         this.type = type;
@@ -25,7 +25,7 @@ public class ObservableArray implements ASTNode {
 
     @Override
     public String generate() {
-        // Convert Observable<T> to regular array in JavaScript
+        // Convert Observable<T> to JS array initialization
         return "[]";
     }
 }

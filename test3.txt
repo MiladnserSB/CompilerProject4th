@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgFor, NgIf,AsyncPipe } from '@angular/common';
 
-
 @Component({
   selector: 'app-products',
   imports:[NgFor,NgIf,AsyncPipe],
@@ -23,13 +22,13 @@ export class ProductsComponent implements OnInit {
     this.products$ = this.productsService.products$;
   }
 
-  viewDetails(item: any) {
-    this.productsService.setSelectedProduct(item);
+  viewDetails(id: any) {
+    this.productsService.setSelectedProduct(id);
     this.router.navigate(['/details']);
   }
 
-  onEdit(item: any) {
-    this.selectedItem = { ...item };
+  onEdit(id: any) {
+    this.selectedItem = { ...id };
     this.editMode = true;
   }
 
@@ -51,7 +50,13 @@ export class ProductsComponent implements OnInit {
     this.editMode = false;
   }
 }
-
+ <header>
+        <h1>Product Management</h1>
+        <nav>
+<a routerLink="/products">All Products</a>
+        <a routerLink="/add-product">Add Product</a>
+        </nav>
+    </header>
 <div class="container">
 
   
@@ -68,7 +73,7 @@ export class ProductsComponent implements OnInit {
   <div class="edit-form" *ngIf="editMode">
     <h2>Edit Product</h2>
 
-    <form (submit)="onEditSave(); $event.preventDefault()">
+    <form (submit)="onEditSave(); $event.preventDefault()" id="edit-form">
       <label>Name:
         <input name="name" [value]="selectedItem.name" (input)="selectedItem.name = $any($event.target).value" required />
       </label><br />
@@ -84,7 +89,7 @@ export class ProductsComponent implements OnInit {
       <label>Color:
         <input name="color" [value]="selectedItem.colors" (input)="selectedItem.colors = $any($event.target).value" required />
       </label><br />
-
+<input type="hidden" id="edit-id" />
       <div class="center-btn">
         <button type="submit">Save</button>
         <button type="button" (click)="onEditCancel()">Cancel</button>
@@ -96,6 +101,10 @@ export class ProductsComponent implements OnInit {
 
 </div>
 
+body{
+margin:0;
+padding:0;
+}
 .container {
     display: flex;
     justify-content: space-between;
@@ -129,23 +138,24 @@ export class ProductsComponent implements OnInit {
 
 
 .edit-form {
-display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
- width: 300px; 
- height: 300px;
-  padding: 50px;
-  margin: 25px;
-  background: #f9f9f9;
-  
-}
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 300px;
+            height: 300px;
+            padding: 50px;
+            margin: 25px;
+            background: #f9f9f9;
+        }
+
 .edit-form input{
 width: 200px;
 height: 18px;
 margin: 10px;
 margin-top: 8px;
 }
+
 .center-btn {
   display: flex;
   justify-content: space-evenly;
@@ -164,3 +174,21 @@ padding-top: 10px;
   .edit-form h2{
     color: #ff3c00;
   }
+
+  header{
+      display: flex;
+      padding-inline: 50px;
+      padding-block: 8px;
+      background-color: black;
+      color: aliceblue;
+      }
+
+      nav{
+          display: flex;
+          gap: 16px;
+          position: absolute;
+          right: 50px;
+      }
+      a{
+          color: white;
+      }

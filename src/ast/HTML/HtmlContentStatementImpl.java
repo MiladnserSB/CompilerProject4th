@@ -18,37 +18,9 @@ public class HtmlContentStatementImpl extends HtmlContentStatement {
 
     @Override
     public String generate() {
-        ASTNode stmt = getStatement();
-        if (stmt == null) return "";
-
-        // Plain text or whitespace
-        if (stmt.getClass().getSimpleName().equals("ASTNodeToken")) {
-            return stmt.toString();
+        if (getStatement() != null) {
+            return getStatement().generate();
         }
-
-        // Interpolation {{ value }}
-        if (stmt.getClass().getSimpleName().equals("Interpolation")) {
-            String expr = stmt.toString().replace("{{", "").replace("}}", "").trim();
-            return "\" + " + expr + " + \"";
-        }
-
-        // Nested HTML element
-        if (stmt instanceof HtmlElement) {
-            return ((HtmlElement) stmt).generate();
-        }
-
-        // Structural directive (*ngIf, *ngFor)
-        if (stmt instanceof StructuralDirectiveAttribute) {
-            return ((StructuralDirectiveAttribute) stmt).generate();
-        }
-
-        // Normal attribute
-        if (stmt instanceof HtmlAttribute) {
-            HtmlAttribute attr = (HtmlAttribute) stmt;
-            return " " + attr.getName() + "=\"" + attr.getTagAttribute().generate() + "\"";
-        }
-
-        // Fallback
         return "";
     }
 }

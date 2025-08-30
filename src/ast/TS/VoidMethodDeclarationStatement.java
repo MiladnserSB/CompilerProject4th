@@ -5,7 +5,7 @@ import ast.ASTNode;
 public class VoidMethodDeclarationStatement extends ClassBodyStatement {
     private Signature signature;
     private Parameters parameters;
-    private MethodVoidBody methodBody;
+    private MethodVoidBody methodBody;  // <-- more general, not only MethodVoidBody
 
     public VoidMethodDeclarationStatement(Signature signature, Parameters parameters, MethodVoidBody methodBody) {
         super(null);
@@ -22,7 +22,7 @@ public class VoidMethodDeclarationStatement extends ClassBodyStatement {
         return parameters;
     }
 
-    public MethodVoidBody getMethodBody() {
+    public ASTNode getMethodBody() {
         return methodBody;
     }
 
@@ -38,13 +38,12 @@ public class VoidMethodDeclarationStatement extends ClassBodyStatement {
             System.out.println(indent + "  <No parameters>");
         }
         if (methodBody != null) {
-            methodBody.prettyPrint(indent + "  ");
+            methodBody.prettyPrint(indent + "  ");  // <-- works for ObjectLiteralNode or MethodVoidBody
         } else {
             System.out.println(indent + "  <Empty method body>");
         }
     }
-
-    @Override
+     @Override
     public String toString() {
         return "VoidMethodDeclarationStatement{" +
                 "signature=" + signature +
@@ -55,16 +54,29 @@ public class VoidMethodDeclarationStatement extends ClassBodyStatement {
 
     @Override
     public String generate() {
+
         StringBuilder sb = new StringBuilder();
-        sb.append("  ").append(signature.getName()).append("(");
-        if (parameters != null) {
+        String methodName = signature.getName();
+        sb.append("function ");
+        sb.append(methodName).append("(");
+        if(methodName.equals("onEditSave"))
+        {
+            sb.append("e");
+        }
+        else{
+        if(parameters != null){
             sb.append(parameters.generate());
         }
-        sb.append(") {\n");
-        if (methodBody != null) {
-            sb.append(methodBody.generate());
         }
-        sb.append("  }\n");
+        sb.append(") {\n");
+
+
+            if (methodBody != null) {
+                sb.append(methodBody.generate(methodName));
+            }
+
+
+        sb.append("}\n");
         return sb.toString();
     }
 

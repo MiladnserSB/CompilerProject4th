@@ -58,6 +58,13 @@ public class MethodBody implements ASTNode {
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
+
+        if (identifier != null && "raw".equals(identifier) && valueNode != null) {
+            // Special case: directly dump JS/HTML from valueNode
+            sb.append(valueNode.generate());
+            return sb.toString();
+        }
+
         sb.append("return ");
         if (isThisAccessed) sb.append("this.");
         if (identifier != null) {
@@ -69,5 +76,6 @@ public class MethodBody implements ASTNode {
         sb.append(";");
         return sb.toString();
     }
+
 
 }

@@ -19,13 +19,13 @@ classBodyStatement*;
 
 ////////modified
 classBodyStatement
-  : variableAssign              #VariableAssignmentStatement
-  | methodvoid                  #VoidMethodDeclarationStatement
-  | variableDeclaration         #VariableDeclarationStatement
-  | arrayExpression1            #ArrayExprOneStatement
-  | arrayExpression2            #ArrayExprTwoStatement
-  | arrayExpression3            #ArrayExprThreeStatement
-  | methodDeclaration           #TypedMethodDeclarationStatement
+  : variableAssign              #VariableAssignmentStatement ///
+  | methodvoid                  #VoidMethodDeclarationStatement  ///
+  | variableDeclaration         #VariableDeclarationStatement   ///
+  | arrayExpression1            #ArrayExprOneStatement ///
+  | arrayExpression2            #ArrayExprTwoStatement///
+  | arrayExpression3            #ArrayExprThreeStatement///
+  | methodDeclaration           #TypedMethodDeclarationStatement///
   | constructorDeclaration      #ConstructorDeclarationStatement
   | signalDeclaration           #SignalDeclarationStatement
   | ngOnInitMETHOD              #NgOnInitMethodStatement
@@ -140,36 +140,83 @@ methodvoidbody:
     ;
 
 methodAssignment:
-      thisDotIdentifierAssign       # ThisDotIdentifierAssignRule
-    | thisDotIdentifierAssignValues # ThisDotIdentifierAssignValuesRule
-    | identifierAssignment          # IdentifierAssignmentRule
-    | thisDotIdentifierAssignWithBraces # ThisDotIdentifierAssignWithBracesRule
-    | staticAssignment              # StaticAssignmentRule
+    assignmentStatement SEMICOLON
+    | methodCallStatement SEMICOLON
+    | objectSpreadAssignment SEMICOLON
     ;
 
-thisDotIdentifierAssign:    //DONE
-    THIS DOT IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT IDENTIFIER DOLLAR_SIGN SEMICOLON
+// Generalized assignment (covers thisDotIdentifierAssign, thisDotIdentifierAssignValues, identifierAssignment)
+assignmentStatement:
+    leftHandSide ASSIGN expression* DOLLAR_SIGN? ;
+
+// Method calls (covers identifierAssignment with DOT methodCall)
+methodCallStatement:
+    leftHandSide DOT methodCall ;
+
+// Object spread assignment (covers thisDotIdentifierAssignWithBraces)
+objectSpreadAssignment:
+    leftHandSide ASSIGN LBRACE THREE_DOTS IDENTIFIER RBRACE ;
+
+// Static assignment (keep as is)
+staticAssignment:
+    STATIC IDENTIFIER ASSIGN objectLiteral SEMICOLON ;
+
+// Left hand side (covers all assignment targets)
+leftHandSide:
+      STATIC IDENTIFIER
+    |THIS DOT IDENTIFIER (DOLLAR_SIGN)?
+    | IDENTIFIER (DOLLAR_SIGN)?
+    | IDENTIFIER
     ;
 
-thisDotIdentifierAssignValues:      //DONE
-    THIS DOT IDENTIFIER ASSIGN (IDENTIFIER | values) SEMICOLON
+// Expression parsing (covers all value types)
+expression:
+    literal
+    | IDENTIFIER
+    | THIS DOT IDENTIFIER (DOLLAR_SIGN)?
+    | methodCall
+    | objectLiteral
+    | arrayLiteral
+    | arraySpreadExpression
+    | NEW BEHAVIOR_SUBJECT LPAREN expression RPAREN
+    | expression DOT IDENTIFIER
+    | expression DOT methodCall
     ;
 
-identifierAssignment:   //DONE
-    (THIS DOT)? IDENTIFIER ((ASSIGN THIS DOT IDENTIFIER DOT methodcall) | (DOT methodcall)) SEMICOLON
+// CRUD operation (keep as is for now, but could be integrated into methodCallStatement)
+crudBodyRule:
+    crudBody nextCall SEMICOLON ;
+arrayLiteral:
+    LBRACKET (expression (COMMA expression)*)? RBRACKET ;
+objectLiteral:
+    LBRACE (objectSpreadProperty | objectProperty) (COMMA (objectSpreadProperty | objectProperty))* RBRACE ;
+
+objectSpreadProperty:
+    THREE_DOTS expression ;
+
+objectProperty:
+    (IDENTIFIER | PATH | COMPONENT | REDIRECTTO | PATHMATCH) COLON expression ;
+
+arraySpreadExpression:
+    LBRACKET THREE_DOTS expression (COMMA expression)? RBRACKET ;
+
+methodCall:
+    (IDENTIFIER | NAVIGATE | NOW | MAP | FILTER | NEXT | VALUE)
+    LPAREN (argumentList)? RPAREN ;
+
+argumentList:
+    expression (COMMA expression)* ;
+
+literal:
+    NUMBER
+    | STRING_LITERAL
+    | BOOLEAN
+    | NULL
+    | DATE DOT NOW LPAREN RPAREN
     ;
 
-crudBodyRule:   //DONE
-    crudBody nextCall SEMICOLON
-    ;
 
-thisDotIdentifierAssignWithBraces:  //DONE
-    THIS DOT IDENTIFIER ASSIGN LBRACE THREE_DOTS IDENTIFIER RBRACE SEMICOLON
-    ;
 
-staticAssignment:   //DONE
-    STATIC IDENTIFIER ASSIGN LBRACE THREE_DOTS THIS DOT IDENTIFIER COMMA IDENTIFIER COLON DATE DOT methodcall RBRACE SEMICOLON
-    ;
 
 ifStatement:        //DONE
     IF LPAREN THIS DOT IDENTIFIER QUESTION_MARK DOT IDENTIFIER THREE_ASSIGN IDENTIFIER RPAREN LBRACE ifBody RBRACE
@@ -185,8 +232,8 @@ ifBody:     //DONE
 //(THIS DOT IDENTIFIER ((DOT IDENTIFIER DOLLAR_SIGN)|(DOT methodcall)|(crudBody nextCall))|values) SEMICOLON);
 
 
-methodcall:         //DONE
-(IDENTIFIER | NAVIGATE | NOW) LPAREN ((THIS DOT)?IDENTIFIER|(LBRACKET STRING_LITERAL RBRACKET))? RPAREN ;
+//methodcall:         //DONE
+//(IDENTIFIER | NAVIGATE | NOW) LPAREN ((THIS DOT)?IDENTIFIER|(LBRACKET STRING_LITERAL RBRACKET))? RPAREN ;
 
 
 ngOnInitMETHOD:     //DONE
@@ -229,7 +276,7 @@ mapFilterIDENTIFIER: //DONE /////// class and visitor
 (IDENTIFIER DOT IDENTIFIER) | (IDENTIFIER COLON IDENTIFIER);
 
 asObservable:       //DONE
-IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT methodcall SEMICOLON  ;
+IDENTIFIER DOLLAR_SIGN ASSIGN THIS DOT IDENTIFIER DOT methodCall SEMICOLON  ;
 
 observable:         //DONE
 IDENTIFIER DOLLAR_SIGN INTERJECTION COLON OBSERVABLE observableArray SEMICOLON;

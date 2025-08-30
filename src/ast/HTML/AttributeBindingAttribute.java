@@ -23,10 +23,22 @@ public class AttributeBindingAttribute implements HtmlAttribute {
 
     @Override
     public String generate() {
-        if (tagAttribute != null) {
-            String value = tagAttribute.generate();
-            String attrName = name.substring(1, name.length() - 1); // remove brackets
-            return attrName + "=\"" + value + "\"";
+        if (name.startsWith("[") && name.endsWith("]")) {
+            String attributeName = name.substring(1, name.length() - 1);
+
+            // For property bindings like [value], convert to standard HTML attributes
+            if ("value".equals(attributeName)) {
+                // Remove Angular binding syntax and just keep the attribute
+                return "";
+            }
+
+            if (tagAttribute != null) {
+                String value = tagAttribute.getValue();
+                // Remove Angular-specific syntax
+                value = value.replace("{{", "").replace("}}", "")
+                        .replace("$any", "").replace("$event", "event");
+                return attributeName + "=\"" + value + "\"";
+            }
         }
         return "";
     }

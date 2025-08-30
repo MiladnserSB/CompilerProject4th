@@ -27,9 +27,9 @@ public class HtmlComment extends HtmlContentStatement {
     @Override
     public String generate() {
         if (isConditional) {
-            return "<!--[if " + commentText + "]-->";
+            return "<!--[" + commentText + "]-->";
         } else {
-            return "<!-- " + commentText + " -->";
+            return "<!--" + commentText + "-->";
         }
     }
 }

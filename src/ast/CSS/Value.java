@@ -49,10 +49,17 @@ public class Value implements ASTNode {
     @Override
     public String generate() {
         switch (type) {
-            case STRING:
-                return "\"" + value + "\""; // wrap string values
-            default:
+            case STRING: // only quote if needed
+                return "\"" + value + "\"";
+            case COLOR:
+            case KEYWORD:
+            case IDENTIFIER:
+                return value;
+            case NUMBER:
                 return value + (unit != null ? unit : "");
+            default:
+                return value;
         }
     }
+
 }

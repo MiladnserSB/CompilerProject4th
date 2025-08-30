@@ -22,7 +22,8 @@ public class ScriptletOrSeaWs extends HtmlContentStatement {
     @Override
     public String generate() {
         if (isScriptlet) {
-            return "<script>" + content + "</script>";
+            // For innerHTML, script tags need special handling
+            return "<!-- script content -->";
         }
         return content; // whitespace or line breaks
     }

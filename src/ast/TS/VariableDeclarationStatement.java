@@ -41,6 +41,7 @@ public class VariableDeclarationStatement extends ClassBodyStatement {
 
     @Override
     public String generate() {
+
         return "let " + signature + " = " + value + ";\n";
     }
 }

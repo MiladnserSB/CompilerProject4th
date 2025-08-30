@@ -199,7 +199,7 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	T visitSignature(Parsergrammar.SignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code values}
-	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementmethodAssignmentmethodAssignmentmethodAssignmentmethodAssignmentmethodAssignmenthtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
+	 * labeled alternative in {@link Parsergrammar#classBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementclassBodyStatementhtmlElementhtmlElementhtmlElementhtmlElementhtmlElementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlContentStatementhtmlAttributehtmlAttributehtmlAttributehtmlAttribute}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
@@ -295,58 +295,47 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ThisDotIdentifierAssignRule}
-	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * Visit a parse tree produced by {@link Parsergrammar#methodAssignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitThisDotIdentifierAssignRule(Parsergrammar.ThisDotIdentifierAssignRuleContext ctx);
+	T visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ThisDotIdentifierAssignValuesRule}
-	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * Visit a parse tree produced by {@link Parsergrammar#assignmentStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitThisDotIdentifierAssignValuesRule(Parsergrammar.ThisDotIdentifierAssignValuesRuleContext ctx);
+	T visitAssignmentStatement(Parsergrammar.AssignmentStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code IdentifierAssignmentRule}
-	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * Visit a parse tree produced by {@link Parsergrammar#methodCallStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIdentifierAssignmentRule(Parsergrammar.IdentifierAssignmentRuleContext ctx);
+	T visitMethodCallStatement(Parsergrammar.MethodCallStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ThisDotIdentifierAssignWithBracesRule}
-	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * Visit a parse tree produced by {@link Parsergrammar#objectSpreadAssignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitThisDotIdentifierAssignWithBracesRule(Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext ctx);
+	T visitObjectSpreadAssignment(Parsergrammar.ObjectSpreadAssignmentContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code StaticAssignmentRule}
-	 * labeled alternative in {@link Parsergrammar#methodAssignment}.
+	 * Visit a parse tree produced by {@link Parsergrammar#staticAssignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx);
+	T visitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssign}.
+	 * Visit a parse tree produced by {@link Parsergrammar#leftHandSide}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx);
+	T visitLeftHandSide(Parsergrammar.LeftHandSideContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssignValues}.
+	 * Visit a parse tree produced by {@link Parsergrammar#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Parsergrammar#identifierAssignment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx);
+	T visitExpression(Parsergrammar.ExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#crudBodyRule}.
 	 * @param ctx the parse tree
@@ -354,17 +343,53 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCrudBodyRule(Parsergrammar.CrudBodyRuleContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Parsergrammar#thisDotIdentifierAssignWithBraces}.
+	 * Visit a parse tree produced by {@link Parsergrammar#arrayLiteral}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx);
+	T visitArrayLiteral(Parsergrammar.ArrayLiteralContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Parsergrammar#staticAssignment}.
+	 * Visit a parse tree produced by {@link Parsergrammar#objectLiteral}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx);
+	T visitObjectLiteral(Parsergrammar.ObjectLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#objectSpreadProperty}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectSpreadProperty(Parsergrammar.ObjectSpreadPropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#objectProperty}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectProperty(Parsergrammar.ObjectPropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#arraySpreadExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArraySpreadExpression(Parsergrammar.ArraySpreadExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#methodCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodCall(Parsergrammar.MethodCallContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#argumentList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgumentList(Parsergrammar.ArgumentListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Parsergrammar#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLiteral(Parsergrammar.LiteralContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#ifStatement}.
 	 * @param ctx the parse tree
@@ -377,12 +402,6 @@ public interface ParsergrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIfBody(Parsergrammar.IfBodyContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Parsergrammar#methodcall}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMethodcall(Parsergrammar.MethodcallContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Parsergrammar#ngOnInitMETHOD}.
 	 * @param ctx the parse tree

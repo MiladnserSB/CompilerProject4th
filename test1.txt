@@ -20,23 +20,28 @@ export class AddProductComponent {
     this.router.navigate(['/products']);
   }
 }
-
-
+ <header>
+        <h1>Product Management</h1>
+        <nav>
+<a routerLink="/products">All Products</a>
+        <a routerLink="/add-product">Add Product</a>
+        </nav>
+    </header>
   <div class="container"> 
     <div class="add-product-form">
   <h2>Add Product</h2>
   <form (submit)="onSubmit(); $event.preventDefault()">
     <label>Name:
-      <input name="name" [value]="product.name" (input)="product.name =  $any($event.target).value" required />
+      <input name="add-name" [value]="product.name" (input)="product.name =  $any($event.target).value" required />
     </label><br />
     <label>Image:
-      <input name="image" [value]="product.image" (input)="product.image =  $any($event.target).value" required />
+      <input name="add-image" [value]="product.image" (input)="product.image =  $any($event.target).value" required />
     </label><br />
     <label>Price:
-      <input type="number" name="price" [value]="product.price" (input)="product.price = + $any($event.target).value" required />
+      <input type="number" name="add-price" [value]="product.price" (input)="product.price = + $any($event.target).value" required />
     </label><br />
     <label>Color:
-      <input name="color" [value]="product.colors" (input)="product.colors =  $any($event.target).value" required />
+      <input name="add-colors" [value]="product.colors" (input)="product.colors =  $any($event.target).value" required />
     </label><br />
     <div class="center-btn">
     <button type="submit">Add</button>
@@ -45,7 +50,10 @@ export class AddProductComponent {
 </div>
 </div>
 
-
+body{
+margin:0;
+padding:0;
+}
 .container{
     display: flex;
     align-items: center;
@@ -87,3 +95,20 @@ padding-top: 50px;
   color: #fff;
   
 }
+header{
+    display: flex;
+    padding-inline: 50px;
+    padding-block: 8px;
+    background-color: black;
+    color: aliceblue;
+    }
+
+    nav{
+        display: flex;
+        gap: 16px;
+        position: absolute;
+        right: 50px;
+    }
+    a{
+        color: white;
+    }

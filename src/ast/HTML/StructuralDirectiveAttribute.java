@@ -1,8 +1,8 @@
 package ast.HTML;
 
 public class StructuralDirectiveAttribute implements HtmlAttribute {
-    private final String name;
-    private final TagAttribute tagAttribute;
+    protected final String name;
+    protected final TagAttribute tagAttribute;
 
     public StructuralDirectiveAttribute(String name, TagAttribute tagAttribute) {
         this.name = name;
@@ -27,35 +27,30 @@ public class StructuralDirectiveAttribute implements HtmlAttribute {
 
     @Override
     public String generate() {
-        if (name.equals("ngIf") && tagAttribute != null) {
-            String condition = tagAttribute.generate();
-            return "<!-- ngIf transformed -->\n"
-                    + "<div id=\"ngif-placeholder\"></div>\n"
-                    + "<script>\n"
-                    + "const cond = " + condition + ";\n"
-                    + "const target = document.getElementById('ngif-placeholder');\n"
-                    + "target.innerHTML = cond ? '<div>...</div>' : '';\n"
-                    + "</script>\n";
-        }
+        return generate("");
+    }
 
-        if (name.equals("ngFor") && tagAttribute != null) {
-            String expr = tagAttribute.generate();
-            String[] parts = expr.split("of");
-            String loopVar = parts[0].replace("let", "").trim();
-            String collection = parts[1].trim();
-
-            return "<!-- ngFor transformed -->\n"
-                    + "<div id=\"ngfor-placeholder\"></div>\n"
-                    + "<script>\n"
-                    + "const container = document.getElementById('ngfor-placeholder');\n"
-                    + collection + ".forEach(" + loopVar + " => {\n"
-                    + "  const el = document.createElement('div');\n"
-                    + "  el.textContent = " + loopVar + ".name; // TODO: full template\n"
-                    + "  container.appendChild(el);\n"
-                    + "});\n"
-                    + "</script>\n";
-        }
-
+    // Generate method for structural directive conversion
+    public String generate(String angularDirective) {
+//        if (name.startsWith("*")) {
+//            String directiveName = name.substring(1);
+//
+//            if ("ngFor".equals(directiveName)) {
+//                // Convert *ngFor to JavaScript loop
+//                String loopVariable = angularDirective.substring(angularDirective.indexOf("let ") + 4,
+//                        angularDirective.indexOf(" of "));
+//                String collection = angularDirective.substring(angularDirective.indexOf(" of ") + 4);
+//
+//                return "data-ngfor=\"" + collection + "\" data-ngfor-var=\"" + loopVariable + "\"";
+//            } else if ("ngIf".equals(directiveName)) {
+//                // Convert *ngIf to conditional display
+//                String condition = tagAttribute != null ? tagAttribute.getValue() : "";
+//                return "data-ngif=\"" + condition + "\"";
+//            }
+//        }
+////
         return "";
+////    }
+//    }
     }
 }

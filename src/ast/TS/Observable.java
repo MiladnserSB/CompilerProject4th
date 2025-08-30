@@ -4,9 +4,9 @@ import ast.ASTNode;
 
 public class Observable extends ClassBodyStatement {
     private final String variableName;
-    private final String observableArray; // This will actually be the initial value if directly assigned
+    private final ObservableArray observableArray; // store as AST node
 
-    public Observable(String variableName, String observableArray) {
+    public Observable(String variableName, ObservableArray observableArray) {
         super(null);
         this.variableName = variableName;
         this.observableArray = observableArray;
@@ -16,7 +16,7 @@ public class Observable extends ClassBodyStatement {
         return variableName;
     }
 
-    public String getObservableArray() {
+    public ObservableArray getObservableArray() {
         return observableArray;
     }
 
@@ -24,21 +24,23 @@ public class Observable extends ClassBodyStatement {
     public void prettyPrint(String indent) {
         System.out.println(indent + "Observable:");
         System.out.println(indent + "  Variable: " + variableName + "$!");
-        System.out.println(indent + "  Observable Type: " + observableArray);
+        if (observableArray != null) {
+            System.out.print(indent + "  Type/Init: ");
+            observableArray.prettyPrint("");
+        } else {
+            System.out.println(indent + "  Type/Init: <empty>");
+        }
     }
 
     @Override
     public String toString() {
-        return variableName + "$!: Observable" + observableArray;
+        return variableName + "$!: Observable" + (observableArray != null ? observableArray.toString() : "");
     }
 
     @Override
     public String generate() {
-        String generatedVariableName = variableName.endsWith("$")
-                ? variableName.substring(0, variableName.length() - 1)
-                : variableName;
-        return "this." + generatedVariableName + " = " + observableArray + ";\n";
+        return "";
+//        String jsVarName = variableName.endsWith("$") ? variableName : variableName + "$";
+//        return "this." + jsVarName + " = " + (observableArray != null ? observableArray.generate() : "[]") + ";\n";
     }
-
-
 }

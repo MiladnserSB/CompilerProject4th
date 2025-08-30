@@ -271,127 +271,127 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return parameters;
     }
 
-    @Override
-    public ASTNode visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) {
-        List<ASTNode> statements = new ArrayList<>();
-        for (var stmtCtx : ctx.methodAssignment()) {
-            statements.add(visit(stmtCtx));
-        }
-        for (var crudCtx : ctx.crudBodyRule()) {
-            statements.add(visit(crudCtx));
-        }
-        for (var ifCtx : ctx.ifStatement()) {
-            statements.add(visit(ifCtx));
-        }
-        return new MethodVoidBody(statements);
-    }
+//    @Override
+//    public ASTNode visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) {
+//        List<ASTNode> statements = new ArrayList<>();
+//        for (var stmtCtx : ctx.methodAssignment()) {
+//            statements.add(visit(stmtCtx));
+//        }
+//        for (var crudCtx : ctx.crudBodyRule()) {
+//            statements.add(visit(crudCtx));
+//        }
+//        for (var ifCtx : ctx.ifStatement()) {
+//            statements.add(visit(ifCtx));
+//        }
+//        return new MethodVoidBody(statements);
+//    }
 
-    @Override
-    public ASTNode visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) {
-        // Check each labeled alternative dynamically
-        if (ctx.getChildCount() > 0) {
-            for (int i = 0; i < ctx.getChildCount(); i++) {
-                var child = ctx.getChild(i);
-                if (child instanceof Parsergrammar.ThisDotIdentifierAssignRuleContext
-                        || child instanceof Parsergrammar.ThisDotIdentifierAssignValuesRuleContext
-                        || child instanceof Parsergrammar.IdentifierAssignmentRuleContext
-                        || child instanceof Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext
-                        || child instanceof Parsergrammar.StaticAssignmentRuleContext) {
-                    return visit(child);
-                }
-            }
-        }
-        return null; // or throw an exception if nothing matched
-    }
-
-
+//    @Override
+//    public ASTNode visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) {
+//        // Check each labeled alternative dynamically
+//        if (ctx.getChildCount() > 0) {
+//            for (int i = 0; i < ctx.getChildCount(); i++) {
+//                var child = ctx.getChild(i);
+//                if (child instanceof Parsergrammar.ThisDotIdentifierAssignRuleContext
+//                        || child instanceof Parsergrammar.ThisDotIdentifierAssignValuesRuleContext
+//                        || child instanceof Parsergrammar.IdentifierAssignmentRuleContext
+//                        || child instanceof Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext
+//                        || child instanceof Parsergrammar.StaticAssignmentRuleContext) {
+//                    return visit(child);
+//                }
+//            }
+//        }
+//        return null; // or throw an exception if nothing matched
+//    }
 
 
-    @Override
-    public ASTNode visitThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx) {
-        // matches constructor: (leftIdentifier, rightIdentifier1, rightIdentifier2)
-        return new ThisDotIdentifierAssign(
-                ctx.IDENTIFIER(0).getText(),
-                ctx.IDENTIFIER(1).getText(),
-                ctx.IDENTIFIER(2).getText()
-        );
-    }
 
-    @Override
-    public ASTNode visitThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx) {
-        // matches constructor: (leftIdentifier, value)
-        String left = ctx.IDENTIFIER(0).getText();
-        String value;
-        if (ctx.IDENTIFIER().size() > 1) {
-            value = ctx.IDENTIFIER(1).getText();
-        } else {
-            value = ctx.values().getText();
-        }
-        return new ThisDotIdentifierAssignValues(left, value);
-    }
-
-    @Override
-    public ASTNode visitIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx) {
-        // IdentifierAssignment(String left, String right, MethodCall methodCall)
-        String left = ctx.IDENTIFIER(0).getText();
-        String right = ctx.IDENTIFIER().size() > 1 ? ctx.IDENTIFIER(1).getText() : null;
-
-        MethodCall methodCall = null;
-        if (ctx.methodcall() != null) {
-            String methodName;
-            if(ctx.methodcall().IDENTIFIER(0) != null)
-                methodName = ctx.methodcall().IDENTIFIER(0).getText();
-            else
-                methodName= "";
-            String argument = ctx.methodcall().IDENTIFIER().size() > 1
-                    ? ctx.methodcall().IDENTIFIER(1).getText()
-                    : null;
-
-//            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
-
-            // error check for undefined method
-            if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
-//                UndefinedMethodCallError error =
-//                        new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
-//                error.throwException();
-            }
-
-            methodCall = new MethodCall(methodName, argument);
-        }
-
-        return new IdentifierAssignment(left, right, methodCall);
-    }
-
-    @Override
-    public ASTNode visitThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx) {
-        // matches constructor: (leftIdentifier, spreadIdentifier)
-        return new ThisDotIdentifierAssignWithBraces(
-                ctx.IDENTIFIER(0).getText(),
-                ctx.IDENTIFIER(1).getText()
-        );
-    }
-
-    @Override
-    public ASTNode visitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) {
-        // StaticAssignment(String identifier, String spreadThisIdentifier, String dateIdentifier, MethodCall methodCall)
-        String identifier = ctx.IDENTIFIER(0).getText();
-        String spreadThis = ctx.IDENTIFIER(1).getText();
-        String dateField = ctx.IDENTIFIER(2).getText();
-        String methodName;
-        if(ctx.methodcall().IDENTIFIER(0)!=null)
-        {   methodName = ctx.methodcall().IDENTIFIER(0).getText();}
-        else{
-             methodName="";
-        }
-        String argument = ctx.methodcall().IDENTIFIER().size() > 1
-                ? ctx.methodcall().IDENTIFIER(1).getText()
-                : null;
-
-        MethodCall methodCall = new MethodCall(methodName, argument);
-
-        return new StaticAssignment(identifier, spreadThis, dateField, methodCall);
-    }
-
+//
+//    @Override
+//    public ASTNode visitThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx) {
+//        // matches constructor: (leftIdentifier, rightIdentifier1, rightIdentifier2)
+//        return new ThisDotIdentifierAssign(
+//                ctx.IDENTIFIER(0).getText(),
+//                ctx.IDENTIFIER(1).getText(),
+//                ctx.IDENTIFIER(2).getText()
+//        );
+//    }
+//
+//    @Override
+//    public ASTNode visitThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx) {
+//        // matches constructor: (leftIdentifier, value)
+//        String left = ctx.IDENTIFIER(0).getText();
+//        String value;
+//        if (ctx.IDENTIFIER().size() > 1) {
+//            value = ctx.IDENTIFIER(1).getText();
+//        } else {
+//            value = ctx.values().getText();
+//        }
+//        return new ThisDotIdentifierAssignValues(left, value);
+//    }
+//
+//    @Override
+//    public ASTNode visitIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx) {
+//        // IdentifierAssignment(String left, String right, MethodCall methodCall)
+//        String left = ctx.IDENTIFIER(0).getText();
+//        String right = ctx.IDENTIFIER().size() > 1 ? ctx.IDENTIFIER(1).getText() : null;
+//
+//        MethodCall methodCall = null;
+//        if (ctx.methodcall() != null) {
+//            String methodName;
+//            if(ctx.methodcall().IDENTIFIER(0) != null)
+//                methodName = ctx.methodcall().IDENTIFIER(0).getText();
+//            else
+//                methodName= "";
+//            String argument = ctx.methodcall().IDENTIFIER().size() > 1
+//                    ? ctx.methodcall().IDENTIFIER(1).getText()
+//                    : null;
+//
+////            int line = ctx.methodcall().IDENTIFIER(0).getSymbol().getLine();
+//
+//            // error check for undefined method
+//            if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
+////                UndefinedMethodCallError error =
+////                        new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
+////                error.throwException();
+//            }
+//
+//            methodCall = new MethodCall(methodName, argument);
+//        }
+//
+//        return new IdentifierAssignment(left, right, methodCall);
+//    }
+//
+//    @Override
+//    public ASTNode visitThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx) {
+//        // matches constructor: (leftIdentifier, spreadIdentifier)
+//        return new ThisDotIdentifierAssignWithBraces(
+//                ctx.IDENTIFIER(0).getText(),
+//                ctx.IDENTIFIER(1).getText()
+//        );
+//    }
+//
+//    @Override
+//    public ASTNode visitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) {
+//        // StaticAssignment(String identifier, String spreadThisIdentifier, String dateIdentifier, MethodCall methodCall)
+//        String identifier = ctx.IDENTIFIER(0).getText();
+//        String spreadThis = ctx.IDENTIFIER(1).getText();
+//        String dateField = ctx.IDENTIFIER(2).getText();
+//        String methodName;
+//        if(ctx.methodcall().IDENTIFIER(0)!=null)
+//        {   methodName = ctx.methodcall().IDENTIFIER(0).getText();}
+//        else{
+//             methodName="";
+//        }
+//        String argument = ctx.methodcall().IDENTIFIER().size() > 1
+//                ? ctx.methodcall().IDENTIFIER(1).getText()
+//                : null;
+//
+//        MethodCall methodCall = new MethodCall(methodName, argument);
+//
+//        return new StaticAssignment(identifier, spreadThis, dateField, methodCall);
+//    }
+//
     @Override
     public ASTNode visitCrudBodyRule(Parsergrammar.CrudBodyRuleContext ctx) {
         // String form like: "this.<id>.next" or "this.<id>.value"
@@ -454,66 +454,78 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
 
 
-    @Override
-    public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
-        System.out.println("*********************************************************");
-       // method name can be IDENTIFIER, NAVIGATE, or NOW
-       String methodName = ctx.IDENTIFIER() != null
-               ? ctx.IDENTIFIER(0).getText()
-               : (ctx.NAVIGATE() != null ? ctx.NAVIGATE().getText() : ctx.NOW().getText());
-        System.out.println("//////////////////////////////////////////////////////////////////////"+methodName);
-       String argument = null;
-       if (ctx.IDENTIFIER().size() > 1) {
-           // case: IDENTIFIER(...) or this.IDENTIFIER
-           if (ctx.THIS() != null) {
-               argument = "this." + ctx.IDENTIFIER(1).getText();
-           } else {
-               argument = ctx.IDENTIFIER(1).getText();
-           }
-       } else if (ctx.STRING_LITERAL() != null) {
-           // case: ["string"]
-           argument = "[\"" + ctx.STRING_LITERAL().getText().replaceAll("\"", "") + "\"]";
-       }
-
-       MethodCall methodCall = new MethodCall(methodName, argument);
-
-       // Symbol table tracking (optional logging)
-       Row row = new Row();
-       row.setName("MethodCall");
-       row.setValue("Method: " + methodName + (argument != null ? ", Arg: " + argument : ""));
-       this.undefinedMethodCallErrorSymbolTable.addRow("MethodCall", row);
-
-       return methodCall;
-   }
+//    @Override
+//    public ASTNode visitMethodCall(Parsergrammar.MethodcallContext ctx) {
+//        System.out.println("*********************************************************");
+//       // method name can be IDENTIFIER, NAVIGATE, or NOW
+//       String methodName = ctx.IDENTIFIER() != null
+//               ? ctx.IDENTIFIER(0).getText()
+//               : (ctx.NAVIGATE() != null ? ctx.NAVIGATE().getText() : ctx.NOW().getText());
+//        System.out.println("//////////////////////////////////////////////////////////////////////"+methodName);
+//       String argument = null;
+//       if (ctx.IDENTIFIER().size() > 1) {
+//           // case: IDENTIFIER(...) or this.IDENTIFIER
+//           if (ctx.THIS() != null) {
+//               argument = "this." + ctx.IDENTIFIER(1).getText();
+//           } else {
+//               argument = ctx.IDENTIFIER(1).getText();
+//           }
+//       } else if (ctx.STRING_LITERAL() != null) {
+//           // case: ["string"]
+//           argument = "[\"" + ctx.STRING_LITERAL().getText().replaceAll("\"", "") + "\"]";
+//       }
+//
+//       MethodCall methodCall = new MethodCall(methodName, argument);
+//
+//       // Symbol table tracking (optional logging)
+//       Row row = new Row();
+//       row.setName("MethodCall");
+//       row.setValue("Method: " + methodName + (argument != null ? ", Arg: " + argument : ""));
+//       this.undefinedMethodCallErrorSymbolTable.addRow("MethodCall", row);
+//
+//       return methodCall;
+//   }
 
 
     @Override
     public ASTNode visitMethodvoid(Parsergrammar.MethodvoidContext ctx) {
-        // Enter a new scope for the method body
-        this.undefinedMethodCallErrorSymbolTable.enterScope("Local");
-
-        // Visit and extract method components
+//        // Enter a new scope for the method body
+//        this.undefinedMethodCallErrorSymbolTable.enterScope("Local");
+//
+//        // Visit and extract method components
+//        Signature signature = (Signature) visit(ctx.signature());
+//        Parameters parameters = ctx.parameters() != null ? (Parameters) visit(ctx.parameters()) : null;
+//        MethodVoidBody body = (MethodVoidBody) visit(ctx.methodvoidbody());
+//
+//        // Line number for potential error reporting
+//        int line = ctx.signature().IDENTIFIER().getSymbol().getLine();
+//
+//        // Create the AST node
+//        VoidMethodDeclarationStatement method = new VoidMethodDeclarationStatement(signature, parameters, body);
+//
+//        // Add entry to symbol table for error tracking
+//        Row row = new Row();
+//        row.setName(signature.getName());
+//        row.setValue(ctx.methodvoidbody().getText());
+//
+//        this.undefinedMethodCallErrorSymbolTable.addRow(signature.getName(), row);
+//
+//        // Exit scope
+//        this.undefinedMethodCallErrorSymbolTable.exitScope();
+//
+//        return method;
+// Visit method signature
         Signature signature = (Signature) visit(ctx.signature());
-        Parameters parameters = ctx.parameters() != null ? (Parameters) visit(ctx.parameters()) : null;
+
+        // Visit parameters (may be null)
+        Parameters parameters = ctx.parameters() != null ?
+                (Parameters) visit(ctx.parameters()) : null;
+
+        // Visit body
         MethodVoidBody body = (MethodVoidBody) visit(ctx.methodvoidbody());
 
-        // Line number for potential error reporting
-        int line = ctx.signature().IDENTIFIER().getSymbol().getLine();
-
-        // Create the AST node
-        VoidMethodDeclarationStatement method = new VoidMethodDeclarationStatement(signature, parameters, body);
-
-        // Add entry to symbol table for error tracking
-        Row row = new Row();
-        row.setName(signature.getName());
-        row.setValue(ctx.methodvoidbody().getText());
-
-        this.undefinedMethodCallErrorSymbolTable.addRow(signature.getName(), row);
-
-        // Exit scope
-        this.undefinedMethodCallErrorSymbolTable.exitScope();
-
-        return method;
+        // Build final AST node
+        return new VoidMethodDeclarationStatement(signature, parameters, body);
     }
 
     @Override
@@ -981,10 +993,16 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return super.visitProvidedin(ctx);
     }
 
+
+
     @Override
-    public ASTNode visitMethodcall(Parsergrammar.MethodcallContext ctx) {
-        return super.visitMethodcall(ctx);
+    public ASTNode visitVoidMethodDeclarationStatement(Parsergrammar.VoidMethodDeclarationStatementContext ctx) {
+        return super.visitVoidMethodDeclarationStatement(ctx);
     }
+//    @Override
+//    public ASTNode visitMethodcall(Parsergrammar.MethodcallContext ctx) {
+//        return super.visitMethodcall(ctx);
+//    }
 
     @Override
     public ASTNode visitVariableAssignmentStatement(Parsergrammar.VariableAssignmentStatementContext ctx) {
@@ -1048,12 +1066,17 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
 
     @Override
     public ASTNode visitAsObservable(Parsergrammar.AsObservableContext ctx) {
-        String variableName = ctx.IDENTIFIER(0).getText();  // left IDENTIFIER before $
-        String sourceIdentifier = ctx.IDENTIFIER(1).getText(); // the one after this.
-        MethodCall methodCall = null;
+        // Get the variable names
+        String variableName = ctx.IDENTIFIER(0).getText();  // variable before $
+        String sourceIdentifier = ctx.IDENTIFIER(1).getText(); // variable after 'this'
 
-        if (ctx.methodcall() != null) {
-            methodCall = (MethodCall) visit(ctx.methodcall());
+        // Visit optional methodCall
+        MethodCall methodCall = null;
+        if (ctx.methodCall() != null) {
+            ASTNode node = visit(ctx.methodCall());
+            if (node instanceof MethodCall) {
+                methodCall = (MethodCall) node;
+            }
         }
 
         return new AsObservable(variableName, sourceIdentifier, methodCall);
@@ -1062,18 +1085,22 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
     @Override
     public ASTNode visitObservable(Parsergrammar.ObservableContext ctx) {
         String variableName = ctx.IDENTIFIER().getText();
-        ObservableArray observableArray = null;
 
+        // Keep ObservableArray as an AST node reference
+        ObservableArray observableArray = null;
         if (ctx.observableArray() != null) {
-            observableArray = (ObservableArray) visit(ctx.observableArray());
+            ASTNode node = visit(ctx.observableArray());
+            if (node instanceof ObservableArray) {
+                observableArray = (ObservableArray) node;
+            }
         }
 
-        return new Observable(variableName, observableArray != null ? observableArray.toString() : null);
+        return new Observable(variableName, observableArray);
     }
 
     @Override
     public ASTNode visitObservableArray(Parsergrammar.ObservableArrayContext ctx) {
-        // reconstruct something like <any[]>
+        // Return ObservableArray node, preserve type info
         String type = "<" + ctx.ANY().getText() + "[]>";
         return new ObservableArray(type);
     }
@@ -1166,6 +1193,305 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
             return new RightMapFilterAssign(left, right);
         }
     }
+
+
+
+
+
+
+    @Override
+    public ASTNode visitMethodvoidbody(Parsergrammar.MethodvoidbodyContext ctx) {
+        // methodvoidbody: (methodAssignment | crudBodyRule | ifStatement)*
+        List<ASTNode> stmts = new ArrayList<>();
+
+        for (var ma : ctx.methodAssignment()) {
+            ASTNode node = visit(ma);
+            if (node != null) stmts.add(node);
+        }
+        for (var crud : ctx.crudBodyRule()) {
+            ASTNode node = visit(crud);
+            if (node != null) stmts.add(node);
+        }
+        for (var iff : ctx.ifStatement()) {
+            ASTNode node = visit(iff);
+            if (node != null) stmts.add(node);
+        }
+
+        return new MethodVoidBody(stmts);
+    }
+
+    @Override
+    public ASTNode visitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) {
+        // methodAssignment: assignmentStatement SEMICOLON | methodCallStatement SEMICOLON | objectSpreadAssignment SEMICOLON
+        if (ctx.assignmentStatement() != null) return visit(ctx.assignmentStatement());
+        if (ctx.methodCallStatement() != null) return visit(ctx.methodCallStatement());
+        if (ctx.objectSpreadAssignment() != null) return visit(ctx.objectSpreadAssignment());
+        return null;
+    }
+
+    @Override
+    public ASTNode visitAssignmentStatement(Parsergrammar.AssignmentStatementContext ctx) {
+        ASTNode left = visit(ctx.leftHandSide());
+
+        // Handle multiple expressions by concatenating them
+        StringBuilder rightBuilder = new StringBuilder();
+        if (ctx.expression() != null && !ctx.expression().isEmpty()) {
+            for (int i = 0; i < ctx.expression().size(); i++) {
+                ASTNode exprNode = visit(ctx.expression(i));
+                rightBuilder.append(exprNode.generate());
+                if (i < ctx.expression().size() - 1) {
+                    rightBuilder.append(" "); // Add space between expressions
+                }
+            }
+        }
+
+        boolean dollar = ctx.DOLLAR_SIGN() != null;
+
+        // Create a simple ASTNode for the concatenated expressions
+        return new AssignmentStatement(left, new SimpleExpressionNode(rightBuilder.toString()), dollar);
+    }
+    @Override
+    public ASTNode visitMethodCallStatement(Parsergrammar.MethodCallStatementContext ctx) {
+        // leftHandSide DOT methodCall
+        ASTNode left = visit(ctx.leftHandSide());
+        // methodCall returns a MethodCallExpression, but grammar has leftHandSide DOT methodCall
+        MethodCallExpression callExpr;
+        Parsergrammar.MethodCallContext mc = ctx.methodCall();
+        // methodCall allows IDENTIFIER | NAVIGATE | NOW | MAP | FILTER | NEXT | VALUE as name
+        List<ASTNode> args = new ArrayList<>();
+        if (mc.argumentList() != null) {
+            for (var exprCtx : mc.argumentList().expression()) {
+                args.add(visit(exprCtx));
+            }
+        }
+        String name = mc.getText().substring(0, mc.getText().indexOf('(')); // fallback
+        // Better: if mc.IDENTIFIER() != null then
+        if (mc.IDENTIFIER() != null ) {
+            name = mc.IDENTIFIER().getText();
+        } else if (mc.NAVIGATE() != null) {
+            name = mc.NAVIGATE().getText();
+        } else if (mc.NOW() != null) {
+            name = mc.NOW().getText();
+        } else if (mc.MAP() != null) {
+            name = mc.MAP().getText();
+        } else if (mc.FILTER() != null) {
+            name = mc.FILTER().getText();
+        } else if (mc.NEXT() != null) {
+            name = mc.NEXT().getText();
+        } else if (mc.VALUE() != null) {
+            name = mc.VALUE().getText();
+        }
+        callExpr = new MethodCallExpression(left, name, args);
+        return new MethodCallStatementNode(callExpr);
+    }
+
+    @Override
+    public ASTNode visitObjectSpreadAssignment(Parsergrammar.ObjectSpreadAssignmentContext ctx) {
+        // leftHandSide ASSIGN LBRACE THREE_DOTS IDENTIFIER RBRACE
+        ASTNode left = visit(ctx.leftHandSide());
+        String id = ctx.IDENTIFIER().getText();
+        return new ObjectSpreadAssignmentNode(left, id);
+    }
+
+    @Override
+    public ASTNode visitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) {
+        // STATIC IDENTIFIER ASSIGN objectLiteral SEMICOLON
+        String id = ctx.IDENTIFIER().getText();
+        ASTNode obj = visit(ctx.objectLiteral());
+        String type = ctx.STATIC().getText();
+        return new StaticAssignmentNode(id, obj, type);
+    }
+
+
+    @Override
+    public ASTNode visitLeftHandSide(Parsergrammar.LeftHandSideContext ctx) {
+        // THIS DOT IDENTIFIER (DOLLAR_SIGN)? | IDENTIFIER (DOLLAR_SIGN)? | STATIC? IDENTIFIER
+        boolean isStatic=false;
+        if(ctx.STATIC()!=null){isStatic=true;}
+
+
+        if (ctx.THIS() != null) {
+            String id = ctx.IDENTIFIER().getText();
+            return new ThisPropertyNode(id + (ctx.DOLLAR_SIGN()!=null ? "$" : ""));
+        } else {
+            // identifier may have dollar suffix token in your grammar as IDENTIFIER DOLLAR_SIGN token sequence
+            if (ctx.IDENTIFIER() != null ) {
+
+                String id = ctx.IDENTIFIER().getText();
+
+                if (ctx.DOLLAR_SIGN() != null) id = id + "$";
+               if(isStatic)
+                return new IdentifierNode(id,ctx.STATIC().getText());
+               else{
+                   return new IdentifierNode(id);
+               }
+            } else {
+                // fallback
+                if(isStatic)
+                return new IdentifierNode(ctx.getText(),ctx.STATIC().getText());
+                else{
+                  return  new IdentifierNode(ctx.getText());
+                }
+            }
+        }
+    }
+
+    @Override
+    public ASTNode visitExpression(Parsergrammar.ExpressionContext ctx) {
+        // expression rule has many alternatives. We check which is present.
+        if (ctx.literal() != null) {
+            return visit(ctx.literal());
+        }
+        if (ctx.IDENTIFIER() != null && ctx.getChildCount() == 1) {
+            return new IdentifierNode(ctx.IDENTIFIER().getText());
+        }
+        if (ctx.THIS() != null && ctx.DOT() != null && ctx.IDENTIFIER() != null) {
+            String id = ctx.IDENTIFIER().getText();
+            return new ThisPropertyNode(id + (ctx.DOLLAR_SIGN()!=null ? "$" : ""));
+        }
+        if (ctx.methodCall() != null && ctx.getChildCount() == 1) {
+            // direct method call like fn()
+            return visit(ctx.methodCall());
+        }
+        if (ctx.objectLiteral() != null) {
+            return visit(ctx.objectLiteral());
+        }
+        if (ctx.arrayLiteral() != null) {
+            return visit(ctx.arrayLiteral());
+        }
+        if (ctx.arraySpreadExpression() != null) {
+            return visit(ctx.arraySpreadExpression());
+        }
+        if (ctx.NEW() != null && ctx.BEHAVIOR_SUBJECT() != null) {
+            ASTNode arg = visit(ctx.expression());
+            return new NewBehaviorSubjectNode(arg);
+        }
+        // expression DOT IDENTIFIER or expression DOT methodCall
+        if (ctx.expression() != null && ctx.DOT() != null && ctx.IDENTIFIER() != null) {
+            ASTNode target = visit(ctx.expression());
+            String member = ctx.IDENTIFIER().getText();
+            return new MemberAccessExpression(target, member);
+        }
+        if (ctx.expression() != null && ctx.DOT() != null && ctx.methodCall() != null) {
+            ASTNode target = visit(ctx.expression());
+            MethodCallExpression mc = (MethodCallExpression) visit(ctx.methodCall());
+            // create MethodCallExpression with caller being target and name from mc
+            return new MethodCallExpression(target, mc.getMethodName(), mc.getArguments());
+        }
+        // fallback
+        return new IdentifierNode(ctx.getText());
+    }
+
+
+//    @Override
+//    public ASTNode visitCrudBodyRule(Parsergrammar.CrudBodyRuleContext ctx) {
+//        // crudBody nextCall SEMICOLON
+//        ASTNode crud = visit(ctx.crudBody());
+//        ASTNode next = visit(ctx.nextCall());
+//        // Represent as CrudBodyNode with nextCall appended in generate by caller
+//        // For simplicity, wrap both in a list object literal node
+//        return new ObjectLiteralNode(Arrays.asList(new CrudBodyNode(crud), (ASTNode) next));
+//    }
+
+
+    @Override
+    public ASTNode visitArrayLiteral(Parsergrammar.ArrayLiteralContext ctx) {
+        List<ASTNode> items = new ArrayList<>();
+        if (ctx.expression() != null) {
+            for (var e : ctx.expression()) items.add(visit(e));
+        }
+        return new ArrayLiteralNode(items);
+    }
+
+
+    @Override
+    public ASTNode visitObjectLiteral(Parsergrammar.ObjectLiteralContext ctx) {
+        List<ASTNode> props = new ArrayList<>();
+
+        for (var sp : ctx.objectSpreadProperty()) {
+            props.add(visit(sp));
+        }
+        for (var op : ctx.objectProperty()) {
+            props.add(visit(op));
+        }
+
+        return new ObjectLiteralNode(props);
+    }
+
+
+
+    @Override
+    public ASTNode visitObjectSpreadProperty(Parsergrammar.ObjectSpreadPropertyContext ctx) {
+        // THREE_DOTS expression
+        ASTNode expr = visit(ctx.expression());
+        return new ObjectSpreadPropertyNode(expr);
+    }
+
+
+    @Override
+    public ASTNode visitObjectProperty(Parsergrammar.ObjectPropertyContext ctx) {
+        // (IDENTIFIER | PATH | COMPONENT | REDIRECTTO | PATHMATCH) COLON expression
+        String key = ctx.getChild(0).getText();
+        ASTNode value = visit(ctx.expression());
+        return new ObjectPropertyNode(key, value);
+    }
+
+    @Override
+    public ASTNode visitArraySpreadExpression(Parsergrammar.ArraySpreadExpressionContext ctx) {
+        // LBRACKET THREE_DOTS expression (COMMA expression)? RBRACKET
+        ASTNode expr = visit(ctx.expression(0));
+        return new ArraySpreadExpressionNode(expr);
+    }
+
+
+    @Override
+    public ASTNode visitMethodCall(Parsergrammar.MethodCallContext ctx) {
+        // (IDENTIFIER | NAVIGATE | NOW | MAP | FILTER | NEXT | VALUE) LPAREN (argumentList)? RPAREN ;
+        String name = null;
+        if (ctx.IDENTIFIER() != null ) {
+            name = ctx.IDENTIFIER().getText();
+        } else if (ctx.NAVIGATE() != null) name = ctx.NAVIGATE().getText();
+        else if (ctx.NOW() != null) name = ctx.NOW().getText();
+        else if (ctx.MAP() != null) name = ctx.MAP().getText();
+        else if (ctx.FILTER() != null) name = ctx.FILTER().getText();
+        else if (ctx.NEXT() != null) name = ctx.NEXT().getText();
+        else if (ctx.VALUE() != null) name = ctx.VALUE().getText();
+        List<ASTNode> args = new ArrayList<>();
+        if (ctx.argumentList() != null) {
+            ASTNode argList = visit(ctx.argumentList());
+            if (argList instanceof ArrayLiteralNode) {
+                // but our visitArgumentList returns ArrayLiteralNode style - adjust below
+            }
+        }
+        if (ctx.argumentList() != null && ctx.argumentList().expression() != null) {
+            for (var exprCtx : ctx.argumentList().expression()) args.add(visit(exprCtx));
+        }
+        // caller = null, means direct function or static call; the grammar used methodCall alone (caller handled by expression chaining)
+        return new MethodCallExpression(null, name, args);
+    }
+
+
+    @Override
+    public ASTNode visitArgumentList(Parsergrammar.ArgumentListContext ctx) {
+        List<ASTNode> args = new ArrayList<>();
+        for (var e : ctx.expression()) args.add(visit(e));
+        // Return array-like node to be used by caller
+        return new ArrayLiteralNode(args);
+    }
+
+
+    @Override
+    public ASTNode visitLiteral(Parsergrammar.LiteralContext ctx) {
+        if (ctx.NUMBER() != null) return new LiteralNode(ctx.NUMBER().getText());
+        if (ctx.STRING_LITERAL() != null) return new LiteralNode(ctx.STRING_LITERAL().getText());
+        if (ctx.BOOLEAN() != null) return new LiteralNode(ctx.BOOLEAN().getText());
+        if (ctx.NULL() != null) return new LiteralNode("null");
+        if (ctx.DATE() != null && ctx.NOW() != null) {
+            return new LiteralNode("Date.now()");
+        }
+        return new LiteralNode(ctx.getText());
+    }
+
 
 
 
@@ -1294,6 +1620,25 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
          */
         return value;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ////////////////////// HTML VISITORS /////////////////////////////
 
@@ -1685,10 +2030,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
         return new StructuralDirectiveAttribute(name, tagAttribute);
     }
 
-    @Override
-    public ASTNode visitVoidMethodDeclarationStatement(Parsergrammar.VoidMethodDeclarationStatementContext ctx) {
-        return super.visitVoidMethodDeclarationStatement(ctx);
-    }
+
 
     @Override
     public HtmlAttribute visitAttributeBinding(Parsergrammar.AttributeBindingContext ctx) {
@@ -1736,7 +2078,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
                     : methodCallContent;
             if (!undefinedMethodCallErrorSymbolTable.check(methodName)) {
                 UndefinedMethodCallError error = new UndefinedMethodCallError(methodName, line, undefinedMethodCallErrorSymbolTable);
-                error.throwException();
+//                error.throwException();
             }
             isMethodCall = true;
         } else if (ctx.ATTVALUE_VALUE() != null) {

@@ -557,97 +557,85 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterThisDotIdentifierAssignRule(Parsergrammar.ThisDotIdentifierAssignRuleContext ctx) { }
+	@Override public void enterMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitThisDotIdentifierAssignRule(Parsergrammar.ThisDotIdentifierAssignRuleContext ctx) { }
+	@Override public void exitMethodAssignment(Parsergrammar.MethodAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterThisDotIdentifierAssignValuesRule(Parsergrammar.ThisDotIdentifierAssignValuesRuleContext ctx) { }
+	@Override public void enterAssignmentStatement(Parsergrammar.AssignmentStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitThisDotIdentifierAssignValuesRule(Parsergrammar.ThisDotIdentifierAssignValuesRuleContext ctx) { }
+	@Override public void exitAssignmentStatement(Parsergrammar.AssignmentStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIdentifierAssignmentRule(Parsergrammar.IdentifierAssignmentRuleContext ctx) { }
+	@Override public void enterMethodCallStatement(Parsergrammar.MethodCallStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIdentifierAssignmentRule(Parsergrammar.IdentifierAssignmentRuleContext ctx) { }
+	@Override public void exitMethodCallStatement(Parsergrammar.MethodCallStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterThisDotIdentifierAssignWithBracesRule(Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext ctx) { }
+	@Override public void enterObjectSpreadAssignment(Parsergrammar.ObjectSpreadAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitThisDotIdentifierAssignWithBracesRule(Parsergrammar.ThisDotIdentifierAssignWithBracesRuleContext ctx) { }
+	@Override public void exitObjectSpreadAssignment(Parsergrammar.ObjectSpreadAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx) { }
+	@Override public void enterStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStaticAssignmentRule(Parsergrammar.StaticAssignmentRuleContext ctx) { }
+	@Override public void exitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx) { }
+	@Override public void enterLeftHandSide(Parsergrammar.LeftHandSideContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitThisDotIdentifierAssign(Parsergrammar.ThisDotIdentifierAssignContext ctx) { }
+	@Override public void exitLeftHandSide(Parsergrammar.LeftHandSideContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx) { }
+	@Override public void enterExpression(Parsergrammar.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitThisDotIdentifierAssignValues(Parsergrammar.ThisDotIdentifierAssignValuesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIdentifierAssignment(Parsergrammar.IdentifierAssignmentContext ctx) { }
+	@Override public void exitExpression(Parsergrammar.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -665,25 +653,97 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx) { }
+	@Override public void enterArrayLiteral(Parsergrammar.ArrayLiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitThisDotIdentifierAssignWithBraces(Parsergrammar.ThisDotIdentifierAssignWithBracesContext ctx) { }
+	@Override public void exitArrayLiteral(Parsergrammar.ArrayLiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) { }
+	@Override public void enterObjectLiteral(Parsergrammar.ObjectLiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStaticAssignment(Parsergrammar.StaticAssignmentContext ctx) { }
+	@Override public void exitObjectLiteral(Parsergrammar.ObjectLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObjectSpreadProperty(Parsergrammar.ObjectSpreadPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObjectSpreadProperty(Parsergrammar.ObjectSpreadPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObjectProperty(Parsergrammar.ObjectPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObjectProperty(Parsergrammar.ObjectPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArraySpreadExpression(Parsergrammar.ArraySpreadExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArraySpreadExpression(Parsergrammar.ArraySpreadExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodCall(Parsergrammar.MethodCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodCall(Parsergrammar.MethodCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArgumentList(Parsergrammar.ArgumentListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArgumentList(Parsergrammar.ArgumentListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLiteral(Parsergrammar.LiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLiteral(Parsergrammar.LiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -708,18 +768,6 @@ public class ParsergrammarBaseListener implements ParsergrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIfBody(Parsergrammar.IfBodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterMethodcall(Parsergrammar.MethodcallContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitMethodcall(Parsergrammar.MethodcallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
