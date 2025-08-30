@@ -64,14 +64,6 @@ public class NormalTag implements HtmlElement {
             }
         }
 
-
-
-
-
-
-
-
-
         if (attributes != null && !attributes.isEmpty()) {
             for (ASTNode attr : attributes) {
                 if (attr instanceof StructuralDirectiveAttribute) {
@@ -165,9 +157,6 @@ else {elementContent.append(" id=\"product-details-container\"");}
                 sb.append(" class=\"active\"");
             }
         }
-
-
-
 
 
         if ("h2".equalsIgnoreCase(tagName) || "h3".equalsIgnoreCase(tagName) || "p".equalsIgnoreCase(tagName)) {

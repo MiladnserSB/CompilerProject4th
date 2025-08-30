@@ -60,15 +60,17 @@ padding:0;
       color: aliceblue;
       }
 
-      nav{
-          display: flex;
-          gap: 16px;
-          position: absolute;
-          right: 50px;
-      }
-      a{
-          color: white;
-      }
+      nav {
+              display: flex;
+              gap: 16px;
+              position: absolute;
+              right: 50px;
+              top: 35px;
+            }
+            a {
+              color: white;
+              font-size: 20px;
+            }
 
       .edit-form {
                   display: none;
