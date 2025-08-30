@@ -47,6 +47,7 @@ export class ProductsComponent implements OnInit {
   }
 
   onEditCancel() {
+    this.selectedItem = null;
     this.editMode = false;
   }
 }

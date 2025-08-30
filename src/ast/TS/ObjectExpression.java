@@ -54,7 +54,7 @@ public class ObjectExpression extends ClassBodyStatement {
         StringBuilder sb = new StringBuilder();
 
         // Use dynamic variable name
-        sb.append(assignIdentifier).append(" = { ");
+        sb.append(" { ");
 
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
@@ -85,7 +85,7 @@ public class ObjectExpression extends ClassBodyStatement {
             }
         }
 
-        sb.append(" };");
+        sb.append(" }");
         return sb.toString();
     }
 

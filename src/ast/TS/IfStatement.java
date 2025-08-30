@@ -33,9 +33,9 @@ public class IfStatement implements ASTNode {
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
-        sb.append("if (this.")
+        sb.append("if (selectedItem && ")
                 .append(conditionLeft)
-                .append("?.")
+                .append(".")
                 .append(conditionRight)
                 .append(" === ")
                 .append(assignIdentifier)
@@ -44,7 +44,8 @@ public class IfStatement implements ASTNode {
         for (IfBody stmt : body) {
             sb.append("  ").append(stmt.generate()).append("\n");
         }
-        sb.append("}");
+        sb.append("document.getElementById(\"edit-form\").style.display = \"none\";\n");
+        sb.append("}\n");
         return sb.toString();
     }
 }

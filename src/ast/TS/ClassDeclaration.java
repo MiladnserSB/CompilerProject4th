@@ -89,31 +89,32 @@ public class ClassDeclaration implements ASTNode {
         if(this.className.equals("ProductsService"))
         {sb.append("class ").append(className).append(" {\n");}
 if(this.className.equals("ProductsService")) {
-    sb.append("constructor() {\n" +
-            "        this.products = JSON.parse(localStorage.getItem('products')) || [\n" +
-            "            { id: 1, name: 'hoodie', image: 'https://m.media-amazon.com/images/I/51tEciwZARL.jpg', price: 1000, colors: 'red' },\n" +
-            "            { id: 2, name: 'jeans', image: 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcS-gNnQj5hHFmlvbSZjACGvZ2R3GHfUC6zL3ViZGXTMC8Z5MR-If7jikESuzpUFeMRSgDiMb0FR9xPUSruyylJbc-javHeGNK50HAFKEv3PRXLP3HSIuN38', price: 2000, colors: 'blue' },\n" +
-            "            { id: 3, name: 'shoes', image: 'https://assets.adidas.com/images/w_940,f_auto,q_auto/bdd9f8cd43664fffbd3da8bf01188fca_9366/B75807_07_standard.jpg', price: 3000, colors: 'black' },\n" +
-            "        ];\n" +
+    String st1="";
+    String st2="";
+    String st3="";
+    for(ASTNode i: classBody){
+        if(i instanceof ArrayExprThreeStatement){
+st1=i.generate();
+        }else if(i instanceof VariableDeclarationStatement){
+            st2=((VariableDeclarationStatement) i).generate(false);
+        }
+       else if(i instanceof TypedMethodDeclarationStatement){
+            sb.append(i.generate());
+        }else if(i instanceof VoidMethodDeclarationStatement){
+            st3 = i.generate();
+        }
+    }
+    sb.append("\n" +
+        st1+
             "\n" +
-            "        this.selectedProduct = null;\n" +
-            "    }\n" +
-            "\n" +
-            "    getProducts() {\n" +
-            "        return this.products;\n" +
-            "    }\n" +
-            "\n" +
-            "    setSelectedProduct(product) {\n" +
-            "        this.selectedProduct = product;\n" +
-            "        localStorage.setItem('selectedProduct', JSON.stringify(product));\n" +
-            "    }\n" +
-            "\n" +
-            "    getSelectedProduct() {\n" +
-            "        if (!this.selectedProduct) {\n" +
-            "            this.selectedProduct = JSON.parse(localStorage.getItem('selectedProduct'));\n" +
-            "        }\n" +
-            "        return this.selectedProduct;\n" +
-            "    }\n" +
+st2+
+
+            "setSelectedProduct(product) {\n" +
+                    "        this.selectedProduct = product;\n" +
+                    "        localStorage.setItem('selectedProduct', JSON.stringify(product));\n" +
+                    "    }\n" +
+                    "\n" +
+
             "\n" +
             "    addProduct(product) {\n" +
             "        product.id = Date.now();\n" +
@@ -129,11 +130,8 @@ if(this.className.equals("ProductsService")) {
             "        }\n" +
             "    }\n" +
             "\n" +
-            "    deleteProduct(id) {\n" +
-            "        this.products = this.products.filter(p => p.id !== id);\n" +
-            "        this.saveProducts();\n" +
-            "    }\n" +
-            "\n" +
+            st3+
+
             "    saveProducts() {\n" +
             "        localStorage.setItem('products', JSON.stringify(this.products));\n" +
             "    }\n" +
@@ -166,7 +164,7 @@ sb.append("document.addEventListener(\"DOMContentLoaded\", function () {\n" +
         "      });");
 }
         if(this.className.equals("ProductsService"))
-        {sb.append("}\n"+"window.productsService = new ProductsService();");}
+        {sb.append("\n"+"window.productsService = new ProductsService();");}
         return sb.toString();
     }
 

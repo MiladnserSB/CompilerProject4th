@@ -24,6 +24,6 @@ public class IfBody implements ASTNode {
 
     @Override
     public String generate() {
-        return "this." + leftIdentifier + " = " + value + ";";
+        return   leftIdentifier + " = " + value + ";";
     }
 }

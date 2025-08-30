@@ -35,9 +35,14 @@ public class AssignmentStatement implements ASTNode {
     public String generate() {
 //        System.out.println(left);
 //        System.out.println(right);
-        if(isVar)
-        {return left.generate() + " = " + right.generate() + ";";}
-
+        if(isVar) {
+            if (this.right.generate().contains("...id")) {
+                return left.generate().replace("this.", "") + " = " + "product" + ";";
+            }
+            {
+                return left.generate().replace("this.", "") + " = " + right.generate() + ";";
+            }
+        }
         return "const updatedProduct = { "+
          "id: parseInt(document.getElementById(\"edit-id\").value), \n" +
                 "name: document.getElementById(\"edit-name\").value, \n" +

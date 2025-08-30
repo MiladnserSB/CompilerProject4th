@@ -49,16 +49,23 @@ public class MethodVoidBody extends ClassBodyStatement {
         String s="";
         for(ASTNode i : statements)
         {if(i instanceof AssignmentStatement)
-            s=i.generate();
+        s+=((AssignmentStatement) i).generate(true);
+            s+="\n";
         }
+
         if(this.methodName.equals("onEditSave")){
             sb.append(" e.preventDefault();\n"
-+s.toString()
++s.toString()+"const updatedProduct = {\n" +
+                            "          id: parseInt(document.getElementById(\"edit-id\").value),\n" +
+                            "          name: document.getElementById(\"edit-name\").value,\n" +
+                            "          image: document.getElementById(\"edit-image\").value,\n" +
+                            "          price: parseFloat(document.getElementById(\"edit-price\").value),\n" +
+                            "          colors: document.getElementById(\"edit-color\").value,\n" +
+                            "        };"
 
                      +
                     "        window.productsService.editProduct(updatedProduct);\n" +
-                    "        editMode = false;\n" +
-                    "        selectedItem = null;\n" +
+
                     "        document.getElementById(\"edit-form\").style.display = \"none\";\n" +
                     "        document.getElementById(\"edit-product-form\").reset();\n" +
                     "        ngOnInit();"
@@ -75,33 +82,50 @@ public class MethodVoidBody extends ClassBodyStatement {
 
         }
 else if(this.methodName.equals("onDelete")){
-    sb.append("window.productsService.deleteProduct(id);\n" +
-            "        if (selectedItem && selectedItem.id === id) {\n" +
-            "          editMode = false;\n" +
-            "          selectedItem = null;\n" +
-            "          document.getElementById(\"edit-form\").style.display = \"none\";\n" +
-            "        }\n" +
-            "        ngOnInit();"
-    );
-        }
-else if(this.methodName.equals("onEdit")){
-    sb.append("const product = window.productsService\n" +
-            "          .getProducts()\n" +
-            "          .find((p) => p.id === id);\n" +
-            "        if (!product) return;\n" +
-            "        selectedItem = product;\n" +
-            "        editMode = true;\n" +
-            "        document.getElementById(\"edit-id\").value = product.id;\n" +
-            "        document.getElementById(\"edit-name\").value = product.name;\n" +
-            "        document.getElementById(\"edit-image\").value = product.image;\n" +
+            StringBuilder s1= new StringBuilder();
+            for(ASTNode i : statements)
+            {
+                if(i instanceof IfStatement)
+                {
+                    s1.append(i.generate());
+                }
+                s1.append("\n");
+            }
+            sb.append("window.productsService.deleteProduct(id);\n" +
+
+                    s1.toString() +
+
+                    "        ngOnInit();"
+            );
+        } else if (this.methodName.equals("onEdit")) {
+    String s4="";
+            for(ASTNode i : statements)
+            {if(i instanceof AssignmentStatement)
+                s4+=((AssignmentStatement) i).generate(true);
+                s4+="\n";
+            }
+            sb.append("const product = window.productsService\n" +
+                    "          .getProducts()\n" +
+                    "          .find((p) => p.id === id);\n" +
+                    "        if (!product) return;\n" +
+                    s4+
+
+                    "        document.getElementById(\"edit-id\").value = product.id;\n" +
+                    "        document.getElementById(\"edit-name\").value = product.name;\n" +
+                    "        document.getElementById(\"edit-image\").value = product.image;\n" +
             "        document.getElementById(\"edit-price\").value = product.price;\n" +
             "        document.getElementById(\"edit-color\").value = product.colors;\n" +
             "        document.getElementById(\"edit-form\").style.display = \"flex\";");
         }
 else if(this.methodName.equals("onEditCancel")){
+            String s5="";
+            for(ASTNode i : statements)
+            {if(i instanceof AssignmentStatement)
+                s5+=((AssignmentStatement) i).generate(true);
+                s5+="\n";
+            }
     sb.append(
-            "        editMode = false;\n" +
-            "        selectedItem = null;\n" +
+     s5+
             "        document.getElementById(\"edit-form\").style.display = \"none\";\n" +
             "        document.getElementById(\"edit-product-form\").reset();");
         }
@@ -116,7 +140,11 @@ else if(this.methodName.equals("onEditCancel")){
             }
             for (ASTNode stmt : statements) {
                 if (stmt == null) continue;
-                String generated = stmt.generate();
+                String generated="";
+                if(stmt instanceof AssignmentStatement)
+                {  generated = ((AssignmentStatement) stmt).generate(true);}
+                else
+                  generated = stmt.generate();
                 if (generated == null) continue;
                 generated = generated.trim();
 

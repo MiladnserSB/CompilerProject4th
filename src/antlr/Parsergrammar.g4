@@ -146,23 +146,18 @@ methodAssignment:
     | objectSpreadAssignment SEMICOLON
     ;
 
-// Generalized assignment (covers thisDotIdentifierAssign, thisDotIdentifierAssignValues, identifierAssignment)
 assignmentStatement:
     leftHandSide ASSIGN expression* DOLLAR_SIGN? ;
 
-// Method calls (covers identifierAssignment with DOT methodCall)
 methodCallStatement:
     leftHandSide DOT methodCall ;
 
-// Object spread assignment (covers thisDotIdentifierAssignWithBraces)
 objectSpreadAssignment:
     leftHandSide ASSIGN LBRACE THREE_DOTS IDENTIFIER RBRACE ;
 
-// Static assignment (keep as is)
 staticAssignment:
     STATIC IDENTIFIER ASSIGN objectLiteral SEMICOLON ;
 
-// Left hand side (covers all assignment targets)
 leftHandSide:
       STATIC IDENTIFIER
     |THIS DOT IDENTIFIER (DOLLAR_SIGN)?
@@ -170,7 +165,6 @@ leftHandSide:
     | IDENTIFIER
     ;
 
-// Expression parsing (covers all value types)
 expression:
     literal
     | IDENTIFIER
@@ -184,7 +178,6 @@ expression:
     | expression DOT methodCall
     ;
 
-// CRUD operation (keep as is for now, but could be integrated into methodCallStatement)
 crudBodyRule:
     crudBody nextCall SEMICOLON ;
 arrayLiteral:

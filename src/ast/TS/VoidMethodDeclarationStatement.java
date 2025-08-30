@@ -57,7 +57,8 @@ public class VoidMethodDeclarationStatement extends ClassBodyStatement {
 
         StringBuilder sb = new StringBuilder();
         String methodName = signature.getName();
-        sb.append("function ");
+        if(!methodName.equals("deleteProduct"))
+        {sb.append("function ");}
         sb.append(methodName).append("(");
         if(methodName.equals("onEditSave"))
         {

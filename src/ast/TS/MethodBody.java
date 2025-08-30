@@ -72,7 +72,6 @@ public class MethodBody implements ASTNode {
         } else if (valueNode != null) {
             sb.append(valueNode.generate());
         }
-        if (hasDotValue) sb.append(".value");
         sb.append(";");
         return sb.toString();
     }

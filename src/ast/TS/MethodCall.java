@@ -37,6 +37,10 @@ public class MethodCall implements ASTNode {
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
+        if(methodName.equals("next")){
+            sb.append("this.products.filter(pr=>pr.id!==id) \n this.saveProducts();\n");
+            return sb.toString();
+        }
         sb.append(methodName).append("(");
 
         if (argument != null) {

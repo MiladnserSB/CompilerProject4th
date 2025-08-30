@@ -42,9 +42,9 @@ public class Signature implements ASTNode {
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder();
-        if (staticModifier != null && !staticModifier.isEmpty()) {
-            sb.append("static ");
-        }
+//        if (staticModifier != null && !staticModifier.isEmpty()) {
+//            sb.append("static ");
+//        }
         sb.append(name); // accessModifier بيتم تجاهله
         return sb.toString();
     }

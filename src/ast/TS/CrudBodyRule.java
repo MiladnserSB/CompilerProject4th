@@ -24,7 +24,7 @@ public class CrudBodyRule implements ASTNode {
     }
     @Override
     public String generate() {
-        return crudExpression + "." + nextCall.generate();
+        return crudExpression.replace(".next", "") + " = " + nextCall.generate();
     }
 
 }

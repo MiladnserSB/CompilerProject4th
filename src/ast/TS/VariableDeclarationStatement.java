@@ -6,6 +6,7 @@ public class VariableDeclarationStatement extends ClassBodyStatement {
     private String signature;
     private String type;
     private String value;
+    public boolean withLet =true;
     public VariableDeclarationStatement(String signature, String type, String value) {
         super(null);
         this.signature = signature;
@@ -38,9 +39,16 @@ public class VariableDeclarationStatement extends ClassBodyStatement {
         return super.toString() + signature + ": " + type + " = " + value;
     }
 
-
+    public String generate(boolean withLet) {
+        this.withLet = withLet;
+        return this.generate();
+    }
     @Override
     public String generate() {
+        if(withLet)
         return "let " + signature + " = " + value + ";\n";
+        else{
+            return signature + " = " + "JSON.parse(localStorage.getItem('selectedProduct')) || "+ value + ";\n";
+        }
     }
 }

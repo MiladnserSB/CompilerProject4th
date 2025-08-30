@@ -40,7 +40,7 @@ public class MethodCallExpression implements ASTNode {
         if (caller == null) {
             return methodName + "(" + args + ")";
         } else {
-            return caller.generate() + "." + methodName + "(" + args + ")";
+            return "window" + "." + methodName + "(" + args + ")";
         }
     }
 }

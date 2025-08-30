@@ -16,35 +16,27 @@ public class Ast implements ASTNode {
         this.cssDocument = cssDocument;
         this.htmlDocument = htmlDocument;
     }
-
     public TsDocument getTsDecument() {
         return tsDecument;
     }
-
     public HTMLDocument getHtmlDocument() {
         return htmlDocument;
     }
-
     public CssDocument getCssDocument() {
         return cssDocument;
     }
-
     public void setTsDecument(TsDocument tsDecument) {
         this.tsDecument = tsDecument;
     }
-
     public void setHtmlDocument(HTMLDocument htmlDocument) {
         this.htmlDocument = htmlDocument;
     }
-
     public void setCssDocument(CssDocument cssDocument) {
         this.cssDocument = cssDocument;
     }
-
     public TsDocument getTSDocument() {
         return tsDecument;
     }
-
     public CssDocument getCSSDocument() {
         return cssDocument;
     }
@@ -81,9 +73,6 @@ public class Ast implements ASTNode {
     public String generate() {
         return "";
     }
-
-
-
     public String generate(String outputFileName) {
         String cssCode = (cssDocument != null) ? cssDocument.generate() : "";
         String htmlCode = (htmlDocument != null) ? htmlDocument.generate("", "") : "";
@@ -105,14 +94,11 @@ if(outputFileName != "products-service.js") {
                 .append(cssCode)
                 .append("\n    </style>\n");
     }
-
     sb.append("</head>\n<body>\n");
-
     // ================= HTML Elements =================
     if (!htmlCode.isEmpty()) {
         sb.append(htmlCode).append("\n");
     }
-
     // ================= JS inside <script> =================
     if (!jsCode.isEmpty()) {
         sb.append("<script src=\"products-service.js\"></script>\n");
@@ -120,9 +106,8 @@ if(outputFileName != "products-service.js") {
                 .append(jsCode)
                 .append("\n    </script>\n");
     }
-
     sb.append("</body>\n</html>\n");
-}else{
+}else {
     sb.append(jsCode);
 }
         // ================= Write to file =================
@@ -132,7 +117,6 @@ if(outputFileName != "products-service.js") {
         } catch (IOException e) {
             System.err.println("❌ Error writing file: " + outputFileName + " - " + e.getMessage());
         }
-
         return sb.toString();
     }
 

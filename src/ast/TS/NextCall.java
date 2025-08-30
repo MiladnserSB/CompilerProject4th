@@ -25,7 +25,8 @@ public class NextCall implements ASTNode {
     }
     @Override
     public String generate() {
-        return "(" + (call != null ? call.generate() : "") + ")";
+        return (call != null ? call.generate() : "") ;
+
     }
 
 }
