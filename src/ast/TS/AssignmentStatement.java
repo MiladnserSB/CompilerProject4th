@@ -6,7 +6,7 @@ public class AssignmentStatement implements ASTNode {
     private final ASTNode left;
     private final ASTNode right;
     private final boolean dollarSuffix; // whether a trailing $ token was present in grammar (optional)
-
+    public boolean isVar;
     public AssignmentStatement(ASTNode left, ASTNode right, boolean dollarSuffix) {
         this.left = left;
         this.right = right;
@@ -26,12 +26,25 @@ public class AssignmentStatement implements ASTNode {
     @Override
     public String toString() { return left.toString() + " = " + right.toString(); }
 
+    public String generate(boolean isVar) {
+        this.isVar = isVar;
+        return this.generate();
+    }
+
     @Override
     public String generate() {
 //        System.out.println(left);
 //        System.out.println(right);
-//        // If dollarSuffix true, e.g. "foo$ = expr" we simply keep same in name usage (left.generate includes $ if present)
-//        return left.generate() + " = " + right.generate() + ";";
-        return "";
+        if(isVar)
+        {return left.generate() + " = " + right.generate() + ";";}
+
+        return "const updatedProduct = { "+
+         "id: parseInt(document.getElementById(\"edit-id\").value), \n" +
+                "name: document.getElementById(\"edit-name\").value, \n" +
+                "image: document.getElementById(\"edit-image\").value,\n" +
+                "price: parseFloat(document.getElementById(\"edit-price\").value), \n" +
+                "colors: document.getElementById(\"edit-color\").value, \n" +
+                "};";
+//        return "";
     }
 }

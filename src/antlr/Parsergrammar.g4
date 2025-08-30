@@ -140,7 +140,8 @@ methodvoidbody:
     ;
 
 methodAssignment:
-    assignmentStatement SEMICOLON
+
+     assignmentStatement SEMICOLON
     | methodCallStatement SEMICOLON
     | objectSpreadAssignment SEMICOLON
     ;

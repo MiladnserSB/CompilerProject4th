@@ -24,7 +24,8 @@ public class ObjectSpreadAssignmentNode implements ASTNode {
     @Override
     public String generate() {
         // generate an object merge pattern in JS
-//        return target.generate() + " = { ..." + spreadIdentifier + " };";
-    return "";
+        System.out.println(target.generate() + " = { " + spreadIdentifier + " };");
+        return target.generate() + " = { " + spreadIdentifier + " };";
+//    return "";
     }
 }

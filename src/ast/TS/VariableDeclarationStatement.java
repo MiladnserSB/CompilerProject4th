@@ -6,7 +6,6 @@ public class VariableDeclarationStatement extends ClassBodyStatement {
     private String signature;
     private String type;
     private String value;
-
     public VariableDeclarationStatement(String signature, String type, String value) {
         super(null);
         this.signature = signature;
@@ -39,9 +38,9 @@ public class VariableDeclarationStatement extends ClassBodyStatement {
         return super.toString() + signature + ": " + type + " = " + value;
     }
 
+
     @Override
     public String generate() {
-
         return "let " + signature + " = " + value + ";\n";
     }
 }

@@ -1240,7 +1240,7 @@ public class programvisitor  extends ParsergrammarBaseVisitor <ASTNode> {
                 ASTNode exprNode = visit(ctx.expression(i));
                 rightBuilder.append(exprNode.generate());
                 if (i < ctx.expression().size() - 1) {
-                    rightBuilder.append(" "); // Add space between expressions
+                    rightBuilder.append(" ");
                 }
             }
         }

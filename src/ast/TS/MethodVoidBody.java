@@ -46,15 +46,16 @@ public class MethodVoidBody extends ClassBodyStatement {
     public String generate() {
 
         StringBuilder sb = new StringBuilder();
+        String s="";
+        for(ASTNode i : statements)
+        {if(i instanceof AssignmentStatement)
+            s=i.generate();
+        }
         if(this.methodName.equals("onEditSave")){
-            sb.append(" e.preventDefault();\n" +
-                    "        const updatedProduct = {\n" +
-                    "          id: parseInt(document.getElementById(\"edit-id\").value),\n" +
-                    "          name: document.getElementById(\"edit-name\").value,\n" +
-                    "          image: document.getElementById(\"edit-image\").value,\n" +
-                    "          price: parseFloat(document.getElementById(\"edit-price\").value),\n" +
-                    "          colors: document.getElementById(\"edit-color\").value,\n" +
-                    "        };\n" +
+            sb.append(" e.preventDefault();\n"
++s.toString()
+
+                     +
                     "        window.productsService.editProduct(updatedProduct);\n" +
                     "        editMode = false;\n" +
                     "        selectedItem = null;\n" +
